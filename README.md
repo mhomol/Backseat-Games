@@ -2,6 +2,9 @@
 
 **Classic road-trip fun for the whole car.**
 
+> **App Store / TestFlight listing name:** Backseat Games (road trip fun)  
+> **Home screen name:** Backseat Games
+
 Backseat Games is an iPhone app that brings classic family car games to everyone's phone — License Plates, Travel Bingo, and the Sign Game. One person hosts a session; everyone else joins over local peer-to-peer networking. No internet, no accounts.
 
 ## Games included
@@ -92,12 +95,22 @@ docs/
 - [Architecture](docs/ARCHITECTURE.md) — multiplayer, rule engine, state model
 - [Features & rules](docs/FEATURES.md) — how to play, troubleshooting
 
-## TestFlight
+## TestFlight (recommended — no EAS cloud quota)
 
-1. Configure `eas.json` with your Apple Team ID and App Store Connect app ID.
-2. Create the app record **Backseat Games** in App Store Connect.
-3. Run `eas build --profile production --platform ios`.
-4. Run `eas submit --platform ios`.
+Use **GitHub Actions** with `eas build --local` on `macos-26` runners (same pattern as Memento Mori / Homol Invests):
+
+1. One-time setup: [docs/TESTFLIGHT_CI.md](docs/TESTFLIGHT_CI.md) — `testflight` environment, Apple signing secrets, `EXPO_TOKEN`.
+2. Run **Actions → iOS TestFlight → Run workflow** on `master`.
+3. Install from TestFlight when App Store Connect finishes processing (~5–15 min).
+
+Build numbers come from GitHub `run_number` via [`app.config.js`](app.config.js).
+
+### Optional (uses EAS cloud quota)
+
+```bash
+eas build --profile production --platform ios
+eas submit --platform ios
+```
 
 ## License
 

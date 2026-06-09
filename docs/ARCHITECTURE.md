@@ -150,14 +150,29 @@ src/types/               Shared types
 
 ## Build & deploy (Windows → TestFlight)
 
-1. Install EAS CLI: `npm i -g eas-cli`
-2. Log in: `eas login`
-3. Configure Apple credentials (first build prompts interactively).
-4. Development build: `eas build --profile development --platform ios`
-5. Production build: `eas build --profile production --platform ios`
-6. Submit: `eas submit --platform ios`
+### Recommended: GitHub Actions (no EAS cloud quota)
 
-No Mac required for compilation — EAS uses cloud macOS builders.
+Workflow: [`.github/workflows/ios-testflight.yml`](../.github/workflows/ios-testflight.yml)
+
+- Runs on **`macos-26`** (Xcode 26+ required for TestFlight upload).
+- **`eas build --local`** on the runner — does not consume Expo cloud build credits.
+- Upload via App Store Connect API (`xcrun altool`).
+- Signing secrets in GitHub **`testflight`** environment.
+
+Setup: [TESTFLIGHT_CI.md](./TESTFLIGHT_CI.md). Reuse six Apple secrets from Homol Invests; create a new provisioning profile for `com.homolworks.backseatgames`.
+
+Build numbers: GitHub `run_number` → `IOS_BUILD_NUMBER` → [`app.config.js`](../app.config.js).
+
+### Optional: EAS cloud (uses monthly quota)
+
+```bash
+eas build --profile production --platform ios
+eas submit --platform ios
+```
+
+### Local dev
+
+Expo Go on iPhone for UI iteration — no Mac or cloud build required.
 
 ## Design decisions
 
@@ -169,8 +184,15 @@ No Mac required for compilation — EAS uses cloud macOS builders.
 | Mock multiplayer in Expo Go | UI/rules dev without native build |
 | Full state snapshots | Simplicity over bandwidth optimization at family scale |
 
+## Push notifications (planned)
+
+Native builds include the **Push Notifications** entitlement (`expo-notifications` plugin). Runtime sending/handling is not implemented yet — see [PUSH_SETUP.md](./PUSH_SETUP.md).
+
+Enable **Push Notifications** on App ID `com.homolworks.backseatgames` before creating the provisioning profile.
+
 ## Future extension points
 
+- Push alerts (host started game, join reminders)
 - Android via Google Nearby Connections
 - Host migration if host phone dies
 - Relay sign-game audio to all players

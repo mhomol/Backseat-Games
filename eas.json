@@ -18,7 +18,11 @@
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": false,
+      "credentialsSource": "local",
+      "ios": {
+        "simulator": false
+      }
     }
   },
   "submit": {

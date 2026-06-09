@@ -145,7 +145,7 @@ Follows Expo SDK 56 requirements (iOS 15.1+).
 
 1. Accept the TestFlight invite email on each iPhone.
 2. Install **TestFlight** from the App Store.
-3. Open TestFlight → **Backseat Games** → Install.
+3. Open TestFlight → **Backseat Games (road trip fun)** → Install. (The icon on your home screen still shows as **Backseat Games**.)
 4. For multiplayer testing, use the installed TestFlight build (not Expo Go).
 
 ---
@@ -168,4 +168,5 @@ These differ slightly from how some families played growing up:
 - No cloud accounts or cross-trip leaderboards
 - Sign game audio is local-only (not streamed to other players)
 - Host migration not supported if host phone dies
-- App must stay in foreground for reliable sync
+- App must stay in foreground for reliable multiplayer sync
+- **Push notifications:** entitlement is included in native builds, but no alerts are sent yet (see [PUSH_SETUP.md](./PUSH_SETUP.md))
