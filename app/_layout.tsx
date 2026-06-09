@@ -1,6 +1,8 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   Fredoka_600SemiBold,
   Fredoka_700Bold,
@@ -17,14 +19,16 @@ import { ToastBanner } from '@/components/ToastBanner';
 import { useSessionStore } from '@/store/sessionStore';
 import { colors } from '@/theme';
 
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync().catch(() => {
+  // Splash may already be hidden in dev reloads.
+});
 
 export default function RootLayout() {
-  const [fredokaLoaded] = useFredoka({
+  const [fredokaLoaded, fredokaError] = useFredoka({
     Fredoka_600SemiBold,
     Fredoka_700Bold,
   });
-  const [nunitoLoaded] = useNunito({
+  const [nunitoLoaded, nunitoError] = useNunito({
     Nunito_400Regular,
     Nunito_600SemiBold,
     Nunito_700Bold,
@@ -34,15 +38,20 @@ export default function RootLayout() {
   const toast = useSessionStore((state) => state.toast);
   const clearToast = useSessionStore((state) => state.clearToast);
 
+  const fontsReady = fredokaLoaded && nunitoLoaded;
+  const fontError = fredokaError ?? nunitoError;
+
   useEffect(() => {
-    void initialize();
+    void initialize().catch((error: unknown) => {
+      console.error('Multiplayer initialize failed', error);
+    });
   }, [initialize]);
 
   useEffect(() => {
-    if (fredokaLoaded && nunitoLoaded) {
+    if (fontsReady || fontError) {
       void SplashScreen.hideAsync();
     }
-  }, [fredokaLoaded, nunitoLoaded]);
+  }, [fontsReady, fontError]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextState) => {
@@ -53,33 +62,37 @@ export default function RootLayout() {
     return () => subscription.remove();
   }, []);
 
-  if (!fredokaLoaded || !nunitoLoaded) {
+  if (!fontsReady && !fontError) {
     return null;
   }
 
   return (
-    <View style={styles.root}>
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: colors.skyBlue },
-          headerTintColor: colors.roadGray,
-          headerTitleStyle: { fontFamily: 'Fredoka_600SemiBold' },
-          contentStyle: { backgroundColor: colors.cream },
-        }}
-      >
-        <Stack.Screen name="index" options={{ title: 'Backseat Games' }} />
-        <Stack.Screen name="host/setup" options={{ title: 'Start a Game' }} />
-        <Stack.Screen name="join/index" options={{ title: 'Join a Game' }} />
-        <Stack.Screen name="lobby/[sessionId]" options={{ title: 'Waiting Room' }} />
-        <Stack.Screen
-          name="game/license-plates"
-          options={{ title: 'License Plates' }}
-        />
-        <Stack.Screen name="game/bingo" options={{ title: 'Travel Bingo' }} />
-        <Stack.Screen name="game/sign-game" options={{ title: 'Sign Game' }} />
-      </Stack>
-      <ToastBanner message={toast} onDismiss={clearToast} />
-    </View>
+    <GestureHandlerRootView style={styles.root}>
+      <SafeAreaProvider>
+        <View style={styles.root}>
+          <Stack
+            screenOptions={{
+              headerStyle: { backgroundColor: colors.skyBlue },
+              headerTintColor: colors.roadGray,
+              headerTitleStyle: { fontFamily: 'Fredoka_600SemiBold' },
+              contentStyle: { backgroundColor: colors.cream },
+            }}
+          >
+            <Stack.Screen name="index" options={{ title: 'Backseat Games' }} />
+            <Stack.Screen name="host/setup" options={{ title: 'Start a Game' }} />
+            <Stack.Screen name="join/index" options={{ title: 'Join a Game' }} />
+            <Stack.Screen name="lobby/[sessionId]" options={{ title: 'Waiting Room' }} />
+            <Stack.Screen
+              name="game/license-plates"
+              options={{ title: 'License Plates' }}
+            />
+            <Stack.Screen name="game/bingo" options={{ title: 'Travel Bingo' }} />
+            <Stack.Screen name="game/sign-game" options={{ title: 'Sign Game' }} />
+          </Stack>
+          <ToastBanner message={toast} onDismiss={clearToast} />
+        </View>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
