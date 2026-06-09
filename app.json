@@ -19,10 +19,14 @@
       "buildNumber": "1",
       "infoPlist": {
         "NSLocalNetworkUsageDescription": "Backseat Games uses the local network to connect phones in the same car for multiplayer games.",
-        "NSBonjourServices": ["_backseatgames._tcp"],
+        "NSBonjourServices": [
+          "_backseatgames._tcp"
+        ],
         "NSMicrophoneUsageDescription": "Backseat Games records short audio clips when you call out sign words during the Sign Game.",
         "NSUserNotificationsUsageDescription": "Backseat Games may send alerts when a host starts a game or when it's your turn.",
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -56,8 +60,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "backseat-games-placeholder"
+        "projectId": "3760b2e7-04b8-4d7f-b7c1-b6b21e65c387"
       }
-    }
+    },
+    "owner": "sevign"
   }
 }

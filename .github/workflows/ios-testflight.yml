@@ -121,6 +121,7 @@ jobs:
       - name: Build iOS app (EAS local)
         env:
           IOS_BUILD_NUMBER: ${{ github.run_number }}
+          EAS_BUILD_NO_EXPO_GO_WARNING: 'true'
         shell: bash
         run: |
           set -euo pipefail

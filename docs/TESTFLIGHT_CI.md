@@ -8,7 +8,7 @@ Ship **Backseat Games** to internal TestFlight via GitHub Actions on `macos-26` 
 - App Store Connect access
 - GitHub repo admin (to add secrets and the `testflight` environment)
 - Expo account + **`EXPO_TOKEN`** ([expo.dev access token](https://expo.dev/settings/access-tokens))
-- Run `eas init` once locally to link the project and replace the placeholder `projectId` in `app.json`
+- Valid **`extra.eas.projectId`** in `app.json` (UUID from `eas init` — see §5). A placeholder value causes `Invalid UUID appId` in CI.
 
 Bundle ID: **`com.homolworks.backseatgames`**
 
@@ -112,15 +112,18 @@ Store as **`IOS_PROVISION_PROFILE_BASE64`**.
 
 ## 5. Link Expo project (one-time, local)
 
-From the repo root:
+From the repo root (once per machine / after cloning):
 
 ```bash
 npm ci
 npx eas login
-npx eas init
+# If app.json has no projectId or a bad placeholder, remove extra.eas.projectId first, then:
+npx eas init --force
 ```
 
-This updates `extra.eas.projectId` in `app.json`. Commit that change.
+This creates `@<your-expo-account>/backseat-games` on expo.dev and writes a real UUID to `extra.eas.projectId` in `app.json`. **Commit that change** before the first CI build.
+
+Current project: `@sevign/backseat-games` — `3760b2e7-04b8-4d7f-b7c1-b6b21e65c387`
 
 ## 6. GitHub environment and secrets
 
