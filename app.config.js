@@ -1,17 +1,74 @@
-const appJson = require('./app.json');
-
 /** @type {import('expo/config').ExpoConfig} */
 module.exports = () => {
-  const buildNumber =
-    process.env.IOS_BUILD_NUMBER?.trim() || appJson.expo.ios?.buildNumber || '1';
+  const buildNumber = process.env.IOS_BUILD_NUMBER?.trim() || '1';
 
   return {
     expo: {
-      ...appJson.expo,
-      ios: {
-        ...appJson.expo.ios,
-        buildNumber,
+      name: 'Backseat Games',
+      slug: 'backseat-games',
+      version: '1.0.0',
+      orientation: 'portrait',
+      icon: './assets/icon.png',
+      userInterfaceStyle: 'light',
+      scheme: 'backseatgames',
+      newArchEnabled: true,
+      splash: {
+        image: './assets/splash-icon.png',
+        resizeMode: 'contain',
+        backgroundColor: '#4ECDC4',
       },
+      ios: {
+        supportsTablet: true,
+        bundleIdentifier: 'com.homolworks.backseatgames',
+        buildNumber,
+        infoPlist: {
+          ITSAppUsesNonExemptEncryption: false,
+          NSLocalNetworkUsageDescription:
+            'Backseat Games uses the local network to connect phones in the same car for multiplayer games.',
+          NSBonjourServices: ['_backseatgames._tcp'],
+          NSMicrophoneUsageDescription:
+            'Backseat Games records short audio clips when you call out sign words during the Sign Game.',
+          NSUserNotificationsUsageDescription:
+            'Backseat Games may send alerts when a host starts a game or when it is your turn.',
+          UIBackgroundModes: ['remote-notification'],
+        },
+      },
+      android: {
+        adaptiveIcon: {
+          backgroundColor: '#4ECDC4',
+          foregroundImage: './assets/android-icon-foreground.png',
+          backgroundImage: './assets/android-icon-background.png',
+          monochromeImage: './assets/android-icon-monochrome.png',
+        },
+        predictiveBackGestureEnabled: false,
+        package: 'com.homolworks.backseatgames',
+      },
+      web: {
+        favicon: './assets/favicon.png',
+      },
+      plugins: [
+        'expo-router',
+        'expo-font',
+        'expo-splash-screen',
+        'expo-asset',
+        'expo-audio',
+        [
+          'expo-notifications',
+          {
+            color: '#4ECDC4',
+          },
+        ],
+      ],
+      experiments: {
+        tsconfigPaths: true,
+      },
+      extra: {
+        router: {},
+        eas: {
+          projectId: '3760b2e7-04b8-4d7f-b7c1-b6b21e65c387',
+        },
+      },
+      owner: 'sevign',
     },
   };
 };
