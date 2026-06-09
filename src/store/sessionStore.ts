@@ -1,0 +1,229 @@
+import { create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
+import type {
+  GameAction,
+  GameType,
+  NetworkMessage,
+  Player,
+  SessionState,
+} from '../types/game';
+import {
+  addPlayer,
+  applyAction,
+  createSession,
+  rejectAction,
+  startGame,
+} from '../games/ruleEngine';
+import { getMultiplayerService } from '../multiplayer';
+
+interface SessionStore {
+  localPlayerId: string;
+  localPlayerName: string;
+  isHost: boolean;
+  session: SessionState | null;
+  discoveredSessions: Array<{
+    sessionId: string;
+    hostName: string;
+    gameType: GameType | null;
+  }>;
+  connectionStatus: 'idle' | 'connecting' | 'connected' | 'error';
+  toast: string | null;
+  initialized: boolean;
+
+  initialize: () => Promise<void>;
+  reset: () => void;
+  setLocalName: (name: string) => void;
+  hostGame: (gameType: GameType, hostName: string) => Promise<string>;
+  refreshDiscovery: () => void;
+  joinDiscoveredSession: (sessionId: string, playerName: string) => Promise<void>;
+  startHostedGame: () => void;
+  dispatchAction: (action: GameAction) => void;
+  clearToast: () => void;
+}
+
+function playerFromLocal(id: string, name: string, isHost: boolean): Player {
+  return { id, name, isHost, connected: true };
+}
+
+export const useSessionStore = create<SessionStore>((set, get) => {
+  let unsubscribeMessages: (() => void) | null = null;
+  let unsubscribeDiscovery: (() => void) | null = null;
+
+  const multiplayer = getMultiplayerService();
+
+  const handleNetworkMessage = (message: NetworkMessage, fromPeerId?: string) => {
+    const state = get();
+    const localId = state.localPlayerId;
+
+    switch (message.type) {
+      case 'JOIN': {
+        if (!state.isHost || !state.session) {
+          return;
+        }
+        const joinerId = fromPeerId ?? uuidv4();
+        const joiner = playerFromLocal(joinerId, message.name, false);
+        const nextSession = addPlayer(state.session, joiner);
+        set({ session: nextSession });
+        multiplayer.send({
+          type: 'WELCOME',
+          playerId: joinerId,
+          state: nextSession,
+        });
+        multiplayer.send({
+          type: 'PLAYER_JOINED',
+          player: joiner,
+          state: nextSession,
+        });
+        break;
+      }
+      case 'WELCOME': {
+        if (message.playerId) {
+          set({
+            localPlayerId: message.playerId,
+            session: message.state,
+            connectionStatus: 'connected',
+          });
+        }
+        break;
+      }
+      case 'PLAYER_JOINED':
+      case 'STATE_UPDATE':
+      case 'START_GAME':
+        set({ session: message.state, connectionStatus: 'connected' });
+        break;
+      case 'ACTION': {
+        if (!state.isHost || !state.session) {
+          return;
+        }
+        const result = applyAction(state.session, message.playerId, message.action);
+        if (result.ok) {
+          set({ session: result.state });
+          multiplayer.send({ type: 'STATE_UPDATE', state: result.state });
+        } else {
+          const rejected = rejectAction(state.session, message.playerId, result.reason);
+          set({ session: rejected });
+          multiplayer.send({
+            type: 'ACTION_REJECTED',
+            playerId: message.playerId,
+            reason: result.reason,
+          });
+        }
+        break;
+      }
+      case 'ACTION_REJECTED': {
+        if (message.playerId === localId) {
+          set({ toast: message.reason });
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  return {
+    localPlayerId: uuidv4(),
+    localPlayerName: '',
+    isHost: false,
+    session: null,
+    discoveredSessions: [],
+    connectionStatus: 'idle',
+    toast: null,
+    initialized: false,
+
+    initialize: async () => {
+      if (get().initialized) {
+        return;
+      }
+      await multiplayer.initialize();
+      unsubscribeMessages = multiplayer.onMessage(handleNetworkMessage);
+      set({ initialized: true });
+    },
+
+    reset: () => {
+      unsubscribeMessages?.();
+      unsubscribeDiscovery?.();
+      unsubscribeMessages = null;
+      unsubscribeDiscovery = null;
+      set({
+        session: null,
+        isHost: false,
+        discoveredSessions: [],
+        connectionStatus: 'idle',
+        toast: null,
+        localPlayerId: uuidv4(),
+      });
+    },
+
+    setLocalName: (name: string) => set({ localPlayerName: name }),
+
+    hostGame: async (gameType, hostName) => {
+      const sessionId = uuidv4().slice(0, 8);
+      const hostId = get().localPlayerId;
+      const host = playerFromLocal(hostId, hostName, true);
+      const session = createSession(sessionId, host, gameType);
+      await multiplayer.hostSession(sessionId, hostName);
+      multiplayer.registerHostedSessionGameType?.(sessionId, gameType);
+      set({
+        isHost: true,
+        localPlayerName: hostName,
+        session,
+        connectionStatus: 'connected',
+      });
+      return sessionId;
+    },
+
+    refreshDiscovery: () => {
+      unsubscribeDiscovery?.();
+      unsubscribeDiscovery = multiplayer.browseSessions((found) => {
+        set((current) => {
+          const exists = current.discoveredSessions.some(
+            (entry) => entry.sessionId === found.sessionId,
+          );
+          if (exists) {
+            return current;
+          }
+          return {
+            discoveredSessions: [...current.discoveredSessions, found],
+          };
+        });
+      });
+    },
+
+    joinDiscoveredSession: async (sessionId, playerName) => {
+      set({ connectionStatus: 'connecting', localPlayerName: playerName, isHost: false });
+      await multiplayer.joinSession(sessionId, playerName);
+      set({ connectionStatus: 'connected' });
+    },
+
+    startHostedGame: () => {
+      const { session, isHost } = get();
+      if (!isHost || !session) {
+        return;
+      }
+      const next = startGame(session);
+      set({ session: next });
+      multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
+    },
+
+    dispatchAction: (action) => {
+      const { session, isHost, localPlayerId } = get();
+      if (!session || session.phase !== 'playing') {
+        return;
+      }
+      if (isHost) {
+        const result = applyAction(session, localPlayerId, action);
+        if (result.ok) {
+          set({ session: result.state });
+          multiplayer.send({ type: 'STATE_UPDATE', state: result.state });
+        } else {
+          set({ toast: result.reason, session: rejectAction(session, localPlayerId, result.reason) });
+        }
+        return;
+      }
+      multiplayer.send({ type: 'ACTION', playerId: localPlayerId, action });
+    },
+
+    clearToast: () => set({ toast: null }),
+  };
+});
