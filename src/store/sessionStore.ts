@@ -162,8 +162,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const hostId = get().localPlayerId;
       const host = playerFromLocal(hostId, hostName, true);
       const session = createSession(sessionId, host, gameType);
-      await multiplayer.hostSession(sessionId, hostName);
-      multiplayer.registerHostedSessionGameType?.(sessionId, gameType);
+      await multiplayer.hostSession(sessionId, hostName, gameType);
       set({
         isHost: true,
         localPlayerName: hostName,
@@ -175,13 +174,20 @@ export const useSessionStore = create<SessionStore>((set, get) => {
 
     refreshDiscovery: () => {
       unsubscribeDiscovery?.();
+      set({ discoveredSessions: [] });
       unsubscribeDiscovery = multiplayer.browseSessions((found) => {
+        const state = get();
+        if (state.isHost && state.session?.sessionId === found.sessionId) {
+          return;
+        }
         set((current) => {
-          const exists = current.discoveredSessions.some(
+          const existingIndex = current.discoveredSessions.findIndex(
             (entry) => entry.sessionId === found.sessionId,
           );
-          if (exists) {
-            return current;
+          if (existingIndex >= 0) {
+            const next = [...current.discoveredSessions];
+            next[existingIndex] = found;
+            return { discoveredSessions: next };
           }
           return {
             discoveredSessions: [...current.discoveredSessions, found],
@@ -192,8 +198,15 @@ export const useSessionStore = create<SessionStore>((set, get) => {
 
     joinDiscoveredSession: async (sessionId, playerName) => {
       set({ connectionStatus: 'connecting', localPlayerName: playerName, isHost: false });
-      await multiplayer.joinSession(sessionId, playerName);
-      set({ connectionStatus: 'connected' });
+      try {
+        await multiplayer.joinSession(sessionId, playerName.trim());
+      } catch (error) {
+        set({
+          connectionStatus: 'error',
+          toast: error instanceof Error ? error.message : 'Could not join that game.',
+        });
+        throw error;
+      }
     },
 
     startHostedGame: () => {

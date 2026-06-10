@@ -33,7 +33,7 @@ export default function JoinScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <ScreenHeader
         title="Join nearby"
-        subtitle="Looking for hosts in this car. Keep the app open!"
+        subtitle="Looking for hosts in this car. Allow Local Network when iOS asks, and stay on the same Wi‑Fi or hotspot."
       />
 
       <Text style={styles.label}>Your name</Text>

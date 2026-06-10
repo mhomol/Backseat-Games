@@ -1,9 +1,8 @@
 /**
- * Optional native Multipeer plugin for EAS development/production builds.
+ * Native Multipeer for EAS / TestFlight iOS builds.
  *
- * Install before building:
- *   npm install react-native-multipeer-connectivity --legacy-peer-deps
+ * Installed dependency: react-native-multipeer-connectivity
+ * Bonjour service: _backseatgames._tcp (see app.config.js)
  *
- * The app falls back to MockMultiplayerService when this module is unavailable (Expo Go).
+ * Expo Go still uses MockMultiplayerService (single-device only).
  */
-export {};

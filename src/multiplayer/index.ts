@@ -32,8 +32,12 @@ export class NativeMultiplayerService implements MultiplayerService {
     this.delegate.dispose();
   }
 
-  hostSession(sessionId: string, displayName: string): Promise<void> {
-    return this.delegate.hostSession(sessionId, displayName);
+  hostSession(
+    sessionId: string,
+    displayName: string,
+    gameType?: import('../types/game').GameType | null,
+  ): Promise<void> {
+    return this.delegate.hostSession(sessionId, displayName, gameType);
   }
 
   joinSession(sessionId: string, displayName: string): Promise<void> {

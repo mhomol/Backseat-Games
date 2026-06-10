@@ -59,7 +59,11 @@ export class MockMultiplayerService implements MultiplayerService {
     }
   }
 
-  async hostSession(sessionId: string, displayName: string): Promise<void> {
+  async hostSession(
+    sessionId: string,
+    displayName: string,
+    gameType: import('../types/game').GameType | null = null,
+  ): Promise<void> {
     this.peerName = displayName;
     this.sessionId = sessionId;
     this.hosting = true;
@@ -72,7 +76,7 @@ export class MockMultiplayerService implements MultiplayerService {
     mockSessions.set(sessionId, {
       hostId: this.peerId,
       hostName: displayName,
-      gameType: null,
+      gameType,
     });
   }
 
