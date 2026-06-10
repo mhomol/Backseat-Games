@@ -1,10 +1,11 @@
 import { FlashList } from '@shopify/flash-list';
 import { useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
 import { plates } from '@/data';
+import { plateImageByCode } from '@/data/plateImages';
 import { getLicensePlateScores } from '@/games/licensePlates';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
@@ -49,6 +50,8 @@ export default function LicensePlatesScreen() {
           const isTaken = ownerId !== null && !isMine;
           const ownerName = session.players.find((p) => p.id === ownerId)?.name;
 
+          const plateImage = plateImageByCode[item.code];
+
           return (
             <Pressable
               style={[
@@ -66,15 +69,22 @@ export default function LicensePlatesScreen() {
                 }
               }}
             >
-              <Text style={styles.code}>{item.code}</Text>
-              <Text style={styles.name} numberOfLines={2}>
-                {item.name}
-              </Text>
-              {isTaken ? (
-                <Text style={styles.owner} numberOfLines={1}>
-                  {ownerName}
-                </Text>
+              {plateImage ? (
+                <Image source={plateImage} style={styles.plateImage} resizeMode="cover" />
               ) : null}
+              {isMine ? <View style={styles.overlayMine} /> : null}
+              {isTaken ? <View style={styles.overlayTaken} /> : null}
+              <View style={styles.labelStack}>
+                <Text style={[styles.code, isTaken && styles.textMuted]}>{item.code}</Text>
+                <Text style={[styles.name, isTaken && styles.textMuted]} numberOfLines={2}>
+                  {item.name}
+                </Text>
+                {isTaken ? (
+                  <Text style={styles.owner} numberOfLines={1}>
+                    {ownerName}
+                  </Text>
+                ) : null}
+              </View>
             </Pressable>
           );
         }}
@@ -96,33 +106,60 @@ const styles = StyleSheet.create({
   cell: {
     flex: 1,
     margin: spacing.xs,
-    minHeight: 100,
+    minHeight: 110,
     backgroundColor: colors.cloudWhite,
     borderWidth: borders.thick,
     borderRadius: radii.md,
-    padding: spacing.sm,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  plateImage: {
+    ...StyleSheet.absoluteFill,
+    width: '100%',
+    height: '100%',
+  },
+  overlayMine: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(72, 160, 88, 0.28)',
+  },
+  overlayTaken: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(120, 120, 120, 0.45)',
+  },
+  labelStack: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.xs,
+    zIndex: 1,
+  },
   cellMine: {
-    backgroundColor: '#E8F8EA',
     borderColor: colors.grassGreenDark,
   },
   cellTaken: {
-    backgroundColor: colors.plateOther,
-    opacity: 0.85,
+    borderColor: colors.roadGrayLight,
   },
   code: {
     fontFamily: fonts.displayBold,
-    fontSize: 22,
+    fontSize: 20,
     color: colors.roadGray,
+    textShadowColor: 'rgba(255, 255, 255, 0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   name: {
-    fontFamily: fonts.body,
-    fontSize: 11,
+    fontFamily: fonts.bodyBold,
+    fontSize: 10,
     textAlign: 'center',
-    color: colors.roadGrayLight,
-    marginTop: spacing.xs,
+    color: colors.roadGray,
+    marginTop: 2,
+    textShadowColor: 'rgba(255, 255, 255, 0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  textMuted: {
+    color: colors.cloudWhite,
+    textShadowColor: 'rgba(0, 0, 0, 0.35)',
   },
   owner: {
     fontFamily: fonts.bodyBold,

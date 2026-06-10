@@ -61,11 +61,15 @@ Spot license plates from US states and Canadian provinces/territories. First to 
 
 ### Visual cues
 
+Each cell shows a **stylized plate image** (jurisdiction accent colors) with the state/province code and name overlaid in the app.
+
 | State | Meaning |
 |-------|---------|
-| White / colored border | Available |
-| Green highlight | You claimed it |
-| Gray with name | Someone else claimed it |
+| Full-color plate image | Available |
+| Green tint overlay | You claimed it |
+| Gray tint overlay + player name | Someone else claimed it |
+
+Plate artwork lives in `assets/plates/` (regenerate with `npm run generate:plates`). See `scripts/plates/style-guide.md`.
 
 ---
 
