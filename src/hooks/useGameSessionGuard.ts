@@ -33,6 +33,21 @@ export function useGameSessionGuard() {
   }, [router, session?.phase, session?.sessionId]);
 
   useEffect(() => {
+    if (!isInProgress) {
+      return;
+    }
+
+    navigation.setOptions({ gestureEnabled: false });
+    const parent = navigation.getParent();
+    parent?.setOptions({ gestureEnabled: false });
+
+    return () => {
+      navigation.setOptions({ gestureEnabled: true });
+      parent?.setOptions({ gestureEnabled: true });
+    };
+  }, [isInProgress, navigation]);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (event) => {
       if (!isInProgress) {
         return;

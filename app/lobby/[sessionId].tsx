@@ -1,10 +1,17 @@
 import { router } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { BigButton } from '@/components/BigButton';
+import { SceneryBackground } from '@/components/brand/SceneryBackground';
 import { PlayerChip } from '@/components/PlayerChip';
-import { ScreenHeader } from '@/components/ScreenHeader';
 import { GAME_LABELS } from '@/data';
 import { getMultiplayerService } from '@/multiplayer';
 import { useSessionStore } from '@/store/sessionStore';
@@ -54,77 +61,89 @@ export default function LobbyScreen() {
     (session.gameType === 'bingo' ? session.players.length >= 1 : otherPlayers.length >= 1);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ScreenHeader
-        title="Waiting room"
-        subtitle={
-          isHost
-            ? 'Friends can join while you get ready.'
-            : 'Hang tight — the host will start the game.'
-        }
-      />
+    <SceneryBackground variant="lobby" layout="backdrop">
+      <SafeAreaView style={styles.safe} edges={['bottom']}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.subtitle}>
+            {isHost
+              ? 'Friends can join while you get ready.'
+              : 'Hang tight — the host will start the game.'}
+          </Text>
 
-      <View style={styles.badge}>
-        <Text style={styles.badgeLabel}>Game</Text>
-        <Text style={styles.badgeValue}>
-          {session.gameType ? GAME_LABELS[session.gameType] : 'Unknown'}
-        </Text>
-      </View>
-
-      <Text style={styles.sectionTitle}>Players ({session.players.length})</Text>
-      <View style={styles.playerRow}>
-        {session.players.map((player) => (
-          <PlayerChip
-            key={player.id}
-            name={player.name}
-            isHost={player.isHost}
-            highlight={player.id === localPlayerId}
-          />
-        ))}
-      </View>
-
-      {!isHost ? (
-        <View style={styles.waitBox}>
-          <ActivityIndicator color={colors.skyBlueDark} />
-          <Text style={styles.waitText}>Waiting for host to start…</Text>
-        </View>
-      ) : (
-        <>
-          <View style={styles.tipBox}>
-            <Text style={styles.tipText}>
-              Session code: {sessionId}{'\n'}
-              Other players tap Join and look for your name.
+          <View style={styles.badge}>
+            <Text style={styles.badgeLabel}>Game</Text>
+            <Text style={styles.badgeValue}>
+              {session.gameType ? GAME_LABELS[session.gameType] : 'Unknown'}
             </Text>
           </View>
-          <BigButton
-            label="Start Game!"
-            disabled={!canStart}
-            onPress={startHostedGame}
-            variant="accent"
-          />
-          {!canStart ? (
-            <Text style={styles.helper}>
-              Need at least one other player for competitive games.
-            </Text>
-          ) : null}
-        </>
-      )}
-    </ScrollView>
+
+          <Text style={styles.sectionTitle}>Players ({session.players.length})</Text>
+          <View style={styles.playerRow}>
+            {session.players.map((player) => (
+              <PlayerChip
+                key={player.id}
+                name={player.name}
+                isHost={player.isHost}
+                highlight={player.id === localPlayerId}
+              />
+            ))}
+          </View>
+
+          {!isHost ? (
+            <View style={styles.waitBox}>
+              <ActivityIndicator color={colors.skyBlueDark} />
+              <Text style={styles.waitText}>Waiting for host to start…</Text>
+            </View>
+          ) : (
+            <>
+              <View style={styles.tipBox}>
+                <Text style={styles.tipText}>
+                  Session code: {sessionId}{'\n'}
+                  Other players tap Join and look for your name.
+                </Text>
+              </View>
+              <BigButton
+                label="Start Game!"
+                disabled={!canStart}
+                onPress={startHostedGame}
+                variant="accent"
+              />
+              {!canStart ? (
+                <Text style={styles.helper}>
+                  Need at least one other player for competitive games.
+                </Text>
+              ) : null}
+            </>
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </SceneryBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   container: {
     padding: spacing.lg,
     gap: spacing.md,
+    paddingBottom: spacing.xl,
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  subtitle: {
+    fontFamily: fonts.body,
+    fontSize: 16,
+    color: colors.roadGray,
+    lineHeight: 22,
+  },
   badge: {
-    backgroundColor: colors.cloudWhite,
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
     borderWidth: borders.thick,
     borderColor: colors.lavender,
     borderRadius: radii.lg,
@@ -154,13 +173,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
     padding: spacing.xl,
+    backgroundColor: 'rgba(255, 255, 255, 0.88)',
+    borderRadius: radii.lg,
   },
   waitText: {
     fontFamily: fonts.body,
     color: colors.roadGrayLight,
   },
   tipBox: {
-    backgroundColor: '#E8F4FF',
+    backgroundColor: 'rgba(232, 244, 255, 0.92)',
     borderWidth: borders.thick,
     borderColor: colors.skyBlueDark,
     borderRadius: radii.md,

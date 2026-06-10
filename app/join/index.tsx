@@ -38,10 +38,8 @@ export default function JoinScreen() {
 
   return (
     <SceneryBackground variant="join">
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} pointerEvents="box-none">
         <ScrollView contentContainerStyle={styles.container}>
-          <View style={styles.heroSpacer} />
-
           <View style={styles.formCard}>
             <Text style={styles.label}>Your name</Text>
             <TextInput
@@ -110,14 +108,12 @@ export default function JoinScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
+    justifyContent: 'flex-end',
   },
   container: {
     padding: spacing.lg,
     gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
-  heroSpacer: {
-    minHeight: '36%',
+    paddingBottom: spacing.xl,
   },
   formCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',

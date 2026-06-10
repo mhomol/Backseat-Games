@@ -3,30 +3,25 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { BrandDisclaimer } from '@/components/brand/BrandDisclaimer';
-import { BrandLogo } from '@/components/brand/BrandLogo';
+import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
-import { SignPostButton } from '@/components/brand/SignPostButton';
 import { spacing } from '@/theme';
 
 export default function HomeScreen() {
   return (
     <SceneryBackground variant="home">
       <StatusBar style="dark" />
-      <SafeAreaView style={styles.safe}>
-        <BrandLogo variant="hero" />
-        <View style={styles.signColumn}>
-          <SignPostButton
-            color="pink"
-            label="Start a Game"
-            onPress={() => router.push('/host/setup')}
-          />
-          <SignPostButton
-            color="green"
-            label="Join a Game"
-            onPress={() => router.push('/join')}
-          />
-          <SignPostButton color="blue" label="Settings" onPress={() => {}} />
-        </View>
+      <HeroSignHotspots
+        variant="home"
+        onPress={(id) => {
+          if (id === 'start') {
+            router.push('/host/setup');
+          } else if (id === 'join') {
+            router.push('/join');
+          }
+        }}
+      />
+      <SafeAreaView style={styles.safe} pointerEvents="box-none">
         <View style={styles.footer}>
           <BrandDisclaimer />
         </View>
@@ -38,13 +33,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    justifyContent: 'space-between',
-  },
-  signColumn: {
-    paddingLeft: spacing.lg,
-    gap: spacing.xs,
+    justifyContent: 'flex-end',
   },
   footer: {
-    marginTop: 'auto',
+    paddingBottom: spacing.xs,
   },
 });

@@ -10,6 +10,7 @@ export default function GameLayout() {
         headerTitleStyle: { fontFamily: 'Fredoka_600SemiBold' },
         headerBackVisible: false,
         gestureEnabled: false,
+        fullScreenGestureEnabled: false,
       }}
     >
       <Stack.Screen

@@ -19,6 +19,6 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     lineHeight: 18,
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.xs,
   },
 });

@@ -79,10 +79,21 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="host/setup" options={{ headerShown: false }} />
-            <Stack.Screen name="join/index" options={{ headerShown: false }} />
-            <Stack.Screen name="lobby/[sessionId]" options={{ title: 'Waiting Room' }} />
-            <Stack.Screen name="game" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="host/setup"
+              options={{ headerShown: false, title: 'Start a Game' }}
+            />
+            <Stack.Screen name="join/index" options={{ headerShown: false, title: 'Join' }} />
+            <Stack.Screen
+              name="lobby/[sessionId]"
+              options={{
+                title: 'Waiting Room',
+                headerBackTitle: 'Back',
+                headerTransparent: true,
+                headerBlurEffect: 'light',
+              }}
+            />
+            <Stack.Screen name="game" options={{ headerShown: false, gestureEnabled: false }} />
           </Stack>
           <ToastBanner message={toast} onDismiss={clearToast} />
         </View>

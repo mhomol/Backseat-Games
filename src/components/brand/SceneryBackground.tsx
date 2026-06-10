@@ -1,43 +1,78 @@
 import type { ReactNode } from 'react';
-import { ImageBackground, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { sceneryImages, type SceneryVariant } from '@/data/brandAssets';
+import { brand } from '@/theme/brand';
+
+/** Hero art is generated at 768×1344 (9:16). */
+export const HERO_ASPECT_RATIO = 768 / 1344;
 
 type SceneryBackgroundProps = {
   variant: SceneryVariant;
-  children: ReactNode;
+  children?: ReactNode;
+  /** `fit` shows the full illustration; `backdrop` fills the screen for overlay content. */
+  layout?: 'fit' | 'backdrop';
 };
 
-export function SceneryBackground({ variant, children }: SceneryBackgroundProps) {
+export function SceneryBackground({
+  variant,
+  children,
+  layout = 'fit',
+}: SceneryBackgroundProps) {
+  if (layout === 'backdrop') {
+    return (
+      <View style={styles.backdropRoot}>
+        <Image source={sceneryImages[variant]} style={styles.backdropImage} resizeMode="cover" />
+        <View style={styles.backdropOverlay} pointerEvents="box-none">
+          {children}
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <ImageBackground
-      source={sceneryImages[variant]}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <View style={styles.overlayTop} />
-      <View style={styles.overlayBottom} />
-      <View style={styles.content}>{children}</View>
-    </ImageBackground>
+    <View style={styles.root}>
+      <View style={styles.frame}>
+        <Image source={sceneryImages[variant]} style={styles.image} resizeMode="cover" />
+        <View style={styles.overlay} pointerEvents="box-none">
+          {children}
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
+  root: {
     flex: 1,
+    backgroundColor: brand.cream,
+    justifyContent: 'center',
   },
-  overlayTop: {
+  frame: {
+    width: '100%',
+    aspectRatio: HERO_ASPECT_RATIO,
+    maxHeight: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+    alignSelf: 'center',
+  },
+  image: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    width: '100%',
+    height: '100%',
   },
-  overlayBottom: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: '42%',
-    backgroundColor: 'rgba(255, 248, 238, 0.55)',
+  overlay: {
+    ...StyleSheet.absoluteFill,
   },
-  content: {
+  backdropRoot: {
     flex: 1,
+    backgroundColor: brand.cream,
+  },
+  backdropImage: {
+    ...StyleSheet.absoluteFill,
+    width: '100%',
+    height: '100%',
+  },
+  backdropOverlay: {
+    ...StyleSheet.absoluteFill,
   },
 });
