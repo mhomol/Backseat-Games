@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -6,20 +6,21 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { WinCelebration } from '@/components/WinCelebration';
+import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import {
   BINGO_SIZE,
   FREE_CENTER_INDEX,
   getBingoSquareLabel,
 } from '@/games/bingo';
+import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function BingoScreen() {
+  const guard = useGameSessionGuard();
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
-  const [showWin, setShowWin] = useState(false);
 
   const gameState = session?.gameState?.type === 'bingo' ? session.gameState : null;
   const card = gameState?.cards[localPlayerId];
@@ -37,15 +38,11 @@ export default function BingoScreen() {
   }
 
   const youWon = session.winnerId === localPlayerId;
-
-  useEffect(() => {
-    if (youWon && session.phase === 'finished') {
-      setShowWin(true);
-    }
-  }, [youWon, session.phase]);
+  const winnerLabel = youWon ? 'You' : winnerName;
 
   return (
     <View style={styles.container}>
+      <GameSessionOverlays guard={guard} winnerLabel={winnerLabel} />
       <Text style={styles.instructions}>Tap a square when you spot it!</Text>
       <View style={styles.grid}>
         {Array.from({ length: BINGO_SIZE }).map((_, index) => {
@@ -70,12 +67,6 @@ export default function BingoScreen() {
           );
         })}
       </View>
-
-      <WinCelebration
-        visible={showWin || (youWon && session.phase === 'finished')}
-        winnerName={youWon ? 'You' : winnerName}
-        onDismiss={() => setShowWin(false)}
-      />
     </View>
   );
 }

@@ -2,13 +2,16 @@ import { FlashList } from '@shopify/flash-list';
 import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
 import { plates } from '@/data';
 import { getLicensePlateScores } from '@/games/licensePlates';
+import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function LicensePlatesScreen() {
+  const guard = useGameSessionGuard();
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
@@ -33,6 +36,7 @@ export default function LicensePlatesScreen() {
 
   return (
     <View style={styles.container}>
+      <GameSessionOverlays guard={guard} />
       <Scoreboard scores={scores} />
       <FlashList
         data={plates}

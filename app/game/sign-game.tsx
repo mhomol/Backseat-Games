@@ -9,21 +9,22 @@ import {
   View,
 } from 'react-native';
 import { BigButton } from '@/components/BigButton';
+import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
-import { WinCelebration } from '@/components/WinCelebration';
 import { ALPHABET, SPECIAL_LETTERS } from '@/games/signGameUtils';
 import { getSignGameLeaderboard } from '@/games/signGame';
+import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSignGameAudio } from '@/hooks/useSignGameAudio';
 import { useSessionStore } from '@/store/sessionStore';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function SignGameScreen() {
+  const guard = useGameSessionGuard();
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
   const [modalOpen, setModalOpen] = useState(false);
   const [word, setWord] = useState('');
-  const [showWin, setShowWin] = useState(false);
   const audio = useSignGameAudio();
 
   const gameState = session?.gameState?.type === 'sign-game' ? session.gameState : null;
@@ -54,6 +55,7 @@ export default function SignGameScreen() {
   }
 
   const youWon = session.winnerId === localPlayerId;
+  const winnerLabel = youWon ? 'You' : winnerName;
   const houseRule = SPECIAL_LETTERS.has(currentLetter);
 
   const submitWord = async () => {
@@ -66,13 +68,11 @@ export default function SignGameScreen() {
     });
     setWord('');
     setModalOpen(false);
-    if (currentLetter === 'Z') {
-      setShowWin(true);
-    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <GameSessionOverlays guard={guard} winnerLabel={winnerLabel} />
       <Scoreboard scores={leaderboard} />
 
       <View style={styles.letterCircle}>
@@ -158,12 +158,6 @@ export default function SignGameScreen() {
           </View>
         </View>
       </Modal>
-
-      <WinCelebration
-        visible={showWin || (youWon && session.phase === 'finished')}
-        winnerName={youWon ? 'You' : winnerName}
-        onDismiss={() => setShowWin(false)}
-      />
     </ScrollView>
   );
 }

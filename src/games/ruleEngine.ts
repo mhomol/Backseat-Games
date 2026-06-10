@@ -29,6 +29,16 @@ export function createSession(
   };
 }
 
+export function returnToLobby(session: SessionState): SessionState {
+  return {
+    ...session,
+    phase: 'lobby',
+    gameState: null,
+    winnerId: null,
+    lastRejection: null,
+  };
+}
+
 export function startGame(session: SessionState): SessionState {
   if (!session.gameType) {
     return session;

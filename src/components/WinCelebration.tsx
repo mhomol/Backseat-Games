@@ -7,10 +7,20 @@ import { BigButton } from './BigButton';
 type WinCelebrationProps = {
   visible: boolean;
   winnerName: string;
+  isHost?: boolean;
+  onStartNewGame?: () => void;
   onDismiss: () => void;
+  onLeaveHome?: () => void;
 };
 
-export function WinCelebration({ visible, winnerName, onDismiss }: WinCelebrationProps) {
+export function WinCelebration({
+  visible,
+  winnerName,
+  isHost = false,
+  onStartNewGame,
+  onDismiss,
+  onLeaveHome,
+}: WinCelebrationProps) {
   const animationRef = useRef<LottieView>(null);
 
   useEffect(() => {
@@ -32,7 +42,18 @@ export function WinCelebration({ visible, winnerName, onDismiss }: WinCelebratio
           />
           <Text style={styles.title}>Winner!</Text>
           <Text style={styles.subtitle}>{winnerName} takes the road!</Text>
-          <BigButton label="Awesome!" onPress={onDismiss} variant="accent" />
+          {isHost && onStartNewGame ? (
+            <>
+              <BigButton label="Start new game" onPress={onStartNewGame} variant="accent" />
+              <BigButton
+                label="Back to home"
+                onPress={onLeaveHome ?? onDismiss}
+                variant="secondary"
+              />
+            </>
+          ) : (
+            <BigButton label="Awesome!" onPress={onDismiss} variant="accent" />
+          )}
         </View>
       </View>
     </Modal>
@@ -53,6 +74,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.xl,
     padding: spacing.lg,
     alignItems: 'center',
+    gap: spacing.sm,
   },
   lottie: {
     width: 180,

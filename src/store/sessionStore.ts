@@ -12,6 +12,7 @@ import {
   applyAction,
   createSession,
   rejectAction,
+  returnToLobby,
   startGame,
 } from '../games/ruleEngine';
 import { getMultiplayerService } from '../multiplayer';
@@ -37,6 +38,8 @@ interface SessionStore {
   refreshDiscovery: () => void;
   joinDiscoveredSession: (sessionId: string, playerName: string) => Promise<void>;
   startHostedGame: () => void;
+  returnToLobbyAsHost: () => void;
+  leaveActiveGame: () => void;
   dispatchAction: (action: GameAction) => void;
   clearToast: () => void;
 }
@@ -218,6 +221,25 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const next = startGame(session);
       set({ session: next });
       multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
+    },
+
+    returnToLobbyAsHost: () => {
+      const { session, isHost } = get();
+      if (!isHost || !session) {
+        return;
+      }
+      const next = returnToLobby(session);
+      set({ session: next });
+      multiplayer.send({ type: 'STATE_UPDATE', state: next });
+    },
+
+    leaveActiveGame: () => {
+      set({
+        session: null,
+        isHost: false,
+        connectionStatus: 'idle',
+        toast: null,
+      });
     },
 
     dispatchAction: (action) => {
