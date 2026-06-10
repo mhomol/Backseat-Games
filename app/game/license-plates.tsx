@@ -2,16 +2,16 @@ import { FlashList } from '@shopify/flash-list';
 import { useCallback, useMemo } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
 import { plates } from '@/data';
 import { plateImageByCode } from '@/data/plateImages';
 import { getLicensePlateScores } from '@/games/licensePlates';
-import { useGameScreenHeader } from '@/hooks/useGameScreenHeader';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
-import { borders, colors, fonts, radii, spacing } from '@/theme';
+import { colors, fonts, radii, spacing } from '@/theme';
 
 export default function LicensePlatesScreen() {
   const guard = useGameSessionGuard();
@@ -20,12 +20,6 @@ export default function LicensePlatesScreen() {
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
-  useGameScreenHeader({
-    title: 'License Plates',
-    showEndButton: guard.isInProgress,
-    endLabel: guard.isHost ? 'End Game' : 'Leave',
-    onEndPress: requestEnd,
-  });
 
   const gameState = session?.gameState?.type === 'license-plates' ? session.gameState : null;
 
@@ -61,10 +55,11 @@ export default function LicensePlatesScreen() {
       />
       <Scoreboard scores={scores} />
       <FlashList
+        style={styles.list}
         data={plates}
         numColumns={2}
         keyExtractor={(item) => item.code}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={styles.listContent}
         renderItem={({ item }) => {
           const ownerId = gameState.claims[item.code];
           const isMine = ownerId === localPlayerId;
@@ -75,12 +70,7 @@ export default function LicensePlatesScreen() {
 
           return (
             <Pressable
-              style={[
-                styles.cell,
-                { borderColor: item.tint },
-                isMine && styles.cellMine,
-                isTaken && styles.cellTaken,
-              ]}
+              style={styles.cell}
               onPress={() => {
                 void Haptics.selectionAsync();
                 if (isMine) {
@@ -110,6 +100,9 @@ export default function LicensePlatesScreen() {
           );
         }}
       />
+      {guard.isInProgress ? (
+        <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
+      ) : null}
     </View>
   );
 }
@@ -117,19 +110,20 @@ export default function LicensePlatesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
     backgroundColor: colors.cream,
   },
   list: {
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xxl,
+    flex: 1,
+  },
+  listContent: {
+    paddingBottom: spacing.md,
   },
   cell: {
     flex: 1,
     margin: spacing.xs,
     aspectRatio: 2.2,
-    backgroundColor: colors.cloudWhite,
-    borderWidth: borders.thick,
     borderRadius: radii.md,
     overflow: 'hidden',
     alignItems: 'center',
@@ -153,12 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.xs,
     zIndex: 1,
-  },
-  cellMine: {
-    borderColor: colors.grassGreenDark,
-  },
-  cellTaken: {
-    borderColor: colors.roadGrayLight,
   },
   code: {
     fontFamily: fonts.displayBold,

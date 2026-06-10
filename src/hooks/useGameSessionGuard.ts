@@ -1,5 +1,5 @@
 import { useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSessionStore } from '@/store/sessionStore';
 
 export function useGameSessionGuard() {
@@ -12,26 +12,19 @@ export function useGameSessionGuard() {
   const leaveActiveGame = useSessionStore((state) => state.leaveActiveGame);
 
   const [exitPromptVisible, setExitPromptVisible] = useState(false);
-  const pendingNavigation = useRef<unknown>(null);
 
   const isInProgress = session?.phase === 'playing';
   const isFinished = session?.phase === 'finished';
 
   const completeExit = useCallback(() => {
     setExitPromptVisible(false);
-    pendingNavigation.current = null;
     if (isHost) {
       finishGameAsHost();
       return;
     }
     leaveActiveGame();
-    if (pendingNavigation.current) {
-      navigation.dispatch(pendingNavigation.current as never);
-      pendingNavigation.current = null;
-      return;
-    }
     router.replace('/');
-  }, [finishGameAsHost, isHost, leaveActiveGame, navigation, router]);
+  }, [finishGameAsHost, isHost, leaveActiveGame, router]);
 
   useEffect(() => {
     if (session?.phase === 'lobby' && session.sessionId) {
@@ -45,14 +38,11 @@ export function useGameSessionGuard() {
         return;
       }
       event.preventDefault();
-      pendingNavigation.current = event.data.action;
-      setExitPromptVisible(true);
     });
     return unsubscribe;
   }, [isInProgress, navigation]);
 
   const cancelExit = useCallback(() => {
-    pendingNavigation.current = null;
     setExitPromptVisible(false);
   }, []);
 

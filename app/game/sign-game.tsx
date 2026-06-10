@@ -8,11 +8,11 @@ import {
   View,
 } from 'react-native';
 import { BigButton } from '@/components/BigButton';
+import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
 import { ALPHABET, SPECIAL_LETTERS } from '@/games/signGameUtils';
 import { getSignGameLeaderboard } from '@/games/signGame';
-import { useGameScreenHeader } from '@/hooks/useGameScreenHeader';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
@@ -27,12 +27,6 @@ export default function SignGameScreen() {
   const [word, setWord] = useState('');
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
-  useGameScreenHeader({
-    title: 'Sign Game',
-    showEndButton: guard.isInProgress,
-    endLabel: guard.isHost ? 'End Game' : 'Leave',
-    onEndPress: requestEnd,
-  });
 
   const gameState = session?.gameState?.type === 'sign-game' ? session.gameState : null;
   const currentLetter = gameState?.playerLetters[localPlayerId] ?? 'A';
@@ -79,7 +73,8 @@ export default function SignGameScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.container}>
       <GameSessionOverlays
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
@@ -156,14 +151,23 @@ export default function SignGameScreen() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+      </ScrollView>
+      {guard.isInProgress ? (
+        <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
+      ) : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.cream,
+  },
   container: {
     padding: spacing.lg,
     gap: spacing.md,
+    paddingBottom: spacing.xl,
   },
   letterCircle: {
     alignSelf: 'center',

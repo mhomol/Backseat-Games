@@ -14,7 +14,7 @@ export const bingoItemById = Object.fromEntries(
 ) as Record<string, BingoItem>;
 
 export const GAME_LABELS = {
-  'license-plates': 'License Plates',
+  'license-plates': 'License Plate Game',
   bingo: 'Travel Bingo',
   'sign-game': 'Sign Game',
 } as const;

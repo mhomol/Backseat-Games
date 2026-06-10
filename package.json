@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "test": "npx tsx --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "generate:plates": "node scripts/generate-plates.mjs"
+    "generate:plates": "node scripts/generate-plates.mjs",
+    "generate:brand": "node scripts/generate-brand-assets.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka": "^0.4.1",

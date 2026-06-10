@@ -15,7 +15,7 @@ module.exports = () => {
       splash: {
         image: './assets/splash-icon.png',
         resizeMode: 'contain',
-        backgroundColor: '#4ECDC4',
+        backgroundColor: '#7EC8F7',
       },
       ios: {
         supportsTablet: true,
@@ -35,7 +35,7 @@ module.exports = () => {
       },
       android: {
         adaptiveIcon: {
-          backgroundColor: '#4ECDC4',
+          backgroundColor: '#7EC8F7',
           foregroundImage: './assets/android-icon-foreground.png',
           backgroundImage: './assets/android-icon-background.png',
           monochromeImage: './assets/android-icon-monochrome.png',
@@ -55,7 +55,7 @@ module.exports = () => {
         [
           'expo-notifications',
           {
-            color: '#4ECDC4',
+            color: '#7EC8F7',
           },
         ],
       ],

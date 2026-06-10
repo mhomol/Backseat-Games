@@ -1,25 +1,29 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { BigButton } from '@/components/BigButton';
-import { ScreenHeader } from '@/components/ScreenHeader';
-import {
-  GAME_DESCRIPTIONS,
-  GAME_EMOJI,
-  GAME_LABELS,
-} from '@/data';
+import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { SignPostButton } from '@/components/brand/SignPostButton';
+import { GAME_EMOJI, GAME_LABELS } from '@/data';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
-import { borders, colors, fonts, radii, shadows, spacing } from '@/theme';
+import type { SignPostColor } from '@/theme/brand';
+import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 const GAME_TYPES: GameType[] = ['license-plates', 'bingo', 'sign-game'];
+
+const gameSignColor: Record<GameType, SignPostColor> = {
+  'license-plates': 'pink',
+  bingo: 'blue',
+  'sign-game': 'green',
+};
 
 export default function HostSetupScreen() {
   const hostGame = useSessionStore((state) => state.hostGame);
@@ -37,69 +41,88 @@ export default function HostSetupScreen() {
   const canContinue = hostName.trim().length >= 2;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ScreenHeader
-        title="Pick a game"
-        subtitle="You will host this session for everyone in the car."
-      />
+    <SceneryBackground variant="host">
+      <SafeAreaView style={styles.safe}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.heroSpacer} />
 
-      <Text style={styles.label}>Your name</Text>
-      <TextInput
-        value={hostName}
-        onChangeText={setHostName}
-        placeholder="e.g. Dad"
-        placeholderTextColor={colors.roadGrayLight}
-        style={styles.input}
-        autoCapitalize="words"
-      />
+          <View style={styles.formCard}>
+            <Text style={styles.label}>Your name</Text>
+            <TextInput
+              value={hostName}
+              onChangeText={setHostName}
+              placeholder="e.g. Dad"
+              placeholderTextColor={colors.roadGrayLight}
+              style={styles.input}
+              autoCapitalize="words"
+            />
+            <Text style={styles.hint}>You will host this session for everyone in the car.</Text>
+          </View>
 
-      <Text style={styles.label}>Game type</Text>
-      {GAME_TYPES.map((gameType) => {
-        const active = selected === gameType;
-        return (
-          <Pressable
-            key={gameType}
-            onPress={() => setSelected(gameType)}
-            style={[styles.gameCard, active && styles.gameCardActive]}
-          >
-            <Text style={styles.gameEmoji}>{GAME_EMOJI[gameType]}</Text>
-            <View style={styles.gameCopy}>
-              <Text style={styles.gameTitle}>{GAME_LABELS[gameType]}</Text>
-              <Text style={styles.gameDescription}>
-                {GAME_DESCRIPTIONS[gameType]}
-              </Text>
-            </View>
-          </Pressable>
-        );
-      })}
+          <View style={styles.signColumn}>
+            {GAME_TYPES.map((gameType) => (
+              <SignPostButton
+                key={gameType}
+                color={gameSignColor[gameType]}
+                label={GAME_LABELS[gameType].toUpperCase()}
+                icon={GAME_EMOJI[gameType]}
+                selected={selected === gameType}
+                onPress={() => setSelected(gameType)}
+              />
+            ))}
+          </View>
 
-      <BigButton
-        label="Create waiting room"
-        disabled={!canContinue}
-        loading={loading}
-        onPress={async () => {
-          setLoading(true);
-          try {
-            const sessionId = await hostGame(selected, hostName.trim());
-            router.push(`/lobby/${sessionId}`);
-          } finally {
-            setLoading(false);
-          }
-        }}
-      />
-    </ScrollView>
+          <BigButton
+            label="Create waiting room"
+            disabled={!canContinue}
+            loading={loading}
+            onPress={async () => {
+              setLoading(true);
+              try {
+                const sessionId = await hostGame(selected, hostName.trim());
+                router.push(`/lobby/${sessionId}`);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            style={styles.cta}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </SceneryBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+  },
   container: {
     padding: spacing.lg,
-    gap: spacing.md,
+    paddingBottom: spacing.xxl,
+  },
+  heroSpacer: {
+    minHeight: '34%',
+  },
+  formCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: radii.lg,
+    padding: spacing.md,
+    marginBottom: spacing.lg,
+    borderWidth: borders.thick,
+    borderColor: colors.roadGrayLight,
   },
   label: {
     fontFamily: fonts.bodyBold,
     fontSize: 16,
     color: colors.roadGray,
+    marginBottom: spacing.xs,
+  },
+  hint: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.roadGrayLight,
+    marginTop: spacing.sm,
   },
   input: {
     backgroundColor: colors.cloudWhite,
@@ -111,36 +134,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.roadGray,
   },
-  gameCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    backgroundColor: colors.cloudWhite,
-    borderWidth: borders.thick,
-    borderColor: colors.roadGrayLight,
-    borderRadius: radii.lg,
-    padding: spacing.md,
-    ...shadows.card,
+  signColumn: {
+    gap: spacing.xs,
+    marginBottom: spacing.lg,
   },
-  gameCardActive: {
-    borderColor: colors.grassGreenDark,
-    backgroundColor: '#E8F8EA',
-  },
-  gameEmoji: {
-    fontSize: 36,
-  },
-  gameCopy: {
-    flex: 1,
-  },
-  gameTitle: {
-    fontFamily: fonts.display,
-    fontSize: 20,
-    color: colors.roadGray,
-  },
-  gameDescription: {
-    fontFamily: fonts.body,
-    fontSize: 14,
-    color: colors.roadGrayLight,
-    marginTop: spacing.xs,
+  cta: {
+    marginTop: spacing.sm,
   },
 });

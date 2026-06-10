@@ -1,16 +1,21 @@
+import { brand } from './brand';
+
+export { brand, gameBrandColors, signPostColors } from './brand';
+export type { SignPostColor } from './brand';
+
 export const colors = {
-  skyBlue: '#4ECDC4',
-  skyBlueDark: '#3DBDB5',
+  skyBlue: brand.blue,
+  skyBlueDark: brand.blueDark,
   sunnyYellow: '#FFE66D',
   sunnyYellowDark: '#F5D84E',
-  grassGreen: '#6BCB77',
-  grassGreenDark: '#52B35E',
+  grassGreen: brand.green,
+  grassGreenDark: brand.greenDark,
   coral: '#FF6B6B',
   coralDark: '#E85555',
   roadGray: '#2D3436',
   roadGrayLight: '#636E72',
   cloudWhite: '#FFFFFF',
-  cream: '#FFF9E6',
+  cream: brand.cream,
   lavender: '#A29BFE',
   plateLocked: '#B2BEC3',
   plateMine: '#6BCB77',

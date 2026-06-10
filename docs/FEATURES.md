@@ -71,7 +71,7 @@ Each cell shows a **stylized plate image** (jurisdiction accent colors) with the
 
 ### Ending the game
 
-The host taps **End Game** in the nav bar to finish the round. Everyone sees final scores and a winner celebration (most plates claimed wins; ties show shared leaders).
+The host taps the red **End Game** button at the bottom of the screen to finish the round (with a confirmation dialog). Everyone sees final scores and a winner celebration (most plates claimed wins; ties show shared leaders). Swipe-back and header back are disabled during play.
 
 Plate artwork lives in `assets/plates/` (regenerate with `npm run generate:plates`). See `scripts/plates/style-guide.md`.
 

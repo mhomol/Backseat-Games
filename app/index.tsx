@@ -1,76 +1,50 @@
 import { router } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { BigButton } from '@/components/BigButton';
-import { ScreenHeader } from '@/components/ScreenHeader';
-import { borders, colors, fonts, radii, shadows, spacing } from '@/theme';
+import { BrandDisclaimer } from '@/components/brand/BrandDisclaimer';
+import { BrandLogo } from '@/components/brand/BrandLogo';
+import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { SignPostButton } from '@/components/brand/SignPostButton';
+import { spacing } from '@/theme';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <SceneryBackground variant="home">
       <StatusBar style="dark" />
-      <View style={styles.hero}>
-        <Text style={styles.emoji}>🚗</Text>
-        <ScreenHeader
-          title="Backseat Games"
-          subtitle="Classic road-trip fun for the whole car"
-        />
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.cardText}>
-          One phone hosts. Everyone else joins nearby — no internet needed.
-        </Text>
-      </View>
-
-      <View style={styles.actions}>
-        <BigButton
-          label="Start a Game"
-          onPress={() => router.push('/host/setup')}
-          variant="primary"
-        />
-        <BigButton
-          label="Join a Game"
-          onPress={() => router.push('/join')}
-          variant="accent"
-        />
-      </View>
-    </View>
+      <SafeAreaView style={styles.safe}>
+        <BrandLogo variant="hero" />
+        <View style={styles.signColumn}>
+          <SignPostButton
+            color="pink"
+            label="Start a Game"
+            onPress={() => router.push('/host/setup')}
+          />
+          <SignPostButton
+            color="green"
+            label="Join a Game"
+            onPress={() => router.push('/join')}
+          />
+          <SignPostButton color="blue" label="Settings" onPress={() => {}} />
+        </View>
+        <View style={styles.footer}>
+          <BrandDisclaimer />
+        </View>
+      </SafeAreaView>
+    </SceneryBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safe: {
     flex: 1,
-    padding: spacing.lg,
-    backgroundColor: colors.cream,
+    justifyContent: 'space-between',
   },
-  hero: {
-    alignItems: 'center',
-    marginTop: spacing.xl,
-    marginBottom: spacing.lg,
+  signColumn: {
+    paddingLeft: spacing.lg,
+    gap: spacing.xs,
   },
-  emoji: {
-    fontSize: 72,
-    marginBottom: spacing.md,
-  },
-  card: {
-    backgroundColor: colors.cloudWhite,
-    borderWidth: borders.thick,
-    borderColor: colors.skyBlueDark,
-    borderRadius: radii.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.xl,
-    ...shadows.card,
-  },
-  cardText: {
-    fontFamily: fonts.body,
-    fontSize: 16,
-    color: colors.roadGray,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  actions: {
-    gap: spacing.md,
+  footer: {
+    marginTop: 'auto',
   },
 });

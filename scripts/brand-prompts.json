@@ -1,0 +1,27 @@
+{
+  "model": "recraft-ai/recraft-v4",
+  "styleBlock": "Vibrant cartoon road trip illustration, cheerful family-friendly vector cartoon style, pink vintage compact car with luggage on roof rack, coastal highway winding along ocean cliffs, snowy mountains in distance, pine forest, bright blue sky, fluffy white clouds, wildflowers along the road, wooden signpost with colorful arrow signs, clean readable text on signs, no watermark",
+  "logoBlock": "Large playful BACKSEAT GAMES logo at top: word BACKSEAT in bubble pink letters with white dashed stitching outline, word GAMES in bubble green letters with white dashed stitching, the letter A in GAMES replaced by a blue map pin icon",
+  "scenes": {
+    "home": {
+      "aspect_ratio": "9:16",
+      "prompt": "{{logoBlock}}. Below the logo, scenic coastal highway, pink car driving away, wooden signpost on the left with three arrow signs: START A GAME (pink sign), JOIN A GAME (green sign), SETTINGS (blue sign). {{styleBlock}}."
+    },
+    "host": {
+      "aspect_ratio": "9:16",
+      "prompt": "Tall portrait mobile game screen background. {{logoBlock}}. Below, wooden signpost on the left with three arrow signs: LICENSE PLATES (pink sign), SIGN GAME (green sign), TRAVEL BINGO (blue sign). Pink car on coastal highway. {{styleBlock}}. Open cream-toned lower area for form overlay."
+    },
+    "join": {
+      "aspect_ratio": "9:16",
+      "prompt": "Tall portrait mobile game screen background. {{logoBlock}}. Scenic coastal road, pink car driving into distance, mountains and ocean. No signpost. {{styleBlock}}. Open lower two-thirds with soft cream sky wash for form overlay."
+    },
+    "logo": {
+      "aspect_ratio": "3:2",
+      "prompt": "{{logoBlock}}. Logo lockup only, centered on plain soft cream background #FFF8EE, no car, no scenery, no signpost, marketing asset, crisp edges, generous padding."
+    },
+    "icon": {
+      "aspect_ratio": "1:1",
+      "prompt": "Square mobile app icon. {{logoBlock}} at top. Below, pink car on winding coastal road, wooden signpost with three small arrow signs: LICENSE PLATES (pink), SIGN GAME (green), TRAVEL BINGO (blue). Compact centered composition. {{styleBlock}}."
+    }
+  }
+}

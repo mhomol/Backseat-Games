@@ -78,22 +78,11 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: colors.cream },
             }}
           >
-            <Stack.Screen name="index" options={{ title: 'Backseat Games' }} />
-            <Stack.Screen name="host/setup" options={{ title: 'Start a Game' }} />
-            <Stack.Screen name="join/index" options={{ title: 'Join a Game' }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="host/setup" options={{ headerShown: false }} />
+            <Stack.Screen name="join/index" options={{ headerShown: false }} />
             <Stack.Screen name="lobby/[sessionId]" options={{ title: 'Waiting Room' }} />
-            <Stack.Screen
-              name="game/license-plates"
-              options={{ title: 'License Plates', headerBackVisible: false, gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="game/bingo"
-              options={{ title: 'Travel Bingo', headerBackVisible: false, gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="game/sign-game"
-              options={{ title: 'Sign Game', headerBackVisible: false, gestureEnabled: false }}
-            />
+            <Stack.Screen name="game" options={{ headerShown: false }} />
           </Stack>
           <ToastBanner message={toast} onDismiss={clearToast} />
         </View>

@@ -6,13 +6,13 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import {
   BINGO_SIZE,
   FREE_CENTER_INDEX,
   getBingoSquareLabel,
 } from '@/games/bingo';
-import { useGameScreenHeader } from '@/hooks/useGameScreenHeader';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
@@ -25,12 +25,6 @@ export default function BingoScreen() {
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
-  useGameScreenHeader({
-    title: 'Travel Bingo',
-    showEndButton: guard.isInProgress,
-    endLabel: guard.isHost ? 'End Game' : 'Leave',
-    onEndPress: requestEnd,
-  });
 
   const gameState = session?.gameState?.type === 'bingo' ? session.gameState : null;
   const card = gameState?.cards[localPlayerId];
@@ -54,9 +48,10 @@ export default function BingoScreen() {
         winnerHeadline={winnerDisplay?.headline}
         isWinnerYou={winnerDisplay?.isYou}
       />
-      <Text style={styles.instructions}>Tap a square when you spot it!</Text>
-      <View style={styles.grid}>
-        {Array.from({ length: BINGO_SIZE }).map((_, index) => {
+      <View style={styles.playArea}>
+        <Text style={styles.instructions}>Tap a square when you spot it!</Text>
+        <View style={styles.grid}>
+          {Array.from({ length: BINGO_SIZE }).map((_, index) => {
           const { label, icon } = getBingoSquareLabel(card, index);
           const isMarked = marked[index];
           return (
@@ -76,8 +71,12 @@ export default function BingoScreen() {
               }}
             />
           );
-        })}
+          })}
+        </View>
       </View>
+      {guard.isInProgress ? (
+        <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
+      ) : null}
     </View>
   );
 }
@@ -129,8 +128,12 @@ function BingoCell({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
     backgroundColor: colors.cream,
+  },
+  playArea: {
+    flex: 1,
   },
   instructions: {
     fontFamily: fonts.bodyBold,
