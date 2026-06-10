@@ -170,9 +170,6 @@ class MultipeerService implements MultiplayerService {
     for (const peerId of this.connectedPeerIds) {
       void this.mpc?.sendText(peerId, payload);
     }
-    if (this.hosting) {
-      this.messageHandler?.(message, this.localPeerId);
-    }
   }
 
   onMessage(handler: MessageHandler): () => void {

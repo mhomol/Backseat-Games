@@ -77,7 +77,8 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         break;
       }
       case 'WELCOME': {
-        if (message.playerId) {
+        // Joiners only — the host sends WELCOME and must keep their own player id.
+        if (!state.isHost && message.playerId) {
           set({
             localPlayerId: message.playerId,
             session: message.state,
