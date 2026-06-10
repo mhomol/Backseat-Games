@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
@@ -7,8 +7,10 @@ import { Scoreboard } from '@/components/Scoreboard';
 import { plates } from '@/data';
 import { plateImageByCode } from '@/data/plateImages';
 import { getLicensePlateScores } from '@/games/licensePlates';
+import { useGameScreenHeader } from '@/hooks/useGameScreenHeader';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
+import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function LicensePlatesScreen() {
@@ -16,6 +18,14 @@ export default function LicensePlatesScreen() {
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
+
+  const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
+  useGameScreenHeader({
+    title: 'License Plates',
+    showEndButton: guard.isInProgress,
+    endLabel: guard.isHost ? 'End Game' : 'Leave',
+    onEndPress: requestEnd,
+  });
 
   const gameState = session?.gameState?.type === 'license-plates' ? session.gameState : null;
 
@@ -31,17 +41,28 @@ export default function LicensePlatesScreen() {
     }));
   }, [gameState, session, localPlayerId]);
 
+  const winnerDisplay = useMemo(() => {
+    if (!session) {
+      return null;
+    }
+    return getSessionWinnerDisplay(session, localPlayerId);
+  }, [session, localPlayerId]);
+
   if (!gameState || !session) {
     return null;
   }
 
   return (
     <View style={styles.container}>
-      <GameSessionOverlays guard={guard} />
+      <GameSessionOverlays
+        guard={guard}
+        winnerHeadline={winnerDisplay?.headline}
+        isWinnerYou={winnerDisplay?.isYou}
+      />
       <Scoreboard scores={scores} />
       <FlashList
         data={plates}
-        numColumns={3}
+        numColumns={2}
         keyExtractor={(item) => item.code}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => {
@@ -106,7 +127,7 @@ const styles = StyleSheet.create({
   cell: {
     flex: 1,
     margin: spacing.xs,
-    minHeight: 110,
+    aspectRatio: 2.2,
     backgroundColor: colors.cloudWhite,
     borderWidth: borders.thick,
     borderRadius: radii.md,

@@ -20,8 +20,15 @@ export default function JoinScreen() {
   const joinDiscoveredSession = useSessionStore((state) => state.joinDiscoveredSession);
   const discoveredSessions = useSessionStore((state) => state.discoveredSessions);
   const connectionStatus = useSessionStore((state) => state.connectionStatus);
+  const savedName = useSessionStore((state) => state.localPlayerName);
   const [playerName, setPlayerName] = useState('');
   const [joiningId, setJoiningId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (savedName) {
+      setPlayerName(savedName);
+    }
+  }, [savedName]);
 
   useEffect(() => {
     refreshDiscovery();

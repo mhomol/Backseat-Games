@@ -84,10 +84,16 @@ export default function RootLayout() {
             <Stack.Screen name="lobby/[sessionId]" options={{ title: 'Waiting Room' }} />
             <Stack.Screen
               name="game/license-plates"
-              options={{ title: 'License Plates' }}
+              options={{ title: 'License Plates', headerBackVisible: false, gestureEnabled: false }}
             />
-            <Stack.Screen name="game/bingo" options={{ title: 'Travel Bingo' }} />
-            <Stack.Screen name="game/sign-game" options={{ title: 'Sign Game' }} />
+            <Stack.Screen
+              name="game/bingo"
+              options={{ title: 'Travel Bingo', headerBackVisible: false, gestureEnabled: false }}
+            />
+            <Stack.Screen
+              name="game/sign-game"
+              options={{ title: 'Sign Game', headerBackVisible: false, gestureEnabled: false }}
+            />
           </Stack>
           <ToastBanner message={toast} onDismiss={clearToast} />
         </View>

@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import {
   Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,9 +12,10 @@ import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
 import { ALPHABET, SPECIAL_LETTERS } from '@/games/signGameUtils';
 import { getSignGameLeaderboard } from '@/games/signGame';
+import { useGameScreenHeader } from '@/hooks/useGameScreenHeader';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
-import { useSignGameAudio } from '@/hooks/useSignGameAudio';
 import { useSessionStore } from '@/store/sessionStore';
+import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function SignGameScreen() {
@@ -25,7 +25,14 @@ export default function SignGameScreen() {
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
   const [modalOpen, setModalOpen] = useState(false);
   const [word, setWord] = useState('');
-  const audio = useSignGameAudio();
+
+  const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
+  useGameScreenHeader({
+    title: 'Sign Game',
+    showEndButton: guard.isInProgress,
+    endLabel: guard.isHost ? 'End Game' : 'Leave',
+    onEndPress: requestEnd,
+  });
 
   const gameState = session?.gameState?.type === 'sign-game' ? session.gameState : null;
   const currentLetter = gameState?.playerLetters[localPlayerId] ?? 'A';
@@ -43,28 +50,29 @@ export default function SignGameScreen() {
 
   const mySubmissions = gameState?.submissions.filter((s) => s.playerId === localPlayerId) ?? [];
 
-  const winnerName = useMemo(() => {
-    if (!session?.winnerId) {
-      return '';
+  const winnerDisplay = useMemo(() => {
+    if (!session) {
+      return null;
     }
-    return session.players.find((p) => p.id === session.winnerId)?.name ?? 'Someone';
-  }, [session]);
+    return getSessionWinnerDisplay(session, localPlayerId);
+  }, [session, localPlayerId]);
 
   if (!gameState || !session) {
     return null;
   }
 
   const youWon = session.winnerId === localPlayerId;
-  const winnerLabel = youWon ? 'You' : winnerName;
   const houseRule = SPECIAL_LETTERS.has(currentLetter);
 
-  const submitWord = async () => {
-    const uri = audio.isRecording ? await audio.stopRecording() : audio.lastRecordingUri ?? undefined;
+  const submitWord = () => {
+    const trimmed = word.trim();
+    if (trimmed.length < 2) {
+      return;
+    }
     dispatchAction({
       type: 'SUBMIT_SIGN_WORD',
       letter: currentLetter,
-      word: word.trim(),
-      audioUri: uri,
+      word: trimmed,
     });
     setWord('');
     setModalOpen(false);
@@ -72,7 +80,11 @@ export default function SignGameScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <GameSessionOverlays guard={guard} winnerLabel={winnerLabel} />
+      <GameSessionOverlays
+        guard={guard}
+        winnerHeadline={winnerDisplay?.headline}
+        isWinnerYou={winnerDisplay?.isYou}
+      />
       <Scoreboard scores={leaderboard} />
 
       <View style={styles.letterCircle}>
@@ -131,23 +143,9 @@ export default function SignGameScreen() {
               placeholder="Type the word you saw"
               style={styles.input}
               autoCapitalize="words"
+              autoFocus
+              onSubmitEditing={submitWord}
             />
-
-            <BigButton
-              label={audio.isRecording ? 'Stop recording' : 'Record your call-out'}
-              onPress={async () => {
-                if (audio.isRecording) {
-                  await audio.stopRecording();
-                } else {
-                  await audio.startRecording();
-                }
-              }}
-              variant="secondary"
-            />
-
-            {audio.lastRecordingUri ? (
-              <BigButton label="Play recording" onPress={audio.playRecording} variant="secondary" />
-            ) : null}
 
             <BigButton
               label="Submit"

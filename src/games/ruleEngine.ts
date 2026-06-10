@@ -9,8 +9,9 @@ import { createBingoState, applyBingoAction } from './bingo';
 import {
   applyLicensePlatesAction,
   createLicensePlatesState,
+  resolveLicensePlateWinner,
 } from './licensePlates';
-import { applySignGameAction, createSignGameState } from './signGame';
+import { applySignGameAction, createSignGameState, getSignGameLeaderboard } from './signGame';
 
 export function createSession(
   sessionId: string,
@@ -86,6 +87,69 @@ export function applyAction(
       return applySignGameAction(session, playerId, action);
     default:
       return { ok: false, reason: 'Unknown game type.' };
+  }
+}
+
+export function finishGame(session: SessionState): SessionState {
+  if (session.phase !== 'playing' || !session.gameState) {
+    return session;
+  }
+
+  if (session.winnerId) {
+    return { ...session, phase: 'finished' };
+  }
+
+  switch (session.gameState.type) {
+    case 'license-plates':
+      return {
+        ...session,
+        phase: 'finished',
+        winnerId: resolveLicensePlateWinner(session),
+      };
+    case 'bingo': {
+      if (session.gameState.winnerId) {
+        return {
+          ...session,
+          phase: 'finished',
+          winnerId: session.gameState.winnerId,
+        };
+      }
+      const markCounts = session.players.map((player) => {
+        const marked = session.gameState?.type === 'bingo'
+          ? session.gameState.marked[player.id]
+          : undefined;
+        return {
+          playerId: player.id,
+          count: marked?.filter(Boolean).length ?? 0,
+        };
+      });
+      const maxMarks = Math.max(...markCounts.map((entry) => entry.count));
+      const leaders = markCounts.filter((entry) => entry.count === maxMarks);
+      return {
+        ...session,
+        phase: 'finished',
+        winnerId: maxMarks > 0 && leaders.length === 1 ? leaders[0].playerId : null,
+      };
+    }
+    case 'sign-game': {
+      if (session.gameState.winnerId) {
+        return {
+          ...session,
+          phase: 'finished',
+          winnerId: session.gameState.winnerId,
+        };
+      }
+      const board = getSignGameLeaderboard(session.gameState, session.players);
+      const maxLetters = board[0]?.lettersDone ?? 0;
+      const leaders = board.filter((entry) => entry.lettersDone === maxLetters);
+      return {
+        ...session,
+        phase: 'finished',
+        winnerId: maxLetters > 0 && leaders.length === 1 ? leaders[0].playerId : null,
+      };
+    }
+    default:
+      return { ...session, phase: 'finished' };
   }
 }
 

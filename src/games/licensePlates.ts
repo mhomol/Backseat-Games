@@ -89,3 +89,29 @@ export function getLicensePlateScores(
   }
   return scores;
 }
+
+export function resolveLicensePlateWinner(session: SessionState): string | null {
+  if (session.gameState?.type !== 'license-plates') {
+    return null;
+  }
+  const scores = getLicensePlateScores(session.gameState, session.players);
+  let maxScore = -1;
+  let leaderId: string | null = null;
+  let tied = false;
+
+  for (const player of session.players) {
+    const score = scores[player.id] ?? 0;
+    if (score > maxScore) {
+      maxScore = score;
+      leaderId = player.id;
+      tied = false;
+    } else if (score === maxScore && score >= 0) {
+      tied = true;
+    }
+  }
+
+  if (maxScore <= 0 || tied) {
+    return null;
+  }
+  return leaderId;
+}

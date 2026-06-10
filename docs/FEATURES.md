@@ -61,13 +61,17 @@ Spot license plates from US states and Canadian provinces/territories. First to 
 
 ### Visual cues
 
-Each cell shows a **stylized plate image** (jurisdiction accent colors) with the state/province code and name overlaid in the app.
+Each cell shows a **stylized plate image** (jurisdiction accent colors) with the state/province code and name overlaid in the app. Plate tiles use a wide rectangular shape like real plates.
 
 | State | Meaning |
 |-------|---------|
 | Full-color plate image | Available |
 | Green tint overlay | You claimed it |
 | Gray tint overlay + player name | Someone else claimed it |
+
+### Ending the game
+
+The host taps **End Game** in the nav bar to finish the round. Everyone sees final scores and a winner celebration (most plates claimed wins; ties show shared leaders).
 
 Plate artwork lives in `assets/plates/` (regenerate with `npm run generate:plates`). See `scripts/plates/style-guide.md`.
 

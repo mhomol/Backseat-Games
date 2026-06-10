@@ -7,6 +7,7 @@ export function useGameSessionGuard() {
   const router = useRouter();
   const session = useSessionStore((state) => state.session);
   const isHost = useSessionStore((state) => state.isHost);
+  const finishGameAsHost = useSessionStore((state) => state.finishGameAsHost);
   const returnToLobbyAsHost = useSessionStore((state) => state.returnToLobbyAsHost);
   const leaveActiveGame = useSessionStore((state) => state.leaveActiveGame);
 
@@ -20,10 +21,7 @@ export function useGameSessionGuard() {
     setExitPromptVisible(false);
     pendingNavigation.current = null;
     if (isHost) {
-      returnToLobbyAsHost();
-      if (session?.sessionId) {
-        router.replace(`/lobby/${session.sessionId}`);
-      }
+      finishGameAsHost();
       return;
     }
     leaveActiveGame();
@@ -33,7 +31,7 @@ export function useGameSessionGuard() {
       return;
     }
     router.replace('/');
-  }, [isHost, leaveActiveGame, navigation, returnToLobbyAsHost, router, session?.sessionId]);
+  }, [finishGameAsHost, isHost, leaveActiveGame, navigation, router]);
 
   useEffect(() => {
     if (session?.phase === 'lobby' && session.sessionId) {
@@ -58,12 +56,19 @@ export function useGameSessionGuard() {
     setExitPromptVisible(false);
   }, []);
 
+  const requestEndGame = useCallback(() => {
+    if (!isInProgress) {
+      return;
+    }
+    setExitPromptVisible(true);
+  }, [isInProgress]);
+
   const exitPrompt = isInProgress
     ? {
         visible: exitPromptVisible,
         title: isHost ? 'End game for everyone?' : 'Leave this game?',
         message: isHost
-          ? 'No one has won yet. Ending now returns everyone to the waiting room.'
+          ? 'This ends the round and shows final scores for everyone.'
           : 'You can join again if the host is still in the waiting room.',
         confirmLabel: isHost ? 'End game' : 'Leave game',
         onConfirm: completeExit,
@@ -77,6 +82,7 @@ export function useGameSessionGuard() {
     isInProgress,
     isFinished,
     exitPrompt,
+    requestEndGame,
     returnToLobbyAsHost: () => {
       returnToLobbyAsHost();
       if (session?.sessionId) {

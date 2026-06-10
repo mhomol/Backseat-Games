@@ -11,11 +11,13 @@ import {
   addPlayer,
   applyAction,
   createSession,
+  finishGame,
   rejectAction,
   returnToLobby,
   startGame,
 } from '../games/ruleEngine';
 import { getMultiplayerService } from '../multiplayer';
+import { loadSavedPlayerName, savePlayerName } from '../services/playerNameStorage';
 
 interface SessionStore {
   localPlayerId: string;
@@ -38,6 +40,7 @@ interface SessionStore {
   refreshDiscovery: () => void;
   joinDiscoveredSession: (sessionId: string, playerName: string) => Promise<void>;
   startHostedGame: () => void;
+  finishGameAsHost: () => void;
   returnToLobbyAsHost: () => void;
   leaveActiveGame: () => void;
   dispatchAction: (action: GameAction) => void;
@@ -141,6 +144,10 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       await multiplayer.initialize();
       unsubscribeMessages = multiplayer.onMessage(handleNetworkMessage);
+      const savedName = await loadSavedPlayerName();
+      if (savedName) {
+        set({ localPlayerName: savedName });
+      }
       set({ initialized: true });
     },
 
@@ -159,7 +166,10 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       });
     },
 
-    setLocalName: (name: string) => set({ localPlayerName: name }),
+    setLocalName: (name: string) => {
+      set({ localPlayerName: name });
+      void savePlayerName(name);
+    },
 
     hostGame: async (gameType, hostName) => {
       const sessionId = uuidv4().slice(0, 8);
@@ -167,6 +177,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const host = playerFromLocal(hostId, hostName, true);
       const session = createSession(sessionId, host, gameType);
       await multiplayer.hostSession(sessionId, hostName, gameType);
+      void savePlayerName(hostName);
       set({
         isHost: true,
         localPlayerName: hostName,
@@ -201,9 +212,11 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     },
 
     joinDiscoveredSession: async (sessionId, playerName) => {
-      set({ connectionStatus: 'connecting', localPlayerName: playerName, isHost: false });
+      const trimmed = playerName.trim();
+      void savePlayerName(trimmed);
+      set({ connectionStatus: 'connecting', localPlayerName: trimmed, isHost: false });
       try {
-        await multiplayer.joinSession(sessionId, playerName.trim());
+        await multiplayer.joinSession(sessionId, trimmed);
       } catch (error) {
         set({
           connectionStatus: 'error',
@@ -221,6 +234,16 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const next = startGame(session);
       set({ session: next });
       multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
+    },
+
+    finishGameAsHost: () => {
+      const { session, isHost } = get();
+      if (!isHost || !session || session.phase !== 'playing') {
+        return;
+      }
+      const next = finishGame(session);
+      set({ session: next });
+      multiplayer.send({ type: 'STATE_UPDATE', state: next });
     },
 
     returnToLobbyAsHost: () => {

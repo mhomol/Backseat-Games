@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -23,9 +23,16 @@ const GAME_TYPES: GameType[] = ['license-plates', 'bingo', 'sign-game'];
 
 export default function HostSetupScreen() {
   const hostGame = useSessionStore((state) => state.hostGame);
+  const savedName = useSessionStore((state) => state.localPlayerName);
   const [hostName, setHostName] = useState('');
   const [selected, setSelected] = useState<GameType>('license-plates');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (savedName) {
+      setHostName(savedName);
+    }
+  }, [savedName]);
 
   const canContinue = hostName.trim().length >= 2;
 

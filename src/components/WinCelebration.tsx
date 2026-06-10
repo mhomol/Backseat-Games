@@ -7,6 +7,7 @@ import { BigButton } from './BigButton';
 type WinCelebrationProps = {
   visible: boolean;
   winnerName: string;
+  isWinnerYou?: boolean;
   isHost?: boolean;
   onStartNewGame?: () => void;
   onDismiss: () => void;
@@ -16,6 +17,7 @@ type WinCelebrationProps = {
 export function WinCelebration({
   visible,
   winnerName,
+  isWinnerYou = false,
   isHost = false,
   onStartNewGame,
   onDismiss,
@@ -41,7 +43,15 @@ export function WinCelebration({
             source={require('../../assets/celebration.json')}
           />
           <Text style={styles.title}>Winner!</Text>
-          <Text style={styles.subtitle}>{winnerName} takes the road!</Text>
+          <Text style={styles.subtitle}>
+            {winnerName === 'Nobody scored'
+              ? 'Great spotting — play again soon!'
+              : winnerName.includes(' and ') || winnerName.includes(',')
+                ? `${winnerName} take the road!`
+                : isWinnerYou
+                  ? 'You take the road!'
+                  : `${winnerName} takes the road!`}
+          </Text>
           {isHost && onStartNewGame ? (
             <>
               <BigButton label="Start new game" onPress={onStartNewGame} variant="accent" />

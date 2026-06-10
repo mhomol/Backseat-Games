@@ -5,12 +5,17 @@ import type { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 
 type GameSessionOverlaysProps = {
   guard: ReturnType<typeof useGameSessionGuard>;
-  winnerLabel?: string;
+  winnerHeadline?: string;
+  isWinnerYou?: boolean;
 };
 
-export function GameSessionOverlays({ guard, winnerLabel }: GameSessionOverlaysProps) {
+export function GameSessionOverlays({
+  guard,
+  winnerHeadline,
+  isWinnerYou = false,
+}: GameSessionOverlaysProps) {
   const [celebrationDismissed, setCelebrationDismissed] = useState(false);
-  const showWin = guard.isFinished && !!guard.session?.winnerId && !!winnerLabel;
+  const showWin = guard.isFinished && !!winnerHeadline;
 
   useEffect(() => {
     if (!guard.isFinished) {
@@ -33,7 +38,8 @@ export function GameSessionOverlays({ guard, winnerLabel }: GameSessionOverlaysP
       {showWin ? (
         <WinCelebration
           visible={!celebrationDismissed}
-          winnerName={winnerLabel}
+          winnerName={winnerHeadline}
+          isWinnerYou={isWinnerYou}
           isHost={guard.isHost}
           onStartNewGame={guard.returnToLobbyAsHost}
           onDismiss={() => setCelebrationDismissed(true)}

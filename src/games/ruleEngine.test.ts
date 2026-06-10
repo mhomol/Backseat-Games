@@ -4,6 +4,7 @@ import {
   addPlayer,
   applyAction,
   createSession,
+  finishGame,
   startGame,
 } from './ruleEngine';
 import { playerFromLocal } from './testUtils';
@@ -48,6 +49,31 @@ describe('license plates', () => {
     if (!second.ok) {
       assert.match(second.reason, /Guest/);
     }
+  });
+
+  it('finishes with the highest plate count as winner', () => {
+    const host = playerFromLocal('host', 'Host', true);
+    let session = startGame(createSession('abc', host, 'license-plates'));
+    session = addPlayer(session, playerFromLocal('guest', 'Guest', false));
+
+    session = (applyAction(session, 'host', {
+      type: 'CLAIM_PLATE',
+      plateCode: 'TX',
+    }) as { ok: true; state: typeof session }).state;
+
+    session = (applyAction(session, 'guest', {
+      type: 'CLAIM_PLATE',
+      plateCode: 'CA',
+    }) as { ok: true; state: typeof session }).state;
+
+    session = (applyAction(session, 'guest', {
+      type: 'CLAIM_PLATE',
+      plateCode: 'NY',
+    }) as { ok: true; state: typeof session }).state;
+
+    const finished = finishGame(session);
+    assert.equal(finished.phase, 'finished');
+    assert.equal(finished.winnerId, 'guest');
   });
 });
 

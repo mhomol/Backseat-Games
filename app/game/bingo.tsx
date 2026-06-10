@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -12,8 +12,10 @@ import {
   FREE_CENTER_INDEX,
   getBingoSquareLabel,
 } from '@/games/bingo';
+import { useGameScreenHeader } from '@/hooks/useGameScreenHeader';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
+import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function BingoScreen() {
@@ -22,27 +24,36 @@ export default function BingoScreen() {
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
 
+  const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
+  useGameScreenHeader({
+    title: 'Travel Bingo',
+    showEndButton: guard.isInProgress,
+    endLabel: guard.isHost ? 'End Game' : 'Leave',
+    onEndPress: requestEnd,
+  });
+
   const gameState = session?.gameState?.type === 'bingo' ? session.gameState : null;
   const card = gameState?.cards[localPlayerId];
   const marked = gameState?.marked[localPlayerId];
 
-  const winnerName = useMemo(() => {
-    if (!session?.winnerId) {
-      return '';
+  const winnerDisplay = useMemo(() => {
+    if (!session) {
+      return null;
     }
-    return session.players.find((p) => p.id === session.winnerId)?.name ?? 'Someone';
-  }, [session]);
+    return getSessionWinnerDisplay(session, localPlayerId);
+  }, [session, localPlayerId]);
 
   if (!gameState || !card || !marked || !session) {
     return null;
   }
 
-  const youWon = session.winnerId === localPlayerId;
-  const winnerLabel = youWon ? 'You' : winnerName;
-
   return (
     <View style={styles.container}>
-      <GameSessionOverlays guard={guard} winnerLabel={winnerLabel} />
+      <GameSessionOverlays
+        guard={guard}
+        winnerHeadline={winnerDisplay?.headline}
+        isWinnerYou={winnerDisplay?.isYou}
+      />
       <Text style={styles.instructions}>Tap a square when you spot it!</Text>
       <View style={styles.grid}>
         {Array.from({ length: BINGO_SIZE }).map((_, index) => {
