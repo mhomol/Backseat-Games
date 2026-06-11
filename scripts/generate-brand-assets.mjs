@@ -32,6 +32,13 @@ async function generateOne(key, config, token) {
   }
 
   const prompt = buildPrompt(scene.prompt, config);
+  const input = { prompt };
+  if (scene.size) {
+    input.size = scene.size;
+  } else if (scene.aspect_ratio) {
+    input.aspect_ratio = scene.aspect_ratio;
+  }
+
   const res = await fetch(
     `https://api.replicate.com/v1/models/${config.model}/predictions`,
     {
@@ -41,12 +48,7 @@ async function generateOne(key, config, token) {
         'Content-Type': 'application/json',
         Prefer: 'wait',
       },
-      body: JSON.stringify({
-        input: {
-          prompt,
-          aspect_ratio: scene.aspect_ratio,
-        },
-      }),
+      body: JSON.stringify({ input }),
     },
   );
 
@@ -63,7 +65,8 @@ async function generateOne(key, config, token) {
   const url = Array.isArray(data.output) ? data.output[0] : data.output;
   const imgRes = await fetch(url);
   const ext = url.includes('.webp') ? 'webp' : 'png';
-  const outPath = join(DRAFTS, `${key}-draft-recraft-v4.${ext}`);
+  const baseName = scene.outputName ?? `${key}-draft-recraft-v4`;
+  const outPath = join(DRAFTS, `${baseName}.${ext}`);
   await writeFile(outPath, Buffer.from(await imgRes.arrayBuffer()));
   console.log(`Wrote ${outPath}`);
   return outPath;

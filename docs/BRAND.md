@@ -23,11 +23,32 @@ Style bible: [`scripts/brand-prompts.json`](../scripts/brand-prompts.json)
 
 | File | Screen |
 |------|--------|
-| `home-hero.webp` | Home — Start / Join / Settings signs in art |
-| `host-hero.webp` | Host setup — game signs in art |
-| `join-hero.webp` | Join — scenery only, form overlay |
+| `home-hero.webp` | Home — logo + Start / Join / Settings signs (768×1536) |
+| `host-hero.webp` | Host setup — game signs only, no logo (720×1456) |
+| `waiting-hero.webp` | Join + waiting room — scenery only, no logo or signpost |
 
 Drafts (for regen review): `assets/branding/drafts/*-draft-recraft-v4.webp`
+
+### Hero size & screen fill
+
+| Asset | Pixels | Source |
+|-------|--------|--------|
+| `home-hero.webp` | 768×1536 | Recraft V4 (`768x1536` max width) |
+| `host-hero.webp`, `waiting-hero.webp` | 720×1456 | Flux Kontext edits from home hero |
+
+**Kontext did not preserve home’s pixel dimensions** — host/waiting drafts arrived at 720×1456. Promotion only converts PNG→WebP; we do not resize heroes.
+
+**Layout (all hero screens):** art scales **uniformly to full width** (no side bars), **bottom-anchored**. Extra space above is **`brand.sky` (`#7EC8F7`)**; if the scaled art is taller than the screen, the top crops off (usually sky in the illustration). Hotspots live inside the art frame so taps stay aligned.
+
+Optional later: re-run Kontext with explicit output size, or pad host/waiting to 768×1536 with sky-colored bars before promoting.
+
+**Taller art (optional):** **768×1664** would add sky/road for very tall phones. Recraft V4 cannot extend an existing image (prompt-only). Outpaint or regenerate, then update `heroDimensions` in `src/data/brandAssets.ts` and recalibrate `src/data/heroHotspots.ts`.
+
+## UI pattern
+
+- Hero WebP bottom-anchored at full width; sky `#7EC8F7` fills space above (`SceneryBackground`)
+- Invisible tap targets on illustrated signs (`HeroSignHotspots`)
+- Logo only on home hero art, not host/join
 
 ## App icon
 
@@ -49,10 +70,4 @@ npm run generate:brand host join logo icon
 node scripts/generate-brand-assets.mjs --promote home host join logo icon
 ```
 
-**Model:** `recraft-ai/recraft-v4` — prompt-only (no reference image). Consistency comes from the locked `styleBlock` + `logoBlock` in `brand-prompts.json`.
-
-## UI pattern
-
-- Full-bleed hero WebP background (`SceneryBackground`)
-- Interactive `SignPostButton` overlays (reliable taps)
-- Logo baked into hero art; `BrandLogo` spacer preserves layout
+**Model:** `recraft-ai/recraft-v4` — prompt-only (no reference image). Consistency comes from the locked `styleBlock` + `logoBlock` in `brand-prompts.json`. To extend an approved hero vertically, outpaint to **768×1664** (see targetHeroSize in prompts JSON).

@@ -1,19 +1,27 @@
 {
   "model": "recraft-ai/recraft-v4",
-  "styleBlock": "Vibrant cartoon road trip illustration, cheerful family-friendly vector cartoon style, pink vintage compact car with luggage on roof rack, coastal highway winding along ocean cliffs, snowy mountains in distance, pine forest, bright blue sky, fluffy white clouds, wildflowers along the road, wooden signpost with colorful arrow signs, clean readable text on signs, no watermark",
+  "styleBlock": "Vibrant cartoon road trip illustration, cheerful family-friendly vector cartoon style, rich detailed scenery with crisp linework and subtle texture, pink vintage compact car with luggage on roof rack, coastal highway winding along ocean cliffs, snowy mountains in distance, pine forest, light sky blue #7EC8F7 sky, fluffy white clouds, wildflowers along the road, wooden signpost with colorful arrow signs, clean readable text on signs, no watermark",
   "logoBlock": "Large playful BACKSEAT GAMES logo at top: word BACKSEAT in bubble pink letters with white dashed stitching outline, word GAMES in bubble green letters with white dashed stitching, the letter A in GAMES replaced by a blue map pin icon",
+  "targetHeroSize": {
+    "width": 768,
+    "height": 1664,
+    "extendTopPx": 160,
+    "extendBottomPx": 160,
+    "note": "Current heroes are 768×1344. Extend 160px sky on top + 160px road on bottom to fill iPhone screens without letterboxing. Recraft V4 is prompt-only — use flux-fill-pro or manual outpainting to extend an approved hero, then update heroDimensions in brandAssets.ts."
+  },
   "scenes": {
     "home": {
-      "aspect_ratio": "9:16",
-      "prompt": "{{logoBlock}}. Below the logo, scenic coastal highway, pink car driving away, wooden signpost on the left with three arrow signs: START A GAME (pink sign), JOIN A GAME (green sign), SETTINGS (blue sign). {{styleBlock}}."
+      "size": "768x1536",
+      "outputName": "home-hero-1664-draft-recraft-v4",
+      "prompt": "{{logoBlock}}. Full-bleed extra-tall portrait mobile app home screen, highly detailed illustration with rich scenery and crisp edges. Light sky blue #7EC8F7 sky — not dark blue — with generous fluffy white clouds above the logo. Long gray coastal road with yellow dashed center line continuing well below the pink car to the bottom edge. Below the logo, detailed scenic coastal highway viewed from behind, pink vintage compact car with yellow green and blue luggage on roof rack driving away. Wooden signpost on the left with three perfectly horizontal level arrow signs, all parallel, not tilted or diagonal, pointing left like road signs: START A GAME (pink sign), JOIN A GAME (green sign), SETTINGS (blue sign). Detailed snow-capped mountains, dense pine forest, rocky ocean cliffs with waves, colorful wildflowers, textured road surface. {{styleBlock}}. No watermark, no extra text beyond logo and sign labels."
     },
     "host": {
       "aspect_ratio": "9:16",
-      "prompt": "Tall portrait mobile game screen background. {{logoBlock}}. Below, wooden signpost on the left with three arrow signs: LICENSE PLATES (pink sign), SIGN GAME (green sign), TRAVEL BINGO (blue sign). Pink car on coastal highway. {{styleBlock}}. Open cream-toned lower area for form overlay."
+      "prompt": "Tall portrait mobile game screen background. NO logo, NO title text, NO BACKSEAT GAMES lettering anywhere. Generous extra blue sky at top and extra road at bottom. Wooden signpost on the left with three horizontally level arrow signs pointing left (straight, not tilted): LICENSE PLATES (pink sign), SIGN GAME (green sign), TRAVEL BINGO (blue sign). Pink car on coastal highway. {{styleBlock}}. Open cream-toned lower third for name form overlay."
     },
     "join": {
       "aspect_ratio": "9:16",
-      "prompt": "Tall portrait mobile game screen background. {{logoBlock}}. Scenic coastal road, pink car driving into distance, mountains and ocean. No signpost. {{styleBlock}}. Open lower two-thirds with soft cream sky wash for form overlay."
+      "prompt": "Tall portrait mobile game screen background. NO logo, NO title text. Generous extra blue sky at top. Scenic coastal road, pink car driving into distance, mountains and ocean. No signpost. {{styleBlock}}. Open lower two-thirds with soft cream sky wash for form overlay."
     },
     "logo": {
       "aspect_ratio": "3:2",

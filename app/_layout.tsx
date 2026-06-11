@@ -87,10 +87,12 @@ export default function RootLayout() {
             <Stack.Screen
               name="lobby/[sessionId]"
               options={{
-                title: 'Waiting Room',
+                title: '',
                 headerBackTitle: 'Back',
                 headerTransparent: true,
+                headerShadowVisible: false,
                 headerBlurEffect: 'light',
+                headerStyle: { backgroundColor: 'transparent' },
               }}
             />
             <Stack.Screen name="game" options={{ headerShown: false, gestureEnabled: false }} />

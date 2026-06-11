@@ -61,7 +61,7 @@ export default function LobbyScreen() {
     (session.gameType === 'bingo' ? session.players.length >= 1 : otherPlayers.length >= 1);
 
   return (
-    <SceneryBackground variant="lobby" layout="backdrop">
+    <SceneryBackground variant="lobby">
       <SafeAreaView style={styles.safe} edges={['bottom']}>
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.subtitle}>
