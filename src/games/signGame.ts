@@ -6,6 +6,7 @@ import type {
 } from '../types/game';
 import {
   getNextLetter,
+  letterMatchRejection,
   normalizeWord,
   wordMatchesLetter,
 } from './signGameUtils';
@@ -63,16 +64,13 @@ export function applySignGameAction(
     return { ok: false, reason: 'Word must be at least 2 characters.' };
   }
 
-  if (state.usedWords.includes(normalized)) {
+  const signRules = session.gameRules['sign-game'];
+  if (!signRules.allowDuplicateWords && state.usedWords.includes(normalized)) {
     return { ok: false, reason: 'That word was already used by someone else.' };
   }
 
-  if (!wordMatchesLetter(action.word, currentLetter)) {
-    const rule =
-      currentLetter === 'Q' || currentLetter === 'X' || currentLetter === 'Z'
-        ? `Letter ${currentLetter} must appear in the word.`
-        : `Word must start with ${currentLetter}.`;
-    return { ok: false, reason: rule };
+  if (!wordMatchesLetter(action.word, currentLetter, signRules)) {
+    return { ok: false, reason: letterMatchRejection(currentLetter, signRules) };
   }
 
   const nextLetter = getNextLetter(currentLetter);

@@ -1,3 +1,5 @@
+import type { GameRules } from './preferences';
+
 export type GameType = 'license-plates' | 'bingo' | 'sign-game';
 
 export type SessionPhase = 'lobby' | 'playing' | 'finished';
@@ -15,6 +17,7 @@ export interface SessionState {
   gameType: GameType | null;
   players: Player[];
   hostId: string;
+  gameRules: GameRules;
   gameState: GameState | null;
   winnerId: string | null;
   lastRejection: { playerId: string; reason: string } | null;

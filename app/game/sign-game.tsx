@@ -11,11 +11,12 @@ import { BigButton } from '@/components/BigButton';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
-import { ALPHABET, SPECIAL_LETTERS } from '@/games/signGameUtils';
+import { ALPHABET, letterMatchHint } from '@/games/signGameUtils';
 import { getSignGameLeaderboard } from '@/games/signGame';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
+import { playTapFeedback } from '@/services/feedback';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function SignGameScreen() {
@@ -56,7 +57,7 @@ export default function SignGameScreen() {
   }
 
   const youWon = session.winnerId === localPlayerId;
-  const houseRule = SPECIAL_LETTERS.has(currentLetter);
+  const signRules = session.gameRules['sign-game'];
 
   const submitWord = () => {
     const trimmed = word.trim();
@@ -68,6 +69,7 @@ export default function SignGameScreen() {
       letter: currentLetter,
       word: trimmed,
     });
+    void playTapFeedback();
     setWord('');
     setModalOpen(false);
   };
@@ -87,9 +89,7 @@ export default function SignGameScreen() {
       </View>
 
       <Text style={styles.rule}>
-        {houseRule
-          ? `Find a word with the letter ${currentLetter} in it`
-          : `Find a word that starts with ${currentLetter}`}
+        {letterMatchHint(currentLetter, signRules)}
       </Text>
 
       <View style={styles.progressRow}>

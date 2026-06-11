@@ -54,6 +54,9 @@ export function applyLicensePlatesAction(
   }
 
   if (action.type === 'UNCLAIM_PLATE') {
+    if (!session.gameRules['license-plates'].allowUnclaim) {
+      return { ok: false, reason: 'Unclaiming plates is turned off for this game.' };
+    }
     const owner = state.claims[action.plateCode];
     if (owner !== playerId) {
       return { ok: false, reason: 'You can only unclaim plates you hold.' };

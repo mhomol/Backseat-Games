@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "generate:plates": "node scripts/generate-plates.mjs",
     "generate:brand": "node scripts/generate-brand-assets.mjs",
-    "prepare:hero-flux": "node scripts/prepare-hero-flux-input.mjs"
+    "prepare:hero-flux": "node scripts/prepare-hero-flux-input.mjs",
+    "generate:sounds": "node scripts/generate-sounds.mjs",
+    "crop:icon": "node scripts/crop-icon-from-hero.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka": "^0.4.1",

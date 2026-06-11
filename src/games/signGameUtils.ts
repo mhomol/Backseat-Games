@@ -1,3 +1,5 @@
+import type { SignGameRules } from '../types/preferences';
+
 export const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 export const SPECIAL_LETTERS = new Set(['Q', 'X', 'Z']);
@@ -14,7 +16,11 @@ export function getNextLetter(current: string): string | null {
   return ALPHABET[index + 1];
 }
 
-export function wordMatchesLetter(word: string, letter: string): boolean {
+export function wordMatchesLetter(
+  word: string,
+  letter: string,
+  rules?: Pick<SignGameRules, 'qxzMatchMode'>,
+): boolean {
   const normalized = normalizeWord(word);
   if (normalized.length < 2) {
     return false;
@@ -23,10 +29,32 @@ export function wordMatchesLetter(word: string, letter: string): boolean {
     return false;
   }
   const upperLetter = letter.toUpperCase();
-  if (SPECIAL_LETTERS.has(upperLetter)) {
+  const useAnywhere =
+    rules?.qxzMatchMode === 'anywhere' && SPECIAL_LETTERS.has(upperLetter);
+  if (useAnywhere) {
     return normalized.includes(upperLetter.toLowerCase());
   }
   return normalized.startsWith(upperLetter.toLowerCase());
+}
+
+export function letterMatchHint(letter: string, rules?: Pick<SignGameRules, 'qxzMatchMode'>): string {
+  const upperLetter = letter.toUpperCase();
+  const useAnywhere =
+    rules?.qxzMatchMode === 'anywhere' && SPECIAL_LETTERS.has(upperLetter);
+  if (useAnywhere) {
+    return `Find a word with the letter ${upperLetter} in it`;
+  }
+  return `Find a word that starts with ${upperLetter}`;
+}
+
+export function letterMatchRejection(letter: string, rules?: Pick<SignGameRules, 'qxzMatchMode'>): string {
+  const upperLetter = letter.toUpperCase();
+  const useAnywhere =
+    rules?.qxzMatchMode === 'anywhere' && SPECIAL_LETTERS.has(upperLetter);
+  if (useAnywhere) {
+    return `Letter ${upperLetter} must appear in the word.`;
+  }
+  return `Word must start with ${upperLetter}.`;
 }
 
 export function lettersCompleted(currentLetter: string): number {

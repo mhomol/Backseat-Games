@@ -52,8 +52,9 @@ Optional later: re-run Kontext with explicit output size, or pad host/waiting to
 
 ## App icon
 
-- `assets/icon.png` — regenerated in Recraft V4 style (1024×1024)
-- Source draft: `assets/branding/drafts/icon-draft-recraft-v4.webp`
+- `assets/icon.png` — car-only square icon (1024×1024), Kontext from home hero
+- Source draft: `assets/branding/drafts/app-icon-car-only.png`
+- Promote after updating draft: copy draft → `assets/icon.png` + `assets/splash-icon.png`
 
 ## Game headers
 

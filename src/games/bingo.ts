@@ -58,7 +58,7 @@ function getMarkedIndices(marked: boolean[]): number[] {
     .filter((index) => index >= 0);
 }
 
-function hasBingo(marked: boolean[]): boolean {
+function hasLineBingo(marked: boolean[]): boolean {
   const lines = [
     [0, 1, 2, 3, 4],
     [5, 6, 7, 8, 9],
@@ -75,6 +75,17 @@ function hasBingo(marked: boolean[]): boolean {
   ];
 
   return lines.some((line) => line.every((index) => marked[index]));
+}
+
+function hasBlackout(marked: boolean[]): boolean {
+  return marked.every(Boolean);
+}
+
+function hasBingoWin(marked: boolean[], winMode: 'line' | 'blackout'): boolean {
+  if (winMode === 'blackout') {
+    return hasBlackout(marked);
+  }
+  return hasLineBingo(marked);
 }
 
 export function applyBingoAction(
@@ -108,7 +119,9 @@ export function applyBingoAction(
     }
     const nextMarked = [...playerMarked];
     nextMarked[action.index] = true;
-    const winnerId = hasBingo(nextMarked) ? playerId : null;
+    const winnerId = hasBingoWin(nextMarked, session.gameRules.bingo.winMode)
+      ? playerId
+      : null;
     return {
       ok: true,
       state: {
@@ -164,4 +177,4 @@ export function getBingoSquareLabel(
   return { label: item?.label ?? '???', icon: item?.icon ?? '❓' };
 }
 
-export { BINGO_SIZE, FREE_CENTER_INDEX, getMarkedIndices, hasBingo };
+export { BINGO_SIZE, FREE_CENTER_INDEX, getMarkedIndices, hasBlackout, hasLineBingo };

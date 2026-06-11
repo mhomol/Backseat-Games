@@ -16,6 +16,7 @@ import {
 } from '@expo-google-fonts/nunito';
 import * as SplashScreen from 'expo-splash-screen';
 import { ToastBanner } from '@/components/ToastBanner';
+import { usePreferencesStore } from '@/store/preferencesStore';
 import { useSessionStore } from '@/store/sessionStore';
 import { colors } from '@/theme';
 
@@ -35,6 +36,7 @@ export default function RootLayout() {
   });
 
   const initialize = useSessionStore((state) => state.initialize);
+  const loadPreferences = usePreferencesStore((state) => state.loadPreferences);
   const toast = useSessionStore((state) => state.toast);
   const clearToast = useSessionStore((state) => state.clearToast);
 
@@ -42,10 +44,10 @@ export default function RootLayout() {
   const fontError = fredokaError ?? nunitoError;
 
   useEffect(() => {
-    void initialize().catch((error: unknown) => {
-      console.error('Multiplayer initialize failed', error);
+    void Promise.all([initialize(), loadPreferences()]).catch((error: unknown) => {
+      console.error('App initialize failed', error);
     });
-  }, [initialize]);
+  }, [initialize, loadPreferences]);
 
   useEffect(() => {
     if (fontsReady || fontError) {

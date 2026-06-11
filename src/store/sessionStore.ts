@@ -18,6 +18,8 @@ import {
 } from '../games/ruleEngine';
 import { getMultiplayerService } from '../multiplayer';
 import { loadSavedPlayerName, savePlayerName } from '../services/playerNameStorage';
+import { usePreferencesStore } from './preferencesStore';
+import type { GameRules } from '../types/preferences';
 
 interface SessionStore {
   localPlayerId: string;
@@ -40,6 +42,7 @@ interface SessionStore {
   refreshDiscovery: () => void;
   joinDiscoveredSession: (sessionId: string, playerName: string) => Promise<void>;
   startHostedGame: () => void;
+  updateSessionRules: (partial: Partial<GameRules>) => void;
   finishGameAsHost: () => void;
   returnToLobbyAsHost: () => void;
   leaveActiveGame: () => void;
@@ -175,7 +178,8 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const sessionId = uuidv4().slice(0, 8);
       const hostId = get().localPlayerId;
       const host = playerFromLocal(hostId, hostName, true);
-      const session = createSession(sessionId, host, gameType);
+      const gameRules = usePreferencesStore.getState().getDefaultGameRules();
+      const session = createSession(sessionId, host, gameType, gameRules);
       await multiplayer.hostSession(sessionId, hostName, gameType);
       void savePlayerName(hostName);
       set({
@@ -234,6 +238,34 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const next = startGame(session);
       set({ session: next });
       multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
+    },
+
+    updateSessionRules: (partial) => {
+      const { session, isHost } = get();
+      if (!isHost || !session || session.phase !== 'lobby') {
+        return;
+      }
+      const next: SessionState = {
+        ...session,
+        gameRules: {
+          ...session.gameRules,
+          ...partial,
+          'sign-game': {
+            ...session.gameRules['sign-game'],
+            ...partial['sign-game'],
+          },
+          'license-plates': {
+            ...session.gameRules['license-plates'],
+            ...partial['license-plates'],
+          },
+          bingo: {
+            ...session.gameRules.bingo,
+            ...partial.bingo,
+          },
+        },
+      };
+      set({ session: next });
+      multiplayer.send({ type: 'STATE_UPDATE', state: next });
     },
 
     finishGameAsHost: () => {

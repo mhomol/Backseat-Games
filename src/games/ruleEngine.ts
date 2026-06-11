@@ -5,6 +5,7 @@ import type {
   Player,
   SessionState,
 } from '../types/game';
+import type { GameRules } from '../types/preferences';
 import { createBingoState, applyBingoAction } from './bingo';
 import {
   applyLicensePlatesAction,
@@ -17,6 +18,7 @@ export function createSession(
   sessionId: string,
   host: Player,
   gameType: GameType,
+  gameRules: GameRules,
 ): SessionState {
   return {
     sessionId,
@@ -24,6 +26,7 @@ export function createSession(
     gameType,
     players: [host],
     hostId: host.id,
+    gameRules,
     gameState: null,
     winnerId: null,
     lastRejection: null,

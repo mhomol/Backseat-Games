@@ -11,6 +11,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BigButton } from '@/components/BigButton';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
+import { SettingsSection } from '@/components/settings/SettingsSection';
 import { PlayerChip } from '@/components/PlayerChip';
 import { GAME_LABELS } from '@/data';
 import { getMultiplayerService } from '@/multiplayer';
@@ -30,6 +32,7 @@ export default function LobbyScreen() {
   const isHost = useSessionStore((state) => state.isHost);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const startHostedGame = useSessionStore((state) => state.startHostedGame);
+  const updateSessionRules = useSessionStore((state) => state.updateSessionRules);
 
   useEffect(() => {
     if (session?.phase === 'playing' && session.gameType) {
@@ -88,6 +91,17 @@ export default function LobbyScreen() {
               />
             ))}
           </View>
+
+          {session.gameType ? (
+            <SettingsSection title="House rules">
+              <GameRulesEditor
+                gameType={session.gameType}
+                rules={session.gameRules}
+                readOnly={!isHost}
+                onChange={updateSessionRules}
+              />
+            </SettingsSection>
+          ) : null}
 
           {!isHost ? (
             <View style={styles.waitBox}>

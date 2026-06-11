@@ -12,7 +12,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { playTapFeedback } from '../services/feedback';
 import { borders, colors, fonts, radii, shadows, spacing } from '../theme';
 
 type BigButtonProps = {
@@ -57,7 +57,7 @@ export function BigButton({
           scale.value = withSpring(1);
         }}
         onPress={() => {
-          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          void playTapFeedback();
           onPress();
         }}
         style={[

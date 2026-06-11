@@ -27,6 +27,10 @@ If no sessions appear after ~30 seconds, ask the host to confirm they created a 
 
 ---
 
+## House rules
+
+Default rules live in **Settings**. When you host, the waiting room copies those defaults — you can tweak rules for that trip before tapping **Start Game!** without changing your saved defaults. Everyone in the lobby sees the rules for that session.
+
 ## Shared behavior
 
 ### Scoreboards

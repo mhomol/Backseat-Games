@@ -18,6 +18,8 @@ export default function HomeScreen() {
             router.push('/host/setup');
           } else if (id === 'join') {
             router.push('/join');
+          } else if (id === 'settings') {
+            router.push('/settings');
           }
         }}
       />
