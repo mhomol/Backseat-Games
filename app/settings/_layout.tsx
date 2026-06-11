@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { SettingsBackButton } from '@/components/settings/SettingsBackButton';
 import { colors } from '@/theme';
 
 export default function SettingsLayout() {
@@ -14,7 +15,13 @@ export default function SettingsLayout() {
         headerBackTitle: 'Back',
       }}
     >
-      <Stack.Screen name="index" options={{ title: 'Settings', headerBackTitle: 'Back' }} />
+      <Stack.Screen
+        name="index"
+        options={{
+          title: 'Settings',
+          headerLeft: () => <SettingsBackButton />,
+        }}
+      />
       <Stack.Screen name="rules/[gameType]" options={{ title: 'House rules' }} />
       <Stack.Screen name="how-to-play" options={{ title: 'How to play' }} />
       <Stack.Screen name="tips" options={{ title: 'Multiplayer tips' }} />

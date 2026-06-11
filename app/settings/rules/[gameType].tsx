@@ -1,13 +1,12 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { StyleSheet, Text } from 'react-native';
 import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
+import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import type { GameType } from '@/types/game';
-import { colors, fonts, spacing } from '@/theme';
+import { colors, fonts } from '@/theme';
 
 function parseGameType(value: string | string[] | undefined): GameType | null {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -28,35 +27,23 @@ export default function GameRulesSettingsScreen() {
   }
 
   return (
-    <SceneryBackground variant="lobby">
-      <SafeAreaView style={styles.safe} edges={['bottom']}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.lead}>
-            These defaults apply when you host a new game. Change rules for a single trip in the
-            waiting room before you start.
-          </Text>
-          <SettingsSection title={GAME_RULES_TITLE[gameType]}>
-            <GameRulesEditor
-              gameType={gameType}
-              rules={preferences.gameRules}
-              onChange={updateGameRules}
-            />
-          </SettingsSection>
-        </ScrollView>
-      </SafeAreaView>
-    </SceneryBackground>
+    <SettingsScreenShell>
+      <Text style={styles.lead}>
+        These defaults apply when you host a new game. Change rules for a single trip in the
+        waiting room before you start.
+      </Text>
+      <SettingsSection title={GAME_RULES_TITLE[gameType]}>
+        <GameRulesEditor
+          gameType={gameType}
+          rules={preferences.gameRules}
+          onChange={updateGameRules}
+        />
+      </SettingsSection>
+    </SettingsScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
   lead: {
     fontFamily: fonts.body,
     fontSize: 14,

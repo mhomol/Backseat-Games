@@ -1,6 +1,5 @@
-import { ScrollView, StyleSheet, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { StyleSheet, Text } from 'react-native';
+import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { colors, fonts, spacing } from '@/theme';
 
@@ -14,31 +13,19 @@ const TIPS = [
 
 export default function TipsScreen() {
   return (
-    <SceneryBackground variant="lobby">
-      <SafeAreaView style={styles.safe} edges={['bottom']}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <SettingsSection title="Multiplayer tips">
-            {TIPS.map((tip) => (
-              <Text key={tip} style={styles.tip}>
-                • {tip}
-              </Text>
-            ))}
-          </SettingsSection>
-        </ScrollView>
-      </SafeAreaView>
-    </SceneryBackground>
+    <SettingsScreenShell>
+      <SettingsSection title="Multiplayer tips">
+        {TIPS.map((tip) => (
+          <Text key={tip} style={styles.tip}>
+            • {tip}
+          </Text>
+        ))}
+      </SettingsSection>
+    </SettingsScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
-  container: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    paddingBottom: spacing.xxl,
-  },
   tip: {
     fontFamily: fonts.body,
     fontSize: 15,
