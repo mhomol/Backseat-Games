@@ -11,7 +11,8 @@ export const brand = {
   blue: '#3FA9F5',
   blueDark: '#2B8FD9',
   blueLight: '#6FC0FA',
-  sky: '#7EC8F7',
+  /** Sampled from Recraft hero sky — matches letterbox + nav chrome to art. */
+  sky: '#5CB9E0',
   ocean: '#2E86C8',
   road: '#4A4F58',
   cream: '#FFF8EE',

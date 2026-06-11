@@ -72,18 +72,19 @@ export default function RootLayout() {
         <View style={styles.root}>
           <Stack
             screenOptions={{
-              headerStyle: { backgroundColor: colors.skyBlue },
+              headerStyle: { backgroundColor: colors.heroSky },
               headerTintColor: colors.roadGray,
               headerTitleStyle: { fontFamily: 'Fredoka_600SemiBold' },
-              contentStyle: { backgroundColor: colors.cream },
+              headerShadowVisible: false,
+              contentStyle: { backgroundColor: colors.heroSky },
             }}
           >
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen
               name="host/setup"
-              options={{ headerShown: false, title: 'Start a Game' }}
+              options={{ title: '', headerBackTitle: 'Back' }}
             />
-            <Stack.Screen name="join/index" options={{ headerShown: false, title: 'Join' }} />
+            <Stack.Screen name="join/index" options={{ title: '', headerBackTitle: 'Back' }} />
             <Stack.Screen
               name="lobby/[sessionId]"
               options={{
@@ -107,6 +108,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.cream,
+    backgroundColor: colors.heroSky,
   },
 });

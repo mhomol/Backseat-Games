@@ -10,7 +10,7 @@ Style bible: [`scripts/brand-prompts.json`](../scripts/brand-prompts.json)
 | Pink | `#F25B88` | License Plate Game |
 | Green | `#3BCA6E` | Sign Game |
 | Blue | `#3FA9F5` | Travel Bingo |
-| Sky | `#7EC8F7` | Splash screen |
+| Sky | `#5CB9E0` | Hero letterbox, nav bar, splash (sampled from hero art) |
 | Cream | `#FFF8EE` | Overlays, logo background |
 
 ## Logo
@@ -38,7 +38,7 @@ Drafts (for regen review): `assets/branding/drafts/*-draft-recraft-v4.webp`
 
 **Kontext did not preserve home’s pixel dimensions** — host/waiting drafts arrived at 720×1456. Promotion only converts PNG→WebP; we do not resize heroes.
 
-**Layout (all hero screens):** art scales **uniformly to full width** (no side bars), **bottom-anchored**. Extra space above is **`brand.sky` (`#7EC8F7`)**; if the scaled art is taller than the screen, the top crops off (usually sky in the illustration). Hotspots live inside the art frame so taps stay aligned.
+**Layout (all hero screens):** art scales **uniformly to full width** (no side bars), **bottom-anchored**. Extra space above is **`brand.sky` (`#5CB9E0`)**; if the scaled art is taller than the screen, the top crops off (usually sky in the illustration). Hotspots live inside the art frame so taps stay aligned.
 
 Optional later: re-run Kontext with explicit output size, or pad host/waiting to 768×1536 with sky-colored bars before promoting.
 
@@ -46,7 +46,7 @@ Optional later: re-run Kontext with explicit output size, or pad host/waiting to
 
 ## UI pattern
 
-- Hero WebP bottom-anchored at full width; sky `#7EC8F7` fills space above (`SceneryBackground`)
+- Hero WebP bottom-anchored at full width; sky `#5CB9E0` fills space above (`SceneryBackground`)
 - Invisible tap targets on illustrated signs (`HeroSignHotspots`)
 - Logo only on home hero art, not host/join
 

@@ -63,7 +63,7 @@ export default function HostSetupScreen() {
           <ActivityIndicator size="large" color={colors.skyBlueDark} />
         </View>
       ) : null}
-      <SafeAreaView style={styles.safe} pointerEvents="box-none">
+      <SafeAreaView style={styles.safe} edges={['left', 'right']} pointerEvents="box-none">
         <View style={styles.formCard}>
           <Text style={styles.label}>Your name</Text>
           <TextInput
@@ -87,14 +87,13 @@ export default function HostSetupScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    justifyContent: 'flex-end',
+    paddingTop: 188,
   },
   formCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.92)',
     borderRadius: radii.lg,
     padding: spacing.md,
     marginHorizontal: spacing.lg,
-    marginBottom: spacing.md,
     borderWidth: borders.thick,
     borderColor: colors.roadGrayLight,
   },

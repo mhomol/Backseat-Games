@@ -4,6 +4,8 @@ export { brand, gameBrandColors, signPostColors } from './brand';
 export type { SignPostColor } from './brand';
 
 export const colors = {
+  /** Illustration sky + hero screen chrome (status bar, nav bar, letterbox). */
+  heroSky: brand.sky,
   skyBlue: brand.blue,
   skyBlueDark: brand.blueDark,
   sunnyYellow: '#FFE66D',
