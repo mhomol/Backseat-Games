@@ -11,6 +11,7 @@ Style bible: [`scripts/brand-prompts.json`](../scripts/brand-prompts.json)
 | Green | `#3BCA6E` | Sign Game |
 | Blue | `#3FA9F5` | Travel Bingo |
 | Sky | `#5CB9E0` | Hero letterbox, nav bar, splash (sampled from hero art) |
+| Road yellow | `#F0C060` | Accent buttons, road-dash UI (sampled from hero art) |
 | Cream | `#FFF8EE` | Overlays, logo background |
 
 ## Logo

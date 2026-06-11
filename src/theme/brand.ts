@@ -15,6 +15,9 @@ export const brand = {
   sky: '#5CB9E0',
   ocean: '#2E86C8',
   road: '#4A4F58',
+  /** Road center-line dashes sampled from home hero art. */
+  roadYellow: '#F0C060',
+  roadYellowDark: '#E0A848',
   cream: '#FFF8EE',
   wood: '#8B5E3C',
 } as const;

@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   badge: {
     backgroundColor: 'rgba(255, 255, 255, 0.92)',
     borderWidth: borders.thick,
-    borderColor: colors.lavender,
+    borderColor: colors.skyBlueDark,
     borderRadius: radii.lg,
     padding: spacing.md,
   },

@@ -99,6 +99,7 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen name="game" options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen name="settings" options={{ headerShown: false }} />
           </Stack>
           <ToastBanner message={toast} onDismiss={clearToast} />
         </View>
