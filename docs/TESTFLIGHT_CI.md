@@ -171,5 +171,36 @@ User-visible marketing version (`expo.version` in `app.json`, e.g. `1.0.0`) is e
 
 - [README.md](../README.md) — local dev with Expo Go
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — build & deploy summary
+- [MONETIZATION.md](./MONETIZATION.md) — host unlock IAP and App Store Connect product setup
 - [PUSH_SETUP.md](./PUSH_SETUP.md) — APNs key and future notification work
 - Memento Mori reference: `90-Day/memento-mori/docs/TESTFLIGHT_CI.md`
+
+## Testing In-App Purchases
+
+Host unlock IAP is enforced in **TestFlight and App Store builds only** (`__DEV__` builds skip the paywall for local development).
+
+### Prerequisites
+
+1. **Paid Apps Agreement** active in App Store Connect (Agreements, Tax, and Banking).
+2. Non-consumable product `com.homolworks.backseatgames.host_unlock` created at **$1.99**, status **Ready to Submit** — see [MONETIZATION.md](./MONETIZATION.md).
+3. **Sandbox Apple ID** — App Store Connect → Users and Access → Sandbox → Testers.
+4. **Physical iPhone** with TestFlight build installed.
+
+### Sandbox test flow
+
+1. Fresh install from TestFlight (or delete app and reinstall).
+2. Tap **Start a Game** on the home signpost → paywall appears.
+3. Tap **Unlock for $1.99** → sign in with sandbox Apple ID when iOS prompts.
+4. Confirm purchase completes → host setup screen opens.
+5. Host a session; confirm **Join** still works on a second phone without purchase.
+6. **Settings → Restore purchases** on a reinstall → hosting works without repurchasing.
+7. Optional: enable airplane mode after unlock → confirm hosting still works offline.
+
+### Troubleshooting IAP
+
+| Issue | Fix |
+|-------|-----|
+| Product not found | Product ID must match code; wait up to a few hours after creating in ASC |
+| Purchase sheet never appears | Paid Apps Agreement incomplete; use physical device not simulator |
+| Restore finds nothing | Same sandbox Apple ID used for original test purchase |
+| Paywall missing in TestFlight | Ensure release/TestFlight build (`__DEV__` false), not Metro dev session |

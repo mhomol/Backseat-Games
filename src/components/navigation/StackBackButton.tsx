@@ -16,7 +16,6 @@ export function StackBackButton({ label = 'Back' }: StackBackButtonProps) {
       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       style={styles.pill}
     >
-      <Text style={styles.chevron}>‹</Text>
       <Text style={styles.label}>{label}</Text>
     </Pressable>
   );
@@ -28,19 +27,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.58)',
     borderRadius: radii.pill,
-    paddingLeft: spacing.sm,
-    paddingRight: spacing.md,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
     minHeight: 36,
     ...shadows.card,
-  },
-  chevron: {
-    fontFamily: fonts.bodySemiBold,
-    fontSize: 22,
-    lineHeight: 22,
-    color: colors.roadGray,
-    marginTop: -1,
-    marginRight: 1,
   },
   label: {
     fontFamily: fonts.body,

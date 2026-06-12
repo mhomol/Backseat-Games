@@ -8,6 +8,8 @@ How to play Backseat Games — written for family testers, not engineers.
 
 Typically the front-seat parent on their phone. The host picks the game, waits for everyone to join, and taps **Start Game**.
 
+**Pricing:** Joining is **free** for everyone. Starting a game (hosting) requires a **one-time $1.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay.
+
 ### How to join
 
 1. Open **Backseat Games** on your iPhone.

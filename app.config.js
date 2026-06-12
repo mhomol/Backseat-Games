@@ -58,6 +58,7 @@ module.exports = () => {
             color: '#5CB9E0',
           },
         ],
+        'expo-iap',
       ],
       experiments: {
         tsconfigPaths: true,

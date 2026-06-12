@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
@@ -23,8 +24,15 @@ const signToGameType: Record<string, GameType> = {
 export default function HostSetupScreen() {
   const hostGame = useSessionStore((state) => state.hostGame);
   const savedName = useSessionStore((state) => state.localPlayerName);
+  const canHost = usePurchaseStore((state) => state.canHost);
   const [hostName, setHostName] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!canHost()) {
+      router.replace('/');
+    }
+  }, [canHost]);
 
   useEffect(() => {
     if (savedName) {

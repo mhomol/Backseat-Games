@@ -19,6 +19,7 @@ import {
 import { getMultiplayerService } from '../multiplayer';
 import { loadSavedPlayerName, savePlayerName } from '../services/playerNameStorage';
 import { usePreferencesStore } from './preferencesStore';
+import { usePurchaseStore } from './purchaseStore';
 import { useStatsStore } from './statsStore';
 import type { GameRules } from '../types/preferences';
 
@@ -186,6 +187,11 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     },
 
     hostGame: async (gameType, hostName) => {
+      if (!usePurchaseStore.getState().canHost()) {
+        set({ toast: 'Host unlock required to start a game.' });
+        throw new Error('Host unlock required');
+      }
+
       const sessionId = uuidv4().slice(0, 8);
       const hostId = get().localPlayerId;
       const host = playerFromLocal(hostId, hostName, true);

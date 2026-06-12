@@ -1,7 +1,8 @@
 import Constants from 'expo-constants';
-import { StyleSheet, Text } from 'react-native';
+import { Linking, StyleSheet, Text } from 'react-native';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
+import { APP_URLS } from '@/constants/urls';
 import { colors, fonts, spacing } from '@/theme';
 
 export default function AboutScreen() {
@@ -15,6 +16,15 @@ export default function AboutScreen() {
           One phone hosts; everyone else joins nearby with no internet required.
         </Text>
         <Text style={styles.meta}>Version {version}</Text>
+        <Text style={styles.body}>
+          Joining games is free. Hosting requires a one-time in-app purchase on iPhone.
+        </Text>
+        <Text style={styles.link} onPress={() => void Linking.openURL(APP_URLS.support)}>
+          Support & feedback
+        </Text>
+        <Text style={styles.link} onPress={() => void Linking.openURL(APP_URLS.privacy)}>
+          Privacy policy
+        </Text>
         <Text style={styles.body}>
           Questions or feedback from TestFlight? Tell us what worked and what felt confusing on
           your next drive.
@@ -36,5 +46,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.roadGrayLight,
     marginVertical: spacing.sm,
+  },
+  link: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 15,
+    color: colors.skyBlueDark,
+    textDecorationLine: 'underline',
+    marginBottom: spacing.sm,
   },
 });
