@@ -103,8 +103,8 @@ See [TESTFLIGHT_CI.md](./TESTFLIGHT_CI.md) § Testing In-App Purchases for the s
 
 Separate checklist (not blocking IAP):
 
-- Privacy policy URL live ([`PRIVACY.md`](../PRIVACY.md))
-- Support URL
+- Privacy policy URL live — https://mhomol.github.io/Backseat-Games-Site/privacy.html
+- Support URL — https://mhomol.github.io/Backseat-Games-Site/support.html
 - App Store screenshots and description
 - Privacy Nutrition Label questionnaire
 - Age rating

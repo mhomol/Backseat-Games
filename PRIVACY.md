@@ -38,8 +38,8 @@ The app is designed for family use. We do not knowingly collect personal informa
 
 ## Contact
 
-Questions or privacy requests: [GitHub Issues](https://github.com/Homol-Works/Homol-Rides/issues)
+Questions or privacy requests: [Support page](https://mhomol.github.io/Backseat-Games-Site/support.html)
 
 ## Changes
 
-We may update this policy before App Store releases. The in-app link will point to the latest version in this repository.
+We may update this policy before App Store releases. The public version lives at [mhomol.github.io/Backseat-Games-Site/privacy.html](https://mhomol.github.io/Backseat-Games-Site/privacy.html).

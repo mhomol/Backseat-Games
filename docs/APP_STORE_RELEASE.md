@@ -13,8 +13,8 @@ Complete this **after** gameplay playtesting with Grace and TestFlight validatio
 | Icon, splash, permissions | [app.config.js](../app.config.js)                                  |
 | Export encryption         | `ITSAppUsesNonExemptEncryption: false`                             |
 | Host unlock IAP           | Product ID `com.homolworks.backseatgames.host_unlock`              |
-| Privacy policy            | [PRIVACY.md](../PRIVACY.md)                                        |
-| Support URL (in-app)      | GitHub Issues — [src/constants/urls.ts](../src/constants/urls.ts)  |
+| Privacy policy            | https://mhomol.github.io/Backseat-Games-Site/privacy.html          |
+| Support URL (in-app)      | https://mhomol.github.io/Backseat-Games-Site/support.html          |
 
 
 Everything below is **App Store Connect** (browser) unless noted.
@@ -25,7 +25,7 @@ Everything below is **App Store Connect** (browser) unless noted.
 
 - [x] **Paid Apps Agreement** active (Agreements, Tax, and Banking)
 - [x] App record exists: **Backseat Games (road trip fun)**
-- [ ] IAP product created — non-consumable, $1.99, **Ready to Submit** ([MONETIZATION.md](./MONETIZATION.md))
+- [x] IAP product created — non-consumable, $1.99, **Ready to Submit** ([MONETIZATION.md](./MONETIZATION.md))
 
 ---
 
@@ -35,8 +35,8 @@ Everything below is **App Store Connect** (browser) unless noted.
 - [x] **Primary category** — Games → Family (or Travel)
 - [x] **Secondary category** — optional
 - [x] **Age rating** questionnaire — expect 4+; declare local network + optional mic honestly
-- [ ] **Privacy Policy URL** — `https://github.com/Homol-Works/Homol-Rides/blob/master/PRIVACY.md`
-- [ ] **Support URL** — `https://github.com/Homol-Works/Homol-Rides/issues`
+- [x] **Privacy Policy URL** — https://mhomol.github.io/Backseat-Games-Site/privacy.html
+- [x] **Support URL** — https://mhomol.github.io/Backseat-Games-Site/support.html
 
 ---
 
