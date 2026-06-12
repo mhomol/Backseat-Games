@@ -1,24 +1,36 @@
 import type { ReactNode } from 'react';
 import { Platform, ScrollView, StyleSheet, type ScrollViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import type { SceneryVariant } from '@/data/brandAssets';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
 import { spacing } from '@/theme';
 
-/** Native stack header floats over full-bleed scenery in the settings group. */
-export const SETTINGS_HEADER_CLEARANCE =
+/** Opaque stack headers float over full-bleed scenery — keep scroll content below them. */
+export const STACK_HEADER_CLEARANCE =
   (Platform.select({ ios: 44, android: 56, default: 44 }) ?? 44) + spacing.lg;
 
-type SettingsScreenShellProps = {
+type SceneryScrollShellProps = {
   children: ReactNode;
+  variant?: SceneryVariant;
   contentContainerStyle?: ScrollViewProps['contentContainerStyle'];
+  headerClearance?: boolean;
 };
 
-export function SettingsScreenShell({ children, contentContainerStyle }: SettingsScreenShellProps) {
+export function SceneryScrollShell({
+  children,
+  variant = 'lobby',
+  contentContainerStyle,
+  headerClearance = true,
+}: SceneryScrollShellProps) {
   return (
-    <SceneryBackground variant="lobby">
+    <SceneryBackground variant={variant}>
       <SafeAreaView style={styles.safe} edges={['bottom']}>
         <ScrollView
-          contentContainerStyle={[styles.container, contentContainerStyle]}
+          contentContainerStyle={[
+            styles.container,
+            headerClearance && styles.withHeaderClearance,
+            contentContainerStyle,
+          ]}
           contentInsetAdjustmentBehavior="never"
         >
           {children}
@@ -34,8 +46,10 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: spacing.lg,
-    paddingTop: SETTINGS_HEADER_CLEARANCE,
     gap: spacing.md,
     paddingBottom: spacing.xxl,
+  },
+  withHeaderClearance: {
+    paddingTop: STACK_HEADER_CLEARANCE,
   },
 });

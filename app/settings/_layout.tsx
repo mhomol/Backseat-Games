@@ -1,17 +1,13 @@
 import { Stack } from 'expo-router';
-import { SettingsBackButton } from '@/components/settings/SettingsBackButton';
-import { colors } from '@/theme';
+import { StackBackButton } from '@/components/navigation/StackBackButton';
+import { stackScreenOptions } from '@/theme/navigation';
 
 export default function SettingsLayout() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: colors.heroSky },
-        headerTintColor: colors.roadGray,
-        headerTitleStyle: { fontFamily: 'Fredoka_600SemiBold', fontSize: 17 },
-        headerShadowVisible: false,
+        ...stackScreenOptions,
         headerLargeTitle: false,
-        contentStyle: { backgroundColor: colors.heroSky },
         headerBackTitle: 'Back',
       }}
     >
@@ -19,7 +15,7 @@ export default function SettingsLayout() {
         name="index"
         options={{
           title: 'Settings',
-          headerLeft: () => <SettingsBackButton />,
+          headerLeft: () => <StackBackButton />,
         }}
       />
       <Stack.Screen name="rules/[gameType]" options={{ title: 'House rules' }} />

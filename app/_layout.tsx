@@ -19,6 +19,7 @@ import { ToastBanner } from '@/components/ToastBanner';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { useSessionStore } from '@/store/sessionStore';
 import { colors } from '@/theme';
+import { stackScreenOptions } from '@/theme/navigation';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {
   // Splash may already be hidden in dev reloads.
@@ -72,32 +73,11 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <View style={styles.root}>
-          <Stack
-            screenOptions={{
-              headerStyle: { backgroundColor: colors.heroSky },
-              headerTintColor: colors.roadGray,
-              headerTitleStyle: { fontFamily: 'Fredoka_600SemiBold' },
-              headerShadowVisible: false,
-              contentStyle: { backgroundColor: colors.heroSky },
-            }}
-          >
+          <Stack screenOptions={stackScreenOptions}>
             <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="host/setup"
-              options={{ title: '', headerBackTitle: 'Back' }}
-            />
-            <Stack.Screen name="join/index" options={{ title: '', headerBackTitle: 'Back' }} />
-            <Stack.Screen
-              name="lobby/[sessionId]"
-              options={{
-                title: '',
-                headerBackTitle: 'Back',
-                headerTransparent: true,
-                headerShadowVisible: false,
-                headerBlurEffect: 'light',
-                headerStyle: { backgroundColor: 'transparent' },
-              }}
-            />
+            <Stack.Screen name="host/setup" options={{ title: '' }} />
+            <Stack.Screen name="join/index" options={{ title: '' }} />
+            <Stack.Screen name="lobby/[sessionId]" options={{ title: '' }} />
             <Stack.Screen name="game" options={{ headerShown: false, gestureEnabled: false }} />
             <Stack.Screen name="settings" options={{ headerShown: false }} />
           </Stack>

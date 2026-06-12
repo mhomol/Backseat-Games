@@ -7,6 +7,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { ContentCapsule } from '@/components/brand/ContentCapsule';
+import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { BigButton } from '@/components/BigButton';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
@@ -75,8 +77,8 @@ export default function SignGameScreen() {
   };
 
   return (
-    <View style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <SceneryScreenFrame>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
       <GameSessionOverlays
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
@@ -88,9 +90,9 @@ export default function SignGameScreen() {
         <Text style={styles.letter}>{currentLetter}</Text>
       </View>
 
-      <Text style={styles.rule}>
-        {letterMatchHint(currentLetter, signRules)}
-      </Text>
+      <ContentCapsule>
+        <Text style={styles.rule}>{letterMatchHint(currentLetter, signRules)}</Text>
+      </ContentCapsule>
 
       <View style={styles.progressRow}>
         {ALPHABET.map((letter) => {
@@ -120,7 +122,9 @@ export default function SignGameScreen() {
         disabled={youWon}
       />
 
-      <Text style={styles.historyTitle}>Your finds</Text>
+      <ContentCapsule style={styles.historyHeader}>
+        <Text style={styles.historyTitle}>Your finds</Text>
+      </ContentCapsule>
       {mySubmissions.map((entry) => (
         <View key={`${entry.letter}-${entry.timestamp}`} style={styles.historyRow}>
           <Text style={styles.historyLetter}>{entry.letter}</Text>
@@ -155,17 +159,15 @@ export default function SignGameScreen() {
       {guard.isInProgress ? (
         <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
       ) : null}
-    </View>
+    </SceneryScreenFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  scroll: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   container: {
-    padding: spacing.lg,
     gap: spacing.md,
     paddingBottom: spacing.xl,
   },
@@ -188,8 +190,9 @@ const styles = StyleSheet.create({
   rule: {
     fontFamily: fonts.bodyBold,
     textAlign: 'center',
-    color: colors.roadGrayLight,
+    color: colors.roadGray,
     fontSize: 16,
+    lineHeight: 22,
   },
   progressRow: {
     flexDirection: 'row',
@@ -218,11 +221,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bodyBold,
     color: colors.roadGray,
   },
+  historyHeader: {
+    paddingVertical: spacing.sm,
+  },
   historyTitle: {
     fontFamily: fonts.display,
     fontSize: 20,
     color: colors.roadGray,
-    marginTop: spacing.md,
   },
   historyRow: {
     flexDirection: 'row',

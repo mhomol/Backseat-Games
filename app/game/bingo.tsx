@@ -6,6 +6,8 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import { ContentCapsule } from '@/components/brand/ContentCapsule';
+import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import {
@@ -42,14 +44,16 @@ export default function BingoScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SceneryScreenFrame>
       <GameSessionOverlays
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
         isWinnerYou={winnerDisplay?.isYou}
       />
       <View style={styles.playArea}>
-        <Text style={styles.instructions}>Tap a square when you spot it!</Text>
+        <ContentCapsule style={styles.instructionsCapsule}>
+          <Text style={styles.instructions}>Tap a square when you spot it!</Text>
+        </ContentCapsule>
         <View style={styles.grid}>
           {Array.from({ length: BINGO_SIZE }).map((_, index) => {
           const { label, icon } = getBingoSquareLabel(card, index);
@@ -77,7 +81,7 @@ export default function BingoScreen() {
       {guard.isInProgress ? (
         <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
       ) : null}
-    </View>
+    </SceneryScreenFrame>
   );
 }
 
@@ -126,20 +130,17 @@ function BingoCell({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    backgroundColor: colors.cream,
-  },
   playArea: {
     flex: 1,
+  },
+  instructionsCapsule: {
+    marginBottom: spacing.md,
+    paddingVertical: spacing.sm,
   },
   instructions: {
     fontFamily: fonts.bodyBold,
     textAlign: 'center',
     color: colors.roadGray,
-    marginBottom: spacing.md,
   },
   grid: {
     flexDirection: 'row',

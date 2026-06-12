@@ -2,6 +2,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useCallback, useMemo } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
@@ -47,7 +48,7 @@ export default function LicensePlatesScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SceneryScreenFrame>
       <GameSessionOverlays
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
@@ -103,17 +104,11 @@ export default function LicensePlatesScreen() {
       {guard.isInProgress ? (
         <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
       ) : null}
-    </View>
+    </SceneryScreenFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    backgroundColor: colors.cream,
-  },
   list: {
     flex: 1,
   },

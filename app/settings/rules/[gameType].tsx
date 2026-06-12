@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
-import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
+import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
@@ -27,7 +27,7 @@ export default function GameRulesSettingsScreen() {
   }
 
   return (
-    <SettingsScreenShell>
+    <SceneryScrollShell>
       <Text style={styles.lead}>
         These defaults apply when you host a new game. Change rules for a single trip in the
         waiting room before you start.
@@ -39,7 +39,7 @@ export default function GameRulesSettingsScreen() {
           onChange={updateGameRules}
         />
       </SettingsSection>
-    </SettingsScreenShell>
+    </SceneryScrollShell>
   );
 }
 

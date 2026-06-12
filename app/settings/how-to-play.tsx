@@ -1,5 +1,5 @@
 import { StyleSheet, Text } from 'react-native';
-import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
+import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { colors, fonts } from '@/theme';
 
@@ -28,13 +28,13 @@ const SECTIONS = [
 
 export default function HowToPlayScreen() {
   return (
-    <SettingsScreenShell>
+    <SceneryScrollShell>
       {SECTIONS.map((section) => (
         <SettingsSection key={section.title} title={section.title}>
           <Text style={styles.body}>{section.body}</Text>
         </SettingsSection>
       ))}
-    </SettingsScreenShell>
+    </SceneryScrollShell>
   );
 }
 

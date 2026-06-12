@@ -3,14 +3,13 @@ import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import {
   ActivityIndicator,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { BigButton } from '@/components/BigButton';
-import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { ContentCapsule } from '@/components/brand/ContentCapsule';
+import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { PlayerChip } from '@/components/PlayerChip';
@@ -64,91 +63,88 @@ export default function LobbyScreen() {
     (session.gameType === 'bingo' ? session.players.length >= 1 : otherPlayers.length >= 1);
 
   return (
-    <SceneryBackground variant="lobby">
-      <SafeAreaView style={styles.safe} edges={['bottom']}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.subtitle}>
-            {isHost
-              ? 'Friends can join while you get ready.'
-              : 'Hang tight — the host will start the game.'}
-          </Text>
+    <SceneryScrollShell contentContainerStyle={styles.container}>
+      <ContentCapsule>
+        <Text style={styles.subtitle}>
+          {isHost
+            ? 'Friends can join while you get ready.'
+            : 'Hang tight — the host will start the game.'}
+        </Text>
+      </ContentCapsule>
 
-          <View style={styles.badge}>
-            <Text style={styles.badgeLabel}>Game</Text>
-            <Text style={styles.badgeValue}>
-              {session.gameType ? GAME_LABELS[session.gameType] : 'Unknown'}
+      <View style={styles.badge}>
+        <Text style={styles.badgeLabel}>Game</Text>
+        <Text style={styles.badgeValue}>
+          {session.gameType ? GAME_LABELS[session.gameType] : 'Unknown'}
+        </Text>
+      </View>
+
+      <ContentCapsule style={styles.playersHeader}>
+        <Text style={styles.sectionTitle}>Players ({session.players.length})</Text>
+      </ContentCapsule>
+      <View style={styles.playerRow}>
+        {session.players.map((player) => (
+          <PlayerChip
+            key={player.id}
+            name={player.name}
+            isHost={player.isHost}
+            highlight={player.id === localPlayerId}
+          />
+        ))}
+      </View>
+
+      {session.gameType ? (
+        <SettingsSection title="House rules">
+          <GameRulesEditor
+            gameType={session.gameType}
+            rules={session.gameRules}
+            readOnly={!isHost}
+            onChange={updateSessionRules}
+          />
+        </SettingsSection>
+      ) : null}
+
+      {!isHost ? (
+        <View style={styles.waitBox}>
+          <ActivityIndicator color={colors.skyBlueDark} />
+          <Text style={styles.waitText}>Waiting for host to start…</Text>
+        </View>
+      ) : (
+        <>
+          <View style={styles.tipBox}>
+            <Text style={styles.tipText}>
+              Session code: {sessionId}{'\n'}
+              Other players tap Join and look for your name.
             </Text>
           </View>
-
-          <Text style={styles.sectionTitle}>Players ({session.players.length})</Text>
-          <View style={styles.playerRow}>
-            {session.players.map((player) => (
-              <PlayerChip
-                key={player.id}
-                name={player.name}
-                isHost={player.isHost}
-                highlight={player.id === localPlayerId}
-              />
-            ))}
-          </View>
-
-          {session.gameType ? (
-            <SettingsSection title="House rules">
-              <GameRulesEditor
-                gameType={session.gameType}
-                rules={session.gameRules}
-                readOnly={!isHost}
-                onChange={updateSessionRules}
-              />
-            </SettingsSection>
+          <BigButton
+            label="Start Game!"
+            disabled={!canStart}
+            onPress={startHostedGame}
+            variant="accent"
+          />
+          {!canStart ? (
+            <ContentCapsule>
+              <Text style={styles.helper}>
+                Need at least one other player for competitive games.
+              </Text>
+            </ContentCapsule>
           ) : null}
-
-          {!isHost ? (
-            <View style={styles.waitBox}>
-              <ActivityIndicator color={colors.skyBlueDark} />
-              <Text style={styles.waitText}>Waiting for host to start…</Text>
-            </View>
-          ) : (
-            <>
-              <View style={styles.tipBox}>
-                <Text style={styles.tipText}>
-                  Session code: {sessionId}{'\n'}
-                  Other players tap Join and look for your name.
-                </Text>
-              </View>
-              <BigButton
-                label="Start Game!"
-                disabled={!canStart}
-                onPress={startHostedGame}
-                variant="accent"
-              />
-              {!canStart ? (
-                <Text style={styles.helper}>
-                  Need at least one other player for competitive games.
-                </Text>
-              ) : null}
-            </>
-          )}
-        </ScrollView>
-      </SafeAreaView>
-    </SceneryBackground>
+        </>
+      )}
+    </SceneryScrollShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   container: {
-    padding: spacing.lg,
-    gap: spacing.md,
     paddingBottom: spacing.xl,
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colors.heroSky,
   },
   subtitle: {
     fontFamily: fonts.body,
@@ -173,6 +169,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.display,
     fontSize: 24,
     color: colors.roadGray,
+  },
+  playersHeader: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
   },
   sectionTitle: {
     fontFamily: fonts.bodyBold,

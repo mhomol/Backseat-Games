@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { StyleSheet, Text } from 'react-native';
-import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
+import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { colors, fonts, spacing } from '@/theme';
 
@@ -8,7 +8,7 @@ export default function AboutScreen() {
   const version = Constants.expoConfig?.version ?? '1.0.0';
 
   return (
-    <SettingsScreenShell>
+    <SceneryScrollShell>
       <SettingsSection title="Backseat Games">
         <Text style={styles.body}>
           Road-trip games for the whole car — license plates, sign spotting, and travel bingo.
@@ -20,7 +20,7 @@ export default function AboutScreen() {
           your next drive.
         </Text>
       </SettingsSection>
-    </SettingsScreenShell>
+    </SceneryScrollShell>
   );
 }
 

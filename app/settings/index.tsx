@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { SettingsLinkRow } from '@/components/settings/SettingsLinkRow';
-import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
+import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
@@ -14,7 +14,7 @@ export default function SettingsScreen() {
   const updatePreferences = usePreferencesStore((state) => state.updatePreferences);
 
   return (
-    <SettingsScreenShell>
+    <SceneryScrollShell>
       <SettingsSection title="Sound & Haptics">
         <SettingsToggle
           label="Sound effects"
@@ -52,6 +52,6 @@ export default function SettingsScreen() {
         />
         <SettingsLinkRow label="About" onPress={() => router.push('/settings/about')} />
       </SettingsSection>
-    </SettingsScreenShell>
+    </SceneryScrollShell>
   );
 }

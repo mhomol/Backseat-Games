@@ -1,5 +1,5 @@
 import { StyleSheet, Text } from 'react-native';
-import { SettingsScreenShell } from '@/components/settings/SettingsScreenShell';
+import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { colors, fonts, spacing } from '@/theme';
 
@@ -13,7 +13,7 @@ const TIPS = [
 
 export default function TipsScreen() {
   return (
-    <SettingsScreenShell>
+    <SceneryScrollShell>
       <SettingsSection title="Multiplayer tips">
         {TIPS.map((tip) => (
           <Text key={tip} style={styles.tip}>
@@ -21,7 +21,7 @@ export default function TipsScreen() {
           </Text>
         ))}
       </SettingsSection>
-    </SettingsScreenShell>
+    </SceneryScrollShell>
   );
 }
 
