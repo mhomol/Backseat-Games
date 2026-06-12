@@ -8,13 +8,13 @@ export default function SettingsLayout() {
       screenOptions={{
         ...stackScreenOptions,
         headerLargeTitle: false,
-        headerBackTitle: 'Back',
       }}
     >
       <Stack.Screen
         name="index"
         options={{
           title: 'Settings',
+          // Nested stack root — always show back to home even though canGoBack is false here.
           headerLeft: () => <StackBackButton />,
         }}
       />

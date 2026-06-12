@@ -1,12 +1,12 @@
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts } from '@/theme';
+import { colors, fonts, radii, shadows, spacing } from '@/theme';
 
 type StackBackButtonProps = {
   label?: string;
 };
 
-/** Matches the default stack back control on child screens (chevron + Back). */
+/** Pill back control matching the native iOS stack style on host/join screens. */
 export function StackBackButton({ label = 'Back' }: StackBackButtonProps) {
   return (
     <Pressable
@@ -14,7 +14,7 @@ export function StackBackButton({ label = 'Back' }: StackBackButtonProps) {
       accessibilityLabel={label}
       onPress={() => router.back()}
       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-      style={styles.hit}
+      style={styles.pill}
     >
       <Text style={styles.chevron}>‹</Text>
       <Text style={styles.label}>{label}</Text>
@@ -23,19 +23,24 @@ export function StackBackButton({ label = 'Back' }: StackBackButtonProps) {
 }
 
 const styles = StyleSheet.create({
-  hit: {
+  pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 44,
-    marginLeft: -8,
+    backgroundColor: 'rgba(255, 255, 255, 0.58)',
+    borderRadius: radii.pill,
+    paddingLeft: spacing.sm,
+    paddingRight: spacing.md,
+    paddingVertical: spacing.xs,
+    minHeight: 36,
+    ...shadows.card,
   },
   chevron: {
-    fontFamily: fonts.body,
-    fontSize: 28,
-    lineHeight: 28,
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 22,
+    lineHeight: 22,
     color: colors.roadGray,
-    marginTop: -2,
-    marginRight: -2,
+    marginTop: -1,
+    marginRight: 1,
   },
   label: {
     fontFamily: fonts.body,

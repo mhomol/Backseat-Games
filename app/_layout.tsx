@@ -18,6 +18,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ToastBanner } from '@/components/ToastBanner';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { useSessionStore } from '@/store/sessionStore';
+import { useStatsStore } from '@/store/statsStore';
 import { colors } from '@/theme';
 import { stackScreenOptions } from '@/theme/navigation';
 
@@ -38,6 +39,7 @@ export default function RootLayout() {
 
   const initialize = useSessionStore((state) => state.initialize);
   const loadPreferences = usePreferencesStore((state) => state.loadPreferences);
+  const loadStats = useStatsStore((state) => state.loadStats);
   const toast = useSessionStore((state) => state.toast);
   const clearToast = useSessionStore((state) => state.clearToast);
 
@@ -45,10 +47,10 @@ export default function RootLayout() {
   const fontError = fredokaError ?? nunitoError;
 
   useEffect(() => {
-    void Promise.all([initialize(), loadPreferences()]).catch((error: unknown) => {
+    void Promise.all([initialize(), loadPreferences(), loadStats()]).catch((error: unknown) => {
       console.error('App initialize failed', error);
     });
-  }, [initialize, loadPreferences]);
+  }, [initialize, loadPreferences, loadStats]);
 
   useEffect(() => {
     if (fontsReady || fontError) {

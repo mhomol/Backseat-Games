@@ -19,6 +19,7 @@ import {
 import { getMultiplayerService } from '../multiplayer';
 import { loadSavedPlayerName, savePlayerName } from '../services/playerNameStorage';
 import { usePreferencesStore } from './preferencesStore';
+import { useStatsStore } from './statsStore';
 import type { GameRules } from '../types/preferences';
 
 interface SessionStore {
@@ -60,6 +61,17 @@ export const useSessionStore = create<SessionStore>((set, get) => {
 
   const multiplayer = getMultiplayerService();
 
+  const commitSession = (
+    nextSession: SessionState,
+    extra?: Partial<Pick<SessionStore, 'connectionStatus' | 'localPlayerId' | 'toast'>>,
+  ) => {
+    const previousSession = get().session;
+    useStatsStore
+      .getState()
+      .recordFinishedSession(previousSession, nextSession, get().localPlayerId);
+    set({ session: nextSession, ...extra });
+  };
+
   const handleNetworkMessage = (message: NetworkMessage, fromPeerId?: string) => {
     const state = get();
     const localId = state.localPlayerId;
@@ -72,7 +84,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         const joinerId = fromPeerId ?? uuidv4();
         const joiner = playerFromLocal(joinerId, message.name, false);
         const nextSession = addPlayer(state.session, joiner);
-        set({ session: nextSession });
+        commitSession(nextSession);
         multiplayer.send({
           type: 'WELCOME',
           playerId: joinerId,
@@ -88,9 +100,8 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       case 'WELCOME': {
         // Joiners only — the host sends WELCOME and must keep their own player id.
         if (!state.isHost && message.playerId) {
-          set({
+          commitSession(message.state, {
             localPlayerId: message.playerId,
-            session: message.state,
             connectionStatus: 'connected',
           });
         }
@@ -99,7 +110,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       case 'PLAYER_JOINED':
       case 'STATE_UPDATE':
       case 'START_GAME':
-        set({ session: message.state, connectionStatus: 'connected' });
+        commitSession(message.state, { connectionStatus: 'connected' });
         break;
       case 'ACTION': {
         if (!state.isHost || !state.session) {
@@ -107,11 +118,11 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         }
         const result = applyAction(state.session, message.playerId, message.action);
         if (result.ok) {
-          set({ session: result.state });
+          commitSession(result.state);
           multiplayer.send({ type: 'STATE_UPDATE', state: result.state });
         } else {
           const rejected = rejectAction(state.session, message.playerId, result.reason);
-          set({ session: rejected });
+          commitSession(rejected);
           multiplayer.send({
             type: 'ACTION_REJECTED',
             playerId: message.playerId,
@@ -236,7 +247,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         return;
       }
       const next = startGame(session);
-      set({ session: next });
+      commitSession(next);
       multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
     },
 
@@ -264,7 +275,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           },
         },
       };
-      set({ session: next });
+      commitSession(next);
       multiplayer.send({ type: 'STATE_UPDATE', state: next });
     },
 
@@ -274,7 +285,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         return;
       }
       const next = finishGame(session);
-      set({ session: next });
+      commitSession(next);
       multiplayer.send({ type: 'STATE_UPDATE', state: next });
     },
 
@@ -284,7 +295,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         return;
       }
       const next = returnToLobby(session);
-      set({ session: next });
+      commitSession(next);
       multiplayer.send({ type: 'STATE_UPDATE', state: next });
     },
 
@@ -305,10 +316,11 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       if (isHost) {
         const result = applyAction(session, localPlayerId, action);
         if (result.ok) {
-          set({ session: result.state });
+          commitSession(result.state);
           multiplayer.send({ type: 'STATE_UPDATE', state: result.state });
         } else {
-          set({ toast: result.reason, session: rejectAction(session, localPlayerId, result.reason) });
+          const rejected = rejectAction(session, localPlayerId, result.reason);
+          commitSession(rejected, { toast: result.reason });
         }
         return;
       }

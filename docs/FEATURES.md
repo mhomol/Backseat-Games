@@ -31,6 +31,10 @@ If no sessions appear after ~30 seconds, ask the host to confirm they created a 
 
 Default rules live in **Settings**. When you host, the waiting room copies those defaults — you can tweak rules for that trip before tapping **Start Game!** without changing your saved defaults. Everyone in the lobby sees the rules for that session.
 
+## Your record (this device)
+
+**Settings → Your record** shows wins, losses, and ties (**W–L–T**) for each game type. Stats are saved on **this iPhone only** — no internet or Game Center required. A round counts when the game reaches the finished celebration (host ends the game, or someone wins bingo/sign spotting). Ties and “nobody scored” endings count in the **T** column. Each phone tracks its own player in the car.
+
 ## Shared behavior
 
 ### Scoreboards

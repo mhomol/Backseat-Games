@@ -7,6 +7,7 @@ export default function GameLayout() {
       screenOptions={{
         ...stackScreenOptions,
         headerBackVisible: false,
+        headerLeft: () => null,
         gestureEnabled: false,
         fullScreenGestureEnabled: false,
       }}

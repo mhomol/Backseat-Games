@@ -1,3 +1,5 @@
+import { createElement } from 'react';
+import { StackBackButton } from '@/components/navigation/StackBackButton';
 import { colors, fonts } from '@/theme';
 
 /** Shared stack header chrome — hero sky on every titled screen. */
@@ -7,5 +9,7 @@ export const stackScreenOptions = {
   headerTitleStyle: { fontFamily: fonts.display, fontSize: 17 },
   headerShadowVisible: false,
   contentStyle: { backgroundColor: colors.heroSky },
-  headerBackTitle: 'Back',
+  headerBackVisible: false,
+  headerLeft: (props: { canGoBack?: boolean }) =>
+    props.canGoBack ? createElement(StackBackButton) : null,
 } as const;

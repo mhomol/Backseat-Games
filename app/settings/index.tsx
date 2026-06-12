@@ -1,17 +1,22 @@
 import { router } from 'expo-router';
+import { StyleSheet, Text } from 'react-native';
+import { GameRecordRow } from '@/components/settings/GameRecordRow';
 import { SettingsLinkRow } from '@/components/settings/SettingsLinkRow';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
+import { useStatsStore } from '@/store/statsStore';
 import type { GameType } from '@/types/game';
+import { colors, fonts, spacing } from '@/theme';
 
 const GAME_TYPES: GameType[] = ['license-plates', 'sign-game', 'bingo'];
 
 export default function SettingsScreen() {
   const preferences = usePreferencesStore((state) => state.preferences);
   const updatePreferences = usePreferencesStore((state) => state.updatePreferences);
+  const stats = useStatsStore((state) => state.stats);
 
   return (
     <SceneryScrollShell>
@@ -28,6 +33,17 @@ export default function SettingsScreen() {
           value={preferences.hapticsEnabled}
           onValueChange={(hapticsEnabled) => updatePreferences({ hapticsEnabled })}
         />
+      </SettingsSection>
+
+      <SettingsSection title="Your record">
+        <Text style={styles.recordHint}>W–L–T per game. Saved on this device only.</Text>
+        {GAME_TYPES.map((gameType) => (
+          <GameRecordRow
+            key={gameType}
+            label={GAME_RULES_TITLE[gameType]}
+            outcome={stats.byGame[gameType]}
+          />
+        ))}
       </SettingsSection>
 
       <SettingsSection title="House rules (defaults)">
@@ -55,3 +71,12 @@ export default function SettingsScreen() {
     </SceneryScrollShell>
   );
 }
+
+const styles = StyleSheet.create({
+  recordHint: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.roadGrayLight,
+    marginBottom: spacing.xs,
+  },
+});
