@@ -47,8 +47,31 @@ Complete before TestFlight IAP testing:
 7. Display name: **Host games**
 8. Description: e.g. "Unlock hosting for road-trip games. Passengers join free."
 9. Optional: enable **Family Sharing**
-10. Status: **Ready to Submit** (sandbox works before App Store approval)
-11. Attach the IAP to your first app version submission
+10. **Review screenshot** — Apple has **two different image uploads** (see below)
+11. Status: **Ready to Submit** (sandbox works before App Store approval)
+12. Attach the IAP to your first app version submission
+
+### Two image fields (different sizes)
+
+| Field in ASC | Purpose | Required size |
+|--------------|---------|---------------|
+| **Image** | Promotional art on App Store (optional unless promoting IAP) | **1024 × 1024** PNG/JPG |
+| **App Review Screenshot** | Shows reviewers the purchase UI; not shown on store | **App Store screenshot size** — e.g. **1290 × 2796** portrait (6.7" iPhone class) |
+
+Do **not** upload 1024×1024 to App Review Screenshot — ASC validates against [screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications).
+
+Generate both from a TestFlight capture:
+
+```bash
+node scripts/prepare-iap-review-screenshot.mjs
+```
+
+Outputs in `assets/branding/marketing/`:
+
+- `iap-host-unlock-promo-1024.png` → **Image**
+- `iap-host-unlock-review-1290x2796.png` → **App Review Screenshot**
+
+For sharpest review capture, re-screenshot on device at full resolution (Side Button + Volume Up) before running the script.
 
 ## TestFlight and Sandbox
 
