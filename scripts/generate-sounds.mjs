@@ -65,7 +65,49 @@ function chord(freqs, durationSec, sampleRate, volume = 0.18) {
   return samples;
 }
 
+function appendSegment(target, segment, gapSec = 0, sampleRate = 22050) {
+  const gap = gapSec > 0 ? Math.floor(sampleRate * gapSec) : 0;
+  const next = new Float32Array(target.length + gap + segment.length);
+  next.set(target, 0);
+  next.set(segment, target.length + gap);
+  return next;
+}
+
+function hornTone(freq, durationSec, sampleRate, volume = 0.28, decay = 6) {
+  const count = Math.floor(sampleRate * durationSec);
+  const samples = new Float32Array(count);
+  for (let i = 0; i < count; i += 1) {
+    const t = i / sampleRate;
+    const attack = Math.min(1, t * 40);
+    const release = Math.exp(-t * decay);
+    const wave =
+      Math.sin(2 * Math.PI * freq * t) * 0.7 +
+      Math.sin(2 * Math.PI * freq * 1.01 * t) * 0.3;
+    samples[i] = wave * volume * attack * release;
+  }
+  return samples;
+}
+
+function carHorn(sampleRate = 22050) {
+  const high = hornTone(523, 0.11, sampleRate, 0.24, 14);
+  const low = hornTone(440, 0.13, sampleRate, 0.24, 12);
+  return appendSegment(high, low, 0.06, sampleRate);
+}
+
+function truckHorn(sampleRate = 22050) {
+  const fundamental = hornTone(196, 0.55, sampleRate, 0.3, 2.2);
+  const harmonics = hornTone(294, 0.55, sampleRate, 0.12, 2.4);
+  const count = fundamental.length;
+  const samples = new Float32Array(count);
+  for (let i = 0; i < count; i += 1) {
+    samples[i] = fundamental[i] + harmonics[i];
+  }
+  return samples;
+}
+
 await mkdir(OUT_DIR, { recursive: true });
 await writeWav(join(OUT_DIR, 'tap.wav'), tone(880, 0.06, 22050, 0.2));
 await writeWav(join(OUT_DIR, 'win.wav'), chord([523.25, 659.25, 783.99], 0.35, 22050));
-console.log('Wrote assets/sounds/tap.wav and win.wav');
+await writeWav(join(OUT_DIR, 'horn-car.wav'), carHorn());
+await writeWav(join(OUT_DIR, 'horn-truck.wav'), truckHorn());
+console.log('Wrote assets/sounds/tap.wav, win.wav, horn-car.wav, horn-truck.wav');

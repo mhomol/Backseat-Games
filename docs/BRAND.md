@@ -26,7 +26,11 @@ Style bible: [`scripts/brand-prompts.json`](../scripts/brand-prompts.json)
 |------|--------|
 | `home-hero.webp` | Home — logo + Start / Join / Settings signs (768×1536) |
 | `host-hero.webp` | Host setup — game signs only, no logo (720×1456) |
-| `waiting-hero.webp` | Join + waiting room — scenery only, no logo or signpost |
+| `waiting-hero.webp` | Join screen (fixed) + one entry in game scenery rotation |
+
+### Game scenery rotation (lobby + gameplay)
+
+Random pink-car heroes live in `assets/branding/game-scenery/`. See **`ROTATION.md`** in that folder for the current list. Registry: `src/data/gameSceneryRotation.ts`. Promote new art with `node scripts/promote-game-scenery.mjs your.png "Label"`.
 
 Drafts (for regen review): `assets/branding/drafts/*-draft-recraft-v4.webp`
 

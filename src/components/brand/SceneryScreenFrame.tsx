@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  type ImageSourcePropType,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { SceneryVariant } from '@/data/brandAssets';
 import { STACK_HEADER_CLEARANCE } from '@/components/brand/SceneryScrollShell';
@@ -9,6 +15,7 @@ import { spacing } from '@/theme';
 type SceneryScreenFrameProps = {
   children: ReactNode;
   variant?: SceneryVariant;
+  scenerySource?: ImageSourcePropType;
   style?: StyleProp<ViewStyle>;
   headerClearance?: boolean;
 };
@@ -17,11 +24,12 @@ type SceneryScreenFrameProps = {
 export function SceneryScreenFrame({
   children,
   variant = 'lobby',
+  scenerySource,
   style,
   headerClearance = true,
 }: SceneryScreenFrameProps) {
   return (
-    <SceneryBackground variant={variant}>
+    <SceneryBackground variant={variant} scenerySource={scenerySource}>
       <SafeAreaView style={styles.safe} edges={['bottom']}>
         <View
           style={[

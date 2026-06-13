@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list';
 import { useCallback, useMemo } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { playHornFeedback } from '@/services/feedback';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
@@ -10,6 +10,7 @@ import { plates } from '@/data';
 import { plateImageByCode } from '@/data/plateImages';
 import { getLicensePlateScores } from '@/games/licensePlates';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
+import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { colors, fonts, radii, spacing } from '@/theme';
@@ -19,6 +20,7 @@ export default function LicensePlatesScreen() {
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
+  const scenerySource = useSessionGameScenery();
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
 
@@ -48,7 +50,7 @@ export default function LicensePlatesScreen() {
   }
 
   return (
-    <SceneryScreenFrame>
+    <SceneryScreenFrame scenerySource={scenerySource}>
       <GameSessionOverlays
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
@@ -73,7 +75,7 @@ export default function LicensePlatesScreen() {
             <Pressable
               style={styles.cell}
               onPress={() => {
-                void Haptics.selectionAsync();
+                void playHornFeedback();
                 if (isMine) {
                   dispatchAction({ type: 'UNCLAIM_PLATE', plateCode: item.code });
                 } else if (!isTaken) {

@@ -20,6 +20,7 @@ import { Scoreboard } from '@/components/Scoreboard';
 import { ALPHABET, letterMatchHint } from '@/games/signGameUtils';
 import { getSignGameLeaderboard } from '@/games/signGame';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
+import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { useSignGameSpeech } from '@/hooks/useSignGameSpeech';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
@@ -32,6 +33,7 @@ export default function SignGameScreen() {
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
+  const scenerySource = useSessionGameScenery();
   const [modalOpen, setModalOpen] = useState(false);
   const [word, setWord] = useState('');
 
@@ -101,7 +103,7 @@ export default function SignGameScreen() {
   };
 
   return (
-    <SceneryScreenFrame>
+    <SceneryScreenFrame scenerySource={scenerySource}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
         <GameSessionOverlays
           guard={guard}

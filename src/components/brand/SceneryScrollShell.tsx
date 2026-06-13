@@ -1,5 +1,11 @@
 import type { ReactNode } from 'react';
-import { Platform, ScrollView, StyleSheet, type ScrollViewProps } from 'react-native';
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  type ImageSourcePropType,
+  type ScrollViewProps,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { SceneryVariant } from '@/data/brandAssets';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
@@ -12,6 +18,7 @@ export const STACK_HEADER_CLEARANCE =
 type SceneryScrollShellProps = {
   children: ReactNode;
   variant?: SceneryVariant;
+  scenerySource?: ImageSourcePropType;
   contentContainerStyle?: ScrollViewProps['contentContainerStyle'];
   headerClearance?: boolean;
 };
@@ -19,11 +26,12 @@ type SceneryScrollShellProps = {
 export function SceneryScrollShell({
   children,
   variant = 'lobby',
+  scenerySource,
   contentContainerStyle,
   headerClearance = true,
 }: SceneryScrollShellProps) {
   return (
-    <SceneryBackground variant={variant}>
+    <SceneryBackground variant={variant} scenerySource={scenerySource}>
       <SafeAreaView style={styles.safe} edges={['bottom']}>
         <ScrollView
           contentContainerStyle={[

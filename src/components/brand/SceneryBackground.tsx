@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
+import { GAME_SCENERY_ASPECT } from '@/data/gameSceneryRotation';
 import { heroAspectRatio, sceneryImages, type SceneryVariant } from '@/data/brandAssets';
 import { brand } from '@/theme/brand';
 
 type SceneryBackgroundProps = {
   variant: SceneryVariant;
+  /** Overrides the static variant art (lobby + gameplay rotation). */
+  scenerySource?: ImageSourcePropType;
   children?: ReactNode;
 };
 
@@ -12,15 +15,20 @@ type SceneryBackgroundProps = {
  * Hero scales uniformly to full screen width (no side letterboxing), anchored
  * to the bottom. Shorter screens show sky above; taller art crops from the top.
  */
-export function SceneryBackground({ variant, children }: SceneryBackgroundProps) {
-  const ratio = heroAspectRatio(variant);
+export function SceneryBackground({
+  variant,
+  scenerySource,
+  children,
+}: SceneryBackgroundProps) {
+  const ratio = scenerySource ? GAME_SCENERY_ASPECT : heroAspectRatio(variant);
+  const source = scenerySource ?? sceneryImages[variant];
 
   return (
     <View style={styles.root}>
       <View style={styles.anchor}>
         <View style={[styles.artFrame, { aspectRatio: ratio }]}>
           <Image
-            source={sceneryImages[variant]}
+            source={source}
             style={styles.artImage}
             resizeMode="cover"
             accessibilityIgnoresInvertColors

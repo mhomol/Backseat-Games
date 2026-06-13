@@ -5,7 +5,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { playHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
@@ -16,6 +16,7 @@ import {
   getBingoSquareLabel,
 } from '@/games/bingo';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
+import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
@@ -25,6 +26,7 @@ export default function BingoScreen() {
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
+  const scenerySource = useSessionGameScenery();
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
 
@@ -44,7 +46,7 @@ export default function BingoScreen() {
   }
 
   return (
-    <SceneryScreenFrame>
+    <SceneryScreenFrame scenerySource={scenerySource}>
       <GameSessionOverlays
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
@@ -66,7 +68,7 @@ export default function BingoScreen() {
               isMarked={isMarked}
               isFree={index === FREE_CENTER_INDEX}
               onPress={() => {
-                void Haptics.selectionAsync();
+                void playHornFeedback();
                 if (isMarked && index !== FREE_CENTER_INDEX) {
                   dispatchAction({ type: 'UNMARK_BINGO', index });
                 } else if (!isMarked) {

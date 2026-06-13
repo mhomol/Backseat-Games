@@ -16,6 +16,7 @@ import { PlayerChip } from '@/components/PlayerChip';
 import { GAME_LABELS } from '@/data';
 import { getMultiplayerService } from '@/multiplayer';
 import { useSessionStore } from '@/store/sessionStore';
+import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import type { GameType } from '@/types/game';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
@@ -32,6 +33,7 @@ export default function LobbyScreen() {
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const startHostedGame = useSessionStore((state) => state.startHostedGame);
   const updateSessionRules = useSessionStore((state) => state.updateSessionRules);
+  const scenerySource = useSessionGameScenery();
 
   useEffect(() => {
     if (session?.phase === 'playing' && session.gameType) {
@@ -63,7 +65,7 @@ export default function LobbyScreen() {
     (session.gameType === 'bingo' ? session.players.length >= 1 : otherPlayers.length >= 1);
 
   return (
-    <SceneryScrollShell contentContainerStyle={styles.container}>
+    <SceneryScrollShell scenerySource={scenerySource} contentContainerStyle={styles.container}>
       <ContentCapsule>
         <Text style={styles.subtitle}>
           {isHost
