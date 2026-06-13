@@ -28,6 +28,10 @@ module.exports = () => {
           NSBonjourServices: ['_backseatgames._tcp'],
           NSMicrophoneUsageDescription:
             'Backseat Games uses the microphone when you say a word aloud in the Sign Game (optional voice input).',
+          NSSpeechRecognitionUsageDescription:
+            'Backseat Games converts your spoken word to text in the Sign Game when voice input is enabled.',
+          NSPhotoLibraryUsageDescription:
+            'Backseat Games does not access your photos. This notice is required because an included speech library references photo access APIs.',
           NSUserNotificationsUsageDescription:
             'Backseat Games may send alerts when a host starts a game or when it is your turn.',
           UIBackgroundModes: ['remote-notification'],

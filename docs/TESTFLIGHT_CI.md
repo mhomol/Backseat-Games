@@ -61,7 +61,9 @@ GitHub environments are **per-repo**. Duplicate secret values from Homol Invests
    | In-car P2P / **Multipeer Connectivity** | iOS system framework; no App ID checkbox | Works after local network permission |
    | **Bonjour** / local discovery | `NSBonjourServices` in Info.plist (`_backseatgames._tcp`) | Part of local network permission |
    | **Local network** | `NSLocalNetworkUsageDescription` in Info.plist | iOS prompt: “Backseat Games would like to find and connect to devices on your local network” |
-   | **Microphone** (Sign Game) | `NSMicrophoneUsageDescription` in Info.plist | iOS prompt when you first record |
+   | **Microphone** (Sign Game voice input) | `NSMicrophoneUsageDescription` in Info.plist | iOS prompt when voice input is used |
+   | **Speech recognition** | `NSSpeechRecognitionUsageDescription` in Info.plist | iOS prompt for Sign Game voice-to-text |
+   | **Photo library** (SDK reference) | `NSPhotoLibraryUsageDescription` in Info.plist | Required by speech library; app does not read photos |
    | Notification permission text | `NSUserNotificationsUsageDescription` in Info.plist | iOS prompt when push UX is implemented |
 
    All of the Info.plist entries above are already in [`app.json`](../app.json). Expo bakes them into the IPA at build time — **no extra Developer Portal toggles required.**
