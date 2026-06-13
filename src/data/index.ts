@@ -22,7 +22,7 @@ export const GAME_LABELS = {
 export const GAME_DESCRIPTIONS = {
   'license-plates': 'Spot state and province plates. First to claim wins the point!',
   bingo: 'Mark things you see on your unique bingo card. First bingo wins!',
-  'sign-game': 'Race from A to Z using road signs. Call out words with audio!',
+  'sign-game': 'Race from A to Z using road signs. Type or say your words!',
 } as const;
 
 export const GAME_EMOJI = {

@@ -4,7 +4,7 @@ export const DEFAULT_GAME_RULES: GameRules = {
   'sign-game': {
     qxzMatchMode: 'anywhere',
     allowDuplicateWords: false,
-    enableRecordings: true,
+    enableRecordings: false,
   },
   'license-plates': {
     allowUnclaim: true,

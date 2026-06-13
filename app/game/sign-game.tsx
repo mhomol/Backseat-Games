@@ -1,12 +1,16 @@
-import { useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback, useState, useEffect } from 'react';
 import {
+  KeyboardAvoidingView,
   Modal,
+  Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { BigButton } from '@/components/BigButton';
@@ -16,6 +20,7 @@ import { Scoreboard } from '@/components/Scoreboard';
 import { ALPHABET, letterMatchHint } from '@/games/signGameUtils';
 import { getSignGameLeaderboard } from '@/games/signGame';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
+import { useSignGameSpeech } from '@/hooks/useSignGameSpeech';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { playTapFeedback } from '@/services/feedback';
@@ -23,6 +28,7 @@ import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function SignGameScreen() {
   const guard = useGameSessionGuard();
+  const insets = useSafeAreaInsets();
   const session = useSessionStore((state) => state.session);
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
@@ -33,6 +39,20 @@ export default function SignGameScreen() {
 
   const gameState = session?.gameState?.type === 'sign-game' ? session.gameState : null;
   const currentLetter = gameState?.playerLetters[localPlayerId] ?? 'A';
+
+  const signRules = session?.gameRules['sign-game'];
+  const voiceInputEnabled = signRules?.enableRecordings ?? false;
+
+  const { listening, available, toggleListening, stopListening } = useSignGameSpeech({
+    enabled: voiceInputEnabled && modalOpen,
+    onTranscript: setWord,
+  });
+
+  useEffect(() => {
+    if (!modalOpen) {
+      stopListening();
+    }
+  }, [modalOpen, stopListening]);
 
   const leaderboard = useMemo(() => {
     if (!gameState || !session) {
@@ -54,12 +74,17 @@ export default function SignGameScreen() {
     return getSessionWinnerDisplay(session, localPlayerId);
   }, [session, localPlayerId]);
 
-  if (!gameState || !session) {
+  if (!gameState || !session || !signRules) {
     return null;
   }
 
   const youWon = session.winnerId === localPlayerId;
-  const signRules = session.gameRules['sign-game'];
+
+  const closeModal = () => {
+    stopListening();
+    setModalOpen(false);
+    setWord('');
+  };
 
   const submitWord = () => {
     const trimmed = word.trim();
@@ -72,89 +97,113 @@ export default function SignGameScreen() {
       word: trimmed,
     });
     void playTapFeedback();
-    setWord('');
-    setModalOpen(false);
+    closeModal();
   };
 
   return (
     <SceneryScreenFrame>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
-      <GameSessionOverlays
-        guard={guard}
-        winnerHeadline={winnerDisplay?.headline}
-        isWinnerYou={winnerDisplay?.isYou}
-      />
-      <Scoreboard scores={leaderboard} />
+        <GameSessionOverlays
+          guard={guard}
+          winnerHeadline={winnerDisplay?.headline}
+          isWinnerYou={winnerDisplay?.isYou}
+        />
+        <Scoreboard scores={leaderboard} />
 
-      <View style={styles.letterCircle}>
-        <Text style={styles.letter}>{currentLetter}</Text>
-      </View>
+        <View style={styles.letterCircle}>
+          <Text style={styles.letter}>{currentLetter}</Text>
+        </View>
 
-      <ContentCapsule>
-        <Text style={styles.rule}>{letterMatchHint(currentLetter, signRules)}</Text>
-      </ContentCapsule>
+        <ContentCapsule>
+          <Text style={styles.rule}>{letterMatchHint(currentLetter, signRules)}</Text>
+        </ContentCapsule>
 
-      <View style={styles.progressRow}>
-        {ALPHABET.map((letter) => {
-          const index = ALPHABET.indexOf(currentLetter);
-          const letterIndex = ALPHABET.indexOf(letter);
-          const done = letterIndex < index || (youWon && letterIndex <= index);
-          const current = letter === currentLetter && !youWon;
-          return (
+        <View style={styles.progressRow}>
+          {ALPHABET.map((letter) => {
+            const index = ALPHABET.indexOf(currentLetter);
+            const letterIndex = ALPHABET.indexOf(letter);
+            const done = letterIndex < index || (youWon && letterIndex <= index);
+            const current = letter === currentLetter && !youWon;
+            return (
+              <View
+                key={letter}
+                style={[
+                  styles.progressDot,
+                  done && styles.progressDone,
+                  current && styles.progressCurrent,
+                ]}
+              >
+                <Text style={styles.progressText}>{letter}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        <BigButton
+          label="I found one!"
+          onPress={() => setModalOpen(true)}
+          variant="accent"
+          disabled={youWon}
+        />
+
+        <ContentCapsule style={styles.historyHeader}>
+          <Text style={styles.historyTitle}>Your finds</Text>
+        </ContentCapsule>
+        {mySubmissions.map((entry) => (
+          <View key={`${entry.letter}-${entry.timestamp}`} style={styles.historyRow}>
+            <Text style={styles.historyLetter}>{entry.letter}</Text>
+            <Text style={styles.historyWord}>{entry.word}</Text>
+          </View>
+        ))}
+
+        <Modal visible={modalOpen} animationType="slide" transparent onRequestClose={closeModal}>
+          <KeyboardAvoidingView
+            style={styles.modalOverlay}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          >
+            <Pressable style={styles.modalBackdrop} onPress={closeModal} />
             <View
-              key={letter}
               style={[
-                styles.progressDot,
-                done && styles.progressDone,
-                current && styles.progressCurrent,
+                styles.modalCard,
+                { marginTop: Math.max(insets.top + spacing.lg, spacing.xl) },
               ]}
             >
-              <Text style={styles.progressText}>{letter}</Text>
+              <Text style={styles.modalTitle}>Letter {currentLetter}</Text>
+              <TextInput
+                value={word}
+                onChangeText={setWord}
+                placeholder="Type the word you saw"
+                style={styles.input}
+                autoCapitalize="words"
+                autoFocus
+                onSubmitEditing={submitWord}
+              />
+
+              {available ? (
+                <Pressable
+                  onPress={() => {
+                    void toggleListening();
+                  }}
+                  style={[styles.voiceButton, listening && styles.voiceButtonActive]}
+                >
+                  <Text style={styles.voiceButtonLabel}>
+                    {listening ? 'Stop listening' : 'Say the word'}
+                  </Text>
+                  {listening ? (
+                    <Text style={styles.voiceHint}>Tap again when you are done speaking</Text>
+                  ) : null}
+                </Pressable>
+              ) : null}
+
+              <BigButton
+                label="Submit"
+                onPress={submitWord}
+                disabled={word.trim().length < 2}
+              />
+              <BigButton label="Cancel" onPress={closeModal} variant="secondary" />
             </View>
-          );
-        })}
-      </View>
-
-      <BigButton
-        label="I found one!"
-        onPress={() => setModalOpen(true)}
-        variant="accent"
-        disabled={youWon}
-      />
-
-      <ContentCapsule style={styles.historyHeader}>
-        <Text style={styles.historyTitle}>Your finds</Text>
-      </ContentCapsule>
-      {mySubmissions.map((entry) => (
-        <View key={`${entry.letter}-${entry.timestamp}`} style={styles.historyRow}>
-          <Text style={styles.historyLetter}>{entry.letter}</Text>
-          <Text style={styles.historyWord}>{entry.word}</Text>
-        </View>
-      ))}
-
-      <Modal visible={modalOpen} animationType="slide" transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Letter {currentLetter}</Text>
-            <TextInput
-              value={word}
-              onChangeText={setWord}
-              placeholder="Type the word you saw"
-              style={styles.input}
-              autoCapitalize="words"
-              autoFocus
-              onSubmitEditing={submitWord}
-            />
-
-            <BigButton
-              label="Submit"
-              onPress={submitWord}
-              disabled={word.trim().length < 2}
-            />
-            <BigButton label="Cancel" onPress={() => setModalOpen(false)} variant="secondary" />
-          </View>
-        </View>
-      </Modal>
+          </KeyboardAvoidingView>
+        </Modal>
       </ScrollView>
       {guard.isInProgress ? (
         <GameEndBar isHost={guard.isHost} onPress={requestEnd} />
@@ -204,12 +253,15 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: colors.plateOther,
+    backgroundColor: colors.cloudWhite,
+    borderWidth: 1.5,
+    borderColor: colors.roadGray,
     alignItems: 'center',
     justifyContent: 'center',
   },
   progressDone: {
     backgroundColor: colors.grassGreen,
+    borderColor: colors.grassGreenDark,
   },
   progressCurrent: {
     backgroundColor: colors.sunnyYellow,
@@ -253,12 +305,16 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFill,
   },
   modalCard: {
     backgroundColor: colors.cream,
-    borderTopLeftRadius: radii.xl,
-    borderTopRightRadius: radii.xl,
+    borderRadius: radii.xl,
+    borderWidth: borders.extraThick,
+    borderColor: colors.skyBlueDark,
+    marginHorizontal: spacing.md,
     padding: spacing.lg,
     gap: spacing.md,
   },
@@ -276,5 +332,30 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     fontFamily: fonts.body,
     fontSize: 18,
+  },
+  voiceButton: {
+    backgroundColor: colors.cloudWhite,
+    borderWidth: borders.thick,
+    borderColor: colors.skyBlueDark,
+    borderRadius: radii.md,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    alignItems: 'center',
+  },
+  voiceButtonActive: {
+    backgroundColor: '#E8F4FD',
+    borderColor: colors.coralDark,
+  },
+  voiceButtonLabel: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 16,
+    color: colors.roadGray,
+  },
+  voiceHint: {
+    fontFamily: fonts.body,
+    fontSize: 13,
+    color: colors.roadGrayLight,
+    marginTop: spacing.xs,
+    textAlign: 'center',
   },
 });

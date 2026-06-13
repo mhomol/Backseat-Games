@@ -16,7 +16,7 @@ export function summarizeGameRules(gameType: GameType, rules: GameRules): string
           ? 'Q, X, Z: letter anywhere in the word'
           : 'Q, X, Z: word must start with the letter',
         sign.allowDuplicateWords ? 'Duplicate words allowed' : 'No duplicate words',
-        sign.enableRecordings ? 'Mic recordings on' : 'Typing only (no recordings)',
+        sign.enableRecordings ? 'Voice input on (say the word)' : 'Typing only',
       ];
     }
     case 'license-plates':

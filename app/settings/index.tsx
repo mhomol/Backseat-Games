@@ -56,10 +56,10 @@ export default function SettingsScreen() {
   return (
     <SceneryScrollShell>
       {requiresPurchase() ? (
-        <SettingsSection title="Hosting">
+        <SettingsSection title="Starting games">
           <SettingsLinkRow
-            label="Unlock hosting"
-            description={`One-time ${productPrice} — start games for the car`}
+            label="Unlock starting games"
+            description={`One-time ${productPrice} — create sessions for the car`}
             onPress={() => setPaywallOpen(true)}
           />
           <SettingsLinkRow
@@ -71,13 +71,13 @@ export default function SettingsScreen() {
           />
         </SettingsSection>
       ) : (
-        <SettingsSection title="Hosting">
+        <SettingsSection title="Starting games">
           <Text style={styles.recordHint}>
-            {canHost() ? 'Hosting unlocked on this device.' : 'Hosting available.'}
+            {canHost() ? 'You can start games on this device.' : 'Starting games available.'}
           </Text>
           <SettingsLinkRow
             label="Restore purchases"
-            description="Re-sync your host unlock from the App Store"
+            description="Re-sync your start-games unlock from the App Store"
             onPress={() => {
               void handleRestore();
             }}

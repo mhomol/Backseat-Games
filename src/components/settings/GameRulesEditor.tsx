@@ -58,8 +58,8 @@ export function GameRulesEditor({
             }
           />
           <SettingsToggle
-            label="Mic recordings"
-            description="Let players record themselves calling out finds."
+            label="Voice input"
+            description="Say the word aloud — converted to text on your phone (typing always works)."
             value={rules['sign-game'].enableRecordings}
             onValueChange={(value) =>
               onChange({

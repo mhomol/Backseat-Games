@@ -112,7 +112,7 @@ Race from **A to Z** using words on road signs. Each player advances **independe
 ### Rules
 
 1. You start on letter **A**.
-2. When you spot a valid word, tap **"I found one!"**, type the word, optionally record yourself saying it, and submit.
+2. When you spot a valid word, tap **"I found one!"**, type the word (or say it if voice input is on in house rules), and submit.
 3. After a valid submission, you advance to the next letter.
 4. **Duplicate words are not allowed** — once anyone uses a word, nobody else can.
 5. You cannot skip letters.
@@ -131,9 +131,9 @@ Examples:
 - On **X**: "Exit" ✓ (contains X)
 - On **Q**: "Queen" ✓ (starts with Q — also valid)
 
-### Audio
+### Voice input (optional house rule)
 
-You can record a short clip when you call out your find. Recordings stay on **your phone** for playback — other players see the word but don't hear your clip in MVP.
+When enabled in house rules, tap **Say the word** in the submit dialog. Your phone converts speech to text — other players see the typed word, not audio.
 
 ---
 
@@ -184,7 +184,7 @@ These differ slightly from how some families played growing up:
 
 - No Android support yet
 - No cloud accounts or cross-trip leaderboards
-- Sign game audio is local-only (not streamed to other players)
+- Voice input requires a TestFlight/dev build (not Expo Go)
 - Host migration not supported if host phone dies
 - App must stay in foreground for reliable multiplayer sync
 - **Push notifications:** entitlement is included in native builds, but no alerts are sent yet (see [PUSH_SETUP.md](./PUSH_SETUP.md))

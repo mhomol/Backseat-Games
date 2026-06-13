@@ -74,7 +74,7 @@ src/
   components/         Shared UI (BigButton, Scoreboard, …)
   data/               plates.json, bingo-items.json
   games/              Rule engine per game
-  hooks/              useSignGameAudio
+  hooks/              useSignGameSpeech
   multiplayer/        Mock + native Multipeer adapters
   store/              Zustand session store
   theme/              Cartoon design tokens

@@ -27,7 +27,7 @@ module.exports = () => {
             'Backseat Games uses the local network to connect phones in the same car for multiplayer games.',
           NSBonjourServices: ['_backseatgames._tcp'],
           NSMicrophoneUsageDescription:
-            'Backseat Games records short audio clips when you call out sign words during the Sign Game.',
+            'Backseat Games uses the microphone when you say a word aloud in the Sign Game (optional voice input).',
           NSUserNotificationsUsageDescription:
             'Backseat Games may send alerts when a host starts a game or when it is your turn.',
           UIBackgroundModes: ['remote-notification'],
@@ -59,6 +59,15 @@ module.exports = () => {
           },
         ],
         'expo-iap',
+        [
+          'expo-speech-recognition',
+          {
+            microphonePermission:
+              'Backseat Games uses the microphone when you say a word aloud in the Sign Game.',
+            speechRecognitionPermission:
+              'Backseat Games converts your spoken word to text in the Sign Game.',
+          },
+        ],
       ],
       experiments: {
         tsconfigPaths: true,
