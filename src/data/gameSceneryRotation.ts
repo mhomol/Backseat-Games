@@ -36,6 +36,21 @@ export const gameSceneryRotation: GameSceneryEntry[] = [
     label: 'Snowy mountains & moose',
     source: require('../../assets/branding/game-scenery/snowy-moose-blue-sky.webp'),
   },
+  {
+    id: 'serengeti-blue-sky',
+    label: 'Serengeti safari',
+    source: require('../../assets/branding/game-scenery/serengeti-blue-sky.webp'),
+  },
+  {
+    id: 'city-blue-sky',
+    label: 'City street',
+    source: require('../../assets/branding/game-scenery/city-blue-sky.webp'),
+  },
+  {
+    id: 'golden-gate-blue-sky',
+    label: 'Golden Gate bridge',
+    source: require('../../assets/branding/game-scenery/golden-gate-blue-sky.webp'),
+  },
 ];
 
 export function sceneryIndexForSession(sessionId: string): number {

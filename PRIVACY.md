@@ -19,7 +19,7 @@ Backseat Games ("the app") is a family road-trip game app published by Homol Wor
 | Data | Purpose |
 |------|---------|
 | Display name | Shown to other players in your car |
-| House rule defaults | Pre-fill lobby settings when you host |
+| Car rule defaults | Pre-fill lobby settings when you host |
 | W–L–T stats | Personal record per game type |
 | Host unlock flag | Remember that you purchased hosting (also verified with Apple) |
 

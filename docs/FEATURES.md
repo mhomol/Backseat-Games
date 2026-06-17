@@ -29,7 +29,7 @@ Typically the front-seat parent on their phone. The host picks the game, waits f
 
 ---
 
-## House rules
+## Car rules
 
 Default rules live in **Settings**. When you host, the waiting room copies those defaults — you can tweak rules for that trip before tapping **Start Game!** without changing your saved defaults. Everyone in the lobby sees the rules for that session.
 
@@ -112,12 +112,12 @@ Race from **A to Z** using words on road signs. Each player advances **independe
 ### Rules
 
 1. You start on letter **A**.
-2. When you spot a valid word, tap **"I found one!"**, type the word (or say it if voice input is on in house rules), and submit.
+2. When you spot a valid word, tap **"I found one!"**, type the word (or say it if voice input is on in car rules), and submit.
 3. After a valid submission, you advance to the next letter.
 4. **Duplicate words are not allowed** — once anyone uses a word, nobody else can.
 5. You cannot skip letters.
 
-### Letter matching (house rules)
+### Letter matching (car rules)
 
 | Letters | Rule |
 |---------|------|
@@ -131,9 +131,9 @@ Examples:
 - On **X**: "Exit" ✓ (contains X)
 - On **Q**: "Queen" ✓ (starts with Q — also valid)
 
-### Voice input (optional house rule)
+### Voice input (optional car rule)
 
-When enabled in house rules, tap **Say the word** in the submit dialog. Your phone converts speech to text — other players see the typed word, not audio.
+When enabled in car rules, tap **Say the word** in the submit dialog. Your phone converts speech to text — other players see the typed word, not audio.
 
 ---
 
@@ -168,13 +168,13 @@ Follows Expo SDK 56 requirements (iOS 15.1+).
 
 ---
 
-## House rules changelog
+## Car rules changelog
 
 These differ slightly from how some families played growing up:
 
 | Classic habit | Backseat Games behavior |
 |---------------|-------------------------|
-| Q/X/Z must start the word | Q, X, Z: letter anywhere in word (configurable house rule — enforced as documented above) |
+| Q/X/Z must start the word | Q, X, Z: letter anywhere in word (configurable car rule — enforced as documented above) |
 | Sign game shared letter | Individual A→Z race (first to Z wins) |
 | License plate pen and paper | Digital grid with tap to claim/unclaim |
 

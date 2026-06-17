@@ -51,7 +51,7 @@ describe('license plates', () => {
     }
   });
 
-  it('blocks unclaim when house rule is off', () => {
+  it('blocks unclaim when car rule is off', () => {
     const host = playerFromLocal('host', 'Host', true);
     const rules = cloneGameRules(DEFAULT_GAME_RULES);
     rules['license-plates'].allowUnclaim = false;
@@ -134,7 +134,7 @@ describe('sign game', () => {
     assert.equal(dup.ok, false);
   });
 
-  it('allows duplicate words when house rule is on', () => {
+  it('allows duplicate words when car rule is on', () => {
     const host = playerFromLocal('host', 'Host', true);
     const rules = cloneGameRules(DEFAULT_GAME_RULES);
     rules['sign-game'].allowDuplicateWords = true;
@@ -180,7 +180,7 @@ describe('sign game', () => {
     assert.equal(q.ok, true);
   });
 
-  it('requires Q words to start with Q when house rule is starts-with', () => {
+  it('requires Q words to start with Q when car rule is starts-with', () => {
     const host = playerFromLocal('host', 'Host', true);
     const rules = cloneGameRules(DEFAULT_GAME_RULES);
     rules['sign-game'].qxzMatchMode = 'starts-with';

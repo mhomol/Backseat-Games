@@ -117,7 +117,7 @@ export default function LobbyScreen() {
       </View>
 
       {session.gameType ? (
-        <SettingsSection title="House rules">
+        <SettingsSection title="Car rules">
           <GameRulesEditor
             gameType={session.gameType}
             rules={session.gameRules}

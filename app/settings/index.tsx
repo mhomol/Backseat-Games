@@ -110,7 +110,7 @@ export default function SettingsScreen() {
         ))}
       </SettingsSection>
 
-      <SettingsSection title="House rules (defaults)">
+      <SettingsSection title="Car rules (defaults)">
         {GAME_TYPES.map((gameType) => (
           <SettingsLinkRow
             key={gameType}

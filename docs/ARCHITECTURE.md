@@ -124,7 +124,7 @@ Each exports `create*State()` and `apply*Action()`. Host-only validation — joi
 ### Sign Game letter rules
 
 - **A–P, R–Y** — word must **start with** the letter.
-- **Q, X, Z** — letter must **appear anywhere** (house rule).
+- **Q, X, Z** — letter must **appear anywhere** (car rule).
 - Global **used-word set** — normalized lowercase, trimmed.
 
 ## State model
