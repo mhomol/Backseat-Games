@@ -1,5 +1,6 @@
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import * as Linking from 'expo-linking';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -12,12 +13,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
-import { normalizeJoinCode } from '@/constants/relay';
+import { formatJoinCodeInput, normalizeJoinCode } from '@/constants/relay';
 import { GAME_LABELS } from '@/data';
 import { useSessionStore } from '@/store/sessionStore';
+import { joinCodeFromUrl } from '@/utils/joinLink';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function JoinScreen() {
+  const { code: codeParam } = useLocalSearchParams<{ code?: string }>();
   const refreshDiscovery = useSessionStore((state) => state.refreshDiscovery);
   const joinDiscoveredSession = useSessionStore((state) => state.joinDiscoveredSession);
   const joinWithCode = useSessionStore((state) => state.joinWithCode);
@@ -28,6 +31,71 @@ export default function JoinScreen() {
   const [joinCode, setJoinCode] = useState('');
   const [joiningId, setJoiningId] = useState<string | null>(null);
   const [joiningByCode, setJoiningByCode] = useState(false);
+  const [inviteJoinPending, setInviteJoinPending] = useState(false);
+  const autoJoinStarted = useRef(false);
+
+  const applyInviteCode = useCallback((rawCode: string) => {
+    const normalized = normalizeJoinCode(rawCode);
+    if (normalized.length !== 6) {
+      return;
+    }
+    setJoinCode(formatJoinCodeInput(normalized));
+    setInviteJoinPending(true);
+  }, []);
+
+  useEffect(() => {
+    const raw = Array.isArray(codeParam) ? codeParam[0] : codeParam;
+    if (typeof raw === 'string' && raw) {
+      applyInviteCode(raw);
+    }
+  }, [codeParam, applyInviteCode]);
+
+  useEffect(() => {
+    const handleUrl = (url: string) => {
+      const code = joinCodeFromUrl(url);
+      if (code) {
+        applyInviteCode(code);
+      }
+    };
+
+    void Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleUrl(url);
+      }
+    });
+
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      handleUrl(url);
+    });
+
+    return () => subscription.remove();
+  }, [applyInviteCode]);
+
+  const runJoinWithCode = useCallback(async () => {
+    setJoiningByCode(true);
+    try {
+      const sessionId = await joinWithCode(joinCode, playerName.trim());
+      router.push(`/lobby/${sessionId}`);
+    } finally {
+      setJoiningByCode(false);
+      setInviteJoinPending(false);
+    }
+  }, [joinCode, joinWithCode, playerName]);
+
+  useEffect(() => {
+    if (
+      !inviteJoinPending ||
+      autoJoinStarted.current ||
+      joiningByCode ||
+      normalizeJoinCode(joinCode).length !== 6 ||
+      playerName.trim().length < 2
+    ) {
+      return;
+    }
+
+    autoJoinStarted.current = true;
+    void runJoinWithCode();
+  }, [inviteJoinPending, joiningByCode, joinCode, playerName, runJoinWithCode]);
 
   useEffect(() => {
     if (savedName) {
@@ -60,8 +128,9 @@ export default function JoinScreen() {
               autoCapitalize="words"
             />
             <Text style={styles.hint}>
-              Ask the host for their join code — works on cellular or Wi‑Fi. Nearby games below
-              are optional on iPhone when everyone is on the same network.
+              Ask the host for their join code or tap a shared invite link — works on cellular
+              or Wi‑Fi. Nearby games below are optional on iPhone when everyone is on the same
+              network.
             </Text>
           </View>
 
@@ -69,8 +138,8 @@ export default function JoinScreen() {
             <Text style={styles.label}>Join code</Text>
             <TextInput
               value={joinCode}
-              onChangeText={(value) => setJoinCode(value.toUpperCase())}
-              placeholder="e.g. AB12CD"
+              onChangeText={(value) => setJoinCode(formatJoinCodeInput(value))}
+              placeholder="e.g. ABC-12D"
               placeholderTextColor={colors.roadGrayLight}
               style={[styles.input, styles.codeInput]}
               autoCapitalize="characters"
@@ -80,14 +149,8 @@ export default function JoinScreen() {
             <Pressable
               style={[styles.codeButton, (!canJoinByCode || busy) && styles.codeButtonDisabled]}
               disabled={!canJoinByCode || busy}
-              onPress={async () => {
-                setJoiningByCode(true);
-                try {
-                  const sessionId = await joinWithCode(joinCode, playerName.trim());
-                  router.push(`/lobby/${sessionId}`);
-                } finally {
-                  setJoiningByCode(false);
-                }
+              onPress={() => {
+                void runJoinWithCode();
               }}
             >
               {joiningByCode ? (

@@ -16,7 +16,16 @@ export function formatJoinCode(code: string): string {
   if (normalized.length !== 6) {
     return normalized;
   }
-  return `${normalized.slice(0, 2)}-${normalized.slice(2)}`;
+  return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
+}
+
+/** Formats typed input with a dash after the third character. */
+export function formatJoinCodeInput(value: string): string {
+  const normalized = normalizeJoinCode(value).slice(0, 6);
+  if (normalized.length <= 3) {
+    return normalized;
+  }
+  return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
 }
 
 export function normalizeJoinCode(code: string): string {

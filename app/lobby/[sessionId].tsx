@@ -18,6 +18,7 @@ import { GAME_LABELS } from '@/data';
 import { getMultiplayerService } from '@/multiplayer';
 import { useSessionStore } from '@/store/sessionStore';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
+import { shareJoinInvite } from '@/utils/joinLink';
 import type { GameType } from '@/types/game';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
@@ -73,8 +74,16 @@ export default function LobbyScreen() {
           <Text style={styles.joinCodeLabel}>Share this join code</Text>
           <Text style={styles.joinCodeValue}>{formatJoinCode(relayJoinCode)}</Text>
           <Text style={styles.joinCodeHint}>
-            Passengers tap Join a Game and enter this code — works on cellular or Wi‑Fi.
+            Share the invite link or code — passengers can join on cellular or Wi‑Fi.
           </Text>
+          <BigButton
+            label="Share invite"
+            variant="secondary"
+            onPress={() => {
+              const hostName = session.players.find((p) => p.isHost)?.name;
+              void shareJoinInvite(relayJoinCode, hostName);
+            }}
+          />
         </View>
       ) : null}
 
@@ -192,6 +201,7 @@ const styles = StyleSheet.create({
     color: colors.roadGray,
     textAlign: 'center',
     lineHeight: 20,
+    marginBottom: spacing.sm,
   },
   badge: {
     backgroundColor: 'rgba(255, 255, 255, 0.92)',
