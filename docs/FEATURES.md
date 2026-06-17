@@ -12,17 +12,17 @@ Typically the front-seat parent on their phone. The host picks the game, waits f
 
 ### How to join
 
-1. Open **Backseat Games** on your iPhone.
+1. Open **Backseat Games** on your phone.
 2. Tap **Join a Game**.
 3. Enter your name (e.g. Emma, Dad).
-4. Tap the host's session when it appears in **Nearby games**.
+4. Enter the **join code** the host reads from their waiting room (e.g. `AB-12CD`). Works on cellular or Wi‑Fi.
 5. Wait in the **Waiting room** until the host starts.
 
-If no sessions appear after ~30 seconds, ask the host to confirm they created a room. Try connecting all phones to the same **Personal Hotspot** (see FAQ).
+**Optional on iPhone:** If everyone is on the same Wi‑Fi or Personal Hotspot, you may also tap a game under **Nearby games** instead of using a code.
 
 ### Waiting room
 
-- Host sees all joined players and the selected game type.
+- Host sees a large **join code** to share with passengers, plus all joined players and the selected game type.
 - Joiners see a spinner: "Waiting for host to start…"
 - Host taps **Start Game!** when everyone is ready.
 - Competitive games (License Plates, Sign Game) need **at least one other player**. Travel Bingo can be played solo for practice.

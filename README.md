@@ -5,7 +5,7 @@
 > **App Store / TestFlight listing name:** Backseat Games (road trip fun)  
 > **Home screen name:** Backseat Games
 
-Backseat Games is an iPhone app that brings classic family car games to everyone's phone — License Plates, Travel Bingo, and the Sign Game. One person hosts a session; everyone else joins over local peer-to-peer networking. No internet, no accounts.
+Backseat Games is an iPhone app that brings classic family car games to everyone's phone — License Plates, Travel Bingo, and the Sign Game. One person hosts a session; passengers join with a **join code** (works on cellular). iPhone can also use optional nearby discovery on the same Wi‑Fi.
 
 **Pricing:** Free to download and join games. **$1.99 one-time** in-app purchase unlocks hosting (start a session for the car). See [docs/MONETIZATION.md](docs/MONETIZATION.md).
 
@@ -24,7 +24,7 @@ _Screenshots will be added before TestFlight. Run the app in Expo Go to preview 
 - **Expo (React Native) + TypeScript**
 - **expo-router** for navigation
 - **Zustand** for session state
-- **Multipeer Connectivity** (iOS dev/production builds) with mock networking in Expo Go
+- **Hybrid multiplayer** — join-code relay (SignalR on Azure) + optional iOS Multipeer nearby
 - **expo-audio** for Sign Game recordings
 - **Lottie** for win celebrations
 

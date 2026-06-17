@@ -34,6 +34,7 @@ interface SessionStore {
     gameType: GameType | null;
   }>;
   connectionStatus: 'idle' | 'connecting' | 'connected' | 'error';
+  relayJoinCode: string | null;
   toast: string | null;
   initialized: boolean;
 
@@ -43,6 +44,7 @@ interface SessionStore {
   hostGame: (gameType: GameType, hostName: string) => Promise<string>;
   refreshDiscovery: () => void;
   joinDiscoveredSession: (sessionId: string, playerName: string) => Promise<void>;
+  joinWithCode: (joinCode: string, playerName: string) => Promise<string>;
   startHostedGame: () => void;
   updateSessionRules: (partial: Partial<GameRules>) => void;
   finishGameAsHost: () => void;
@@ -150,6 +152,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     session: null,
     discoveredSessions: [],
     connectionStatus: 'idle',
+    relayJoinCode: null,
     toast: null,
     initialized: false,
 
@@ -177,6 +180,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         discoveredSessions: [],
         connectionStatus: 'idle',
         toast: null,
+        relayJoinCode: null,
         localPlayerId: uuidv4(),
       });
     },
@@ -204,6 +208,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         localPlayerName: hostName,
         session,
         connectionStatus: 'connected',
+        relayJoinCode: multiplayer.getJoinCode(),
       });
       return sessionId;
     },
@@ -241,7 +246,31 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       } catch (error) {
         set({
           connectionStatus: 'error',
-          toast: error instanceof Error ? error.message : 'Could not join that game.',
+          toast:
+            error instanceof Error
+              ? `${error.message} Try entering the host's join code instead.`
+              : 'Could not join that game. Try the join code instead.',
+        });
+        throw error;
+      }
+    },
+
+    joinWithCode: async (joinCode, playerName) => {
+      const trimmed = playerName.trim();
+      if (!multiplayer.joinByCode) {
+        throw new Error('Online join is not available.');
+      }
+
+      void savePlayerName(trimmed);
+      set({ connectionStatus: 'connecting', localPlayerName: trimmed, isHost: false });
+      try {
+        const sessionId = await multiplayer.joinByCode(joinCode, trimmed);
+        set({ connectionStatus: 'connecting' });
+        return sessionId;
+      } catch (error) {
+        set({
+          connectionStatus: 'error',
+          toast: error instanceof Error ? error.message : 'Could not join with that code.',
         });
         throw error;
       }

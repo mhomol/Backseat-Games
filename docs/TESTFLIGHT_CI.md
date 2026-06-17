@@ -36,6 +36,7 @@ Also add:
 | Secret | Value |
 |--------|--------|
 | `EXPO_TOKEN` | Expo access token (project identity for `eas build --local`) |
+| `EXPO_PUBLIC_RELAY_URL` | HTTPS base URL of deployed relay (e.g. `https://backseat-relay.<region>.azurecontainerapps.io`) — no trailing slash |
 
 GitHub environments are **per-repo**. Duplicate secret values from Homol Invests or promote the six reusable ones to **org-level secrets**.
 
@@ -58,7 +59,8 @@ GitHub environments are **per-repo**. Duplicate secret values from Homol Invests
 
    | Feature | Where it is configured | When the user sees it |
    |---------|------------------------|------------------------|
-   | In-car P2P / **Multipeer Connectivity** | iOS system framework; no App ID checkbox | Works after local network permission |
+   | **Join-code relay** | `EXPO_PUBLIC_RELAY_URL` + [`server/BackseatGames.Relay/`](../server/BackseatGames.Relay/) | Internet; host shares 6-character code |
+   | In-car P2P / **Multipeer Connectivity** (optional) | iOS system framework; no App ID checkbox | Works after local network permission |
    | **Bonjour** / local discovery | `NSBonjourServices` in Info.plist (`_backseatgames._tcp`) | Part of local network permission |
    | **Local network** | `NSLocalNetworkUsageDescription` in Info.plist | iOS prompt: “Backseat Games would like to find and connect to devices on your local network” |
    | **Microphone** (Sign Game voice input) | `NSMicrophoneUsageDescription` in Info.plist | iOS prompt when voice input is used |

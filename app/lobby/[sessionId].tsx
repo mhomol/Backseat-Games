@@ -13,6 +13,7 @@ import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { PlayerChip } from '@/components/PlayerChip';
+import { formatJoinCode } from '@/constants/relay';
 import { GAME_LABELS } from '@/data';
 import { getMultiplayerService } from '@/multiplayer';
 import { useSessionStore } from '@/store/sessionStore';
@@ -34,6 +35,7 @@ export default function LobbyScreen() {
   const startHostedGame = useSessionStore((state) => state.startHostedGame);
   const updateSessionRules = useSessionStore((state) => state.updateSessionRules);
   const scenerySource = useSessionGameScenery();
+  const relayJoinCode = useSessionStore((state) => state.relayJoinCode);
 
   useEffect(() => {
     if (session?.phase === 'playing' && session.gameType) {
@@ -66,6 +68,16 @@ export default function LobbyScreen() {
 
   return (
     <SceneryScrollShell scenerySource={scenerySource} contentContainerStyle={styles.container}>
+      {isHost && relayJoinCode ? (
+        <View style={styles.joinCodeCard}>
+          <Text style={styles.joinCodeLabel}>Share this join code</Text>
+          <Text style={styles.joinCodeValue}>{formatJoinCode(relayJoinCode)}</Text>
+          <Text style={styles.joinCodeHint}>
+            Passengers tap Join a Game and enter this code — works on cellular or Wi‑Fi.
+          </Text>
+        </View>
+      ) : null}
+
       <ContentCapsule>
         <Text style={styles.subtitle}>
           {isHost
@@ -115,8 +127,7 @@ export default function LobbyScreen() {
         <>
           <View style={styles.tipBox}>
             <Text style={styles.tipText}>
-              Session code: {sessionId}{'\n'}
-              Other players tap Join and look for your name.
+              Passengers can join with the code above or nearby discovery on iPhone.
             </Text>
           </View>
           <BigButton
@@ -153,6 +164,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.roadGray,
     lineHeight: 22,
+  },
+  joinCodeCard: {
+    backgroundColor: 'rgba(255, 243, 176, 0.95)',
+    borderWidth: borders.thick,
+    borderColor: colors.sunnyYellowDark,
+    borderRadius: radii.lg,
+    padding: spacing.lg,
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  joinCodeLabel: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 14,
+    color: colors.roadGrayLight,
+    textTransform: 'uppercase',
+  },
+  joinCodeValue: {
+    fontFamily: fonts.displayBold,
+    fontSize: 40,
+    letterSpacing: 6,
+    color: colors.roadGray,
+  },
+  joinCodeHint: {
+    fontFamily: fonts.body,
+    fontSize: 14,
+    color: colors.roadGray,
+    textAlign: 'center',
+    lineHeight: 20,
   },
   badge: {
     backgroundColor: 'rgba(255, 255, 255, 0.92)',

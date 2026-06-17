@@ -40,9 +40,23 @@ Located in [`src/multiplayer/types.ts`](../src/multiplayer/types.ts). Implementa
 | Implementation | When used |
 |----------------|-----------|
 | `MockMultiplayerService` | Expo Go, simulators, single-device dev |
-| `MultipeerService` (native bridge) | EAS development / production iOS builds |
+| `MultipeerService` (native bridge) | Optional iOS nearby discovery / join |
+| `RelayMultiplayerService` | Join-code sessions via SignalR relay |
+| `HybridMultiplayerService` | Production — relay + optional iOS Multipeer |
 
-The factory [`getMultiplayerService()`](../src/multiplayer/index.ts) selects mock mode when `Constants.appOwnership === 'expo'`.
+The factory [`getMultiplayerService()`](../src/multiplayer/index.ts) returns `HybridMultiplayerService` in dev/production builds.
+
+### Relay server
+
+ASP.NET Core SignalR app in [`server/BackseatGames.Relay/`](../server/BackseatGames.Relay/). Deploy to Azure Container Apps; set `EXPO_PUBLIC_RELAY_URL` to the HTTPS base URL.
+
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /rooms` | Host creates ephemeral room → `{ joinCode, sessionId }` |
+| `GET /rooms/{code}` | Joiner validates code |
+| SignalR `/game` | `JoinRoom`, `RouteMessage` — dumb JSON router |
+
+Rooms expire after **4 hours** of inactivity. Game logic stays on the host phone.
 
 ### Host vs joiner
 
@@ -83,9 +97,10 @@ Configured in [`app.json`](../app.json):
 
 ### Car reliability
 
+- **Join code (relay)** — primary path; needs internet on each phone, not a shared hotspot.
 - **Foreground-only** — iOS throttles local networking in background.
-- **Personal Hotspot fallback** — if discovery fails, connect all phones to one hotspot (documented in FEATURES.md).
-- **Persistent session** — one Multipeer session per trip; avoid reconnecting per action.
+- **Nearby Multipeer (iOS)** — optional when phones share Wi‑Fi or Personal Hotspot.
+- **Persistent session** — one connection per trip; avoid reconnecting per action.
 
 ## Rule engine
 
@@ -180,7 +195,8 @@ Expo Go on iPhone for UI iteration — no Mac or cloud build required.
 |----------|-----------|
 | Expo + TypeScript | Fast Windows → iPhone loop via Expo Go |
 | Host-authoritative | Simple rule enforcement without conflict resolution |
-| No backend server | Works offline in the car |
+| No backend rule engine | Host phone stays authoritative; relay only routes messages |
+| Hybrid multiplayer | Join codes work everywhere; Multipeer when LAN allows |
 | Mock multiplayer in Expo Go | UI/rules dev without native build |
 | Full state snapshots | Simplicity over bandwidth optimization at family scale |
 
@@ -193,7 +209,7 @@ Enable **Push Notifications** on App ID `com.homolworks.backseatgames` before cr
 ## Future extension points
 
 - Push alerts (host started game, join reminders)
-- Android via Google Nearby Connections
+- Android via relay join codes (Multipeer iOS optional)
 - Host migration if host phone dies
 - Relay sign-game audio to all players
 - Patch-based state sync

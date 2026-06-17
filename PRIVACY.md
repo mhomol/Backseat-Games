@@ -6,11 +6,12 @@ Backseat Games ("the app") is a family road-trip game app published by Homol Wor
 
 ## Summary
 
-- **No accounts** — we do not collect names, emails, or Apple IDs on our servers.
+- **No accounts** — we do not collect names, emails, or Apple IDs in a user database.
 - **No analytics or ads** in v1.
-- **Local multiplayer only** — phones connect directly in the car via Apple's local networking; game data does not pass through our servers.
-- **On-device storage** — player name, game preferences, win/loss stats, and purchase entitlement cache stay on your iPhone.
-- **Microphone** — used only when you record a short clip in the Sign Game; audio stays on device during the session.
+- **Multiplayer** — phones connect via a short-lived online relay (join code) or, on iPhone, optionally via Apple's local networking when nearby discovery works.
+- **Relay data** — display names and game state pass through our relay only while a room is active (about 4 hours max); we do not store them long-term.
+- **On-device storage** — player name, game preferences, win/loss stats, and purchase entitlement cache stay on your device.
+- **Microphone** — used only when you use optional voice input in the Sign Game; audio stays on device during the session.
 - **In-app purchase** — Apple processes the one-time host unlock; we do not receive your payment details.
 
 ## Data stored on your device
@@ -28,13 +29,14 @@ You can clear app data by deleting the app.
 
 | Permission | Why |
 |------------|-----|
-| Local network | Find and connect to other phones running Backseat Games nearby |
-| Microphone | Optional Sign Game audio call-outs |
+| Internet | Join-code multiplayer via our ephemeral relay |
+| Local network | Optional nearby discovery on iPhone (Multipeer) |
+| Microphone | Optional Sign Game voice input |
 | Notifications | Optional alerts when a host starts a game (when enabled) |
 
 ## Children's privacy
 
-The app is designed for family use. We do not knowingly collect personal information from children on our servers because we operate no backend for gameplay.
+The app is designed for family use. Multiplayer uses a short-lived relay for join codes; we do not build profiles of children from that traffic.
 
 ## Contact
 

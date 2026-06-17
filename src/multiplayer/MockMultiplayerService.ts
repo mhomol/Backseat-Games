@@ -155,6 +155,10 @@ export class MockMultiplayerService implements MultiplayerService {
     return this.hosting;
   }
 
+  getJoinCode(): string | null {
+    return null;
+  }
+
   registerHostedSessionGameType(sessionId: string, gameType: string | null) {
     const session = mockSessions.get(sessionId);
     if (session) {

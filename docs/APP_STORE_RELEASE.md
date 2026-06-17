@@ -42,12 +42,14 @@ Everything below is **App Store Connect** (browser) unless noted.
 
 ## Phase 3 — Privacy Nutrition Label
 
-No backend / no analytics in v1. Declare on-device only:
+Declare honestly:
 
-- Player display name — not linked, not used for tracking
-- Sign Game audio — optional, session-local
+- Player display name — passed through ephemeral relay during active games; not linked to accounts, not used for tracking
+- Game state — ephemeral relay during active sessions only
+- Sign Game audio — optional, session-local (not relayed)
 - Purchases — via Apple IAP only
-- Local network + microphone — capability disclosure
+- Internet — join-code multiplayer relay
+- Local network + microphone — optional iOS nearby play / voice input
 
 ---
 
@@ -55,7 +57,7 @@ No backend / no analytics in v1. Declare on-device only:
 
 **Promotional text** (170 chars):
 
-> Turn road trips into a game. License plates, sign spotting, and travel bingo — one phone hosts, everyone nearby joins. No internet needed.
+> Turn road trips into a game. License plates, sign spotting, and travel bingo — one phone hosts, passengers join with a code.
 
 **Description** — include:
 
@@ -108,15 +110,15 @@ iPad supported in app — provide iPad screenshots or decide to drop tablet supp
 - [ ] **App Review notes:**
 
 ```
-Backseat Games is offline local-network multiplayer for family road trips.
+Backseat Games is family road-trip multiplayer.
 
-- No login. No backend.
+- No login.
 - Join is free. Start/host requires one-time $1.99 IAP.
-- Multiplayer uses local network between nearby devices.
-- Microphone optional (Sign Game only).
+- Multiplayer: host shares a 6-character join code (internet relay). Optional nearby join on iPhone when on same Wi‑Fi.
+- Microphone optional (Sign Game voice input only).
 
 IAP: sandbox Apple ID on Start a Game.
-Multiplayer: two devices on same Wi‑Fi or Personal Hotspot.
+Multiplayer: host reads join code from waiting room; joiner enters code on Join screen.
 ```
 
 - [ ] Export compliance: No (non-exempt encryption already declared in app)

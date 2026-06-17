@@ -189,6 +189,10 @@ class MultipeerService implements MultiplayerService {
     return this.useFallback ? this.fallback.getLocalPeerId() : this.localPeerId;
   }
 
+  getJoinCode(): string | null {
+    return null;
+  }
+
   isHost(): boolean {
     return this.useFallback ? this.fallback.isHost() : this.hosting;
   }
@@ -199,6 +203,9 @@ class MultipeerService implements MultiplayerService {
       return;
     }
     if (!this.hosting || this.sessionId !== sessionId) {
+      return;
+    }
+    if (this.gameType === gameType) {
       return;
     }
     this.gameType = gameType;

@@ -78,6 +78,7 @@ module.exports = () => {
       },
       extra: {
         router: {},
+        relayUrl: process.env.EXPO_PUBLIC_RELAY_URL?.trim() || 'http://localhost:5080',
         eas: {
           projectId: '3760b2e7-04b8-4d7f-b7c1-b6b21e65c387',
         },
