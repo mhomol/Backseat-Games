@@ -36,7 +36,16 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# EAS
+# local screenshot drops (keep repo clean)
+assets/marketing/app-store-screenshots/raw/*
+!assets/marketing/app-store-screenshots/raw/.gitkeep
+assets/marketing/app-store-screenshots/output/*
+!assets/marketing/app-store-screenshots/output/.gitkeep
+assets/marketing/app-store-previews/raw/*
+!assets/marketing/app-store-previews/raw/.gitkeep
+assets/marketing/app-store-previews/output/*
+!assets/marketing/app-store-previews/output/.gitkeep
+
 google-services.json
 GoogleService-Info.plist
 credentials.json

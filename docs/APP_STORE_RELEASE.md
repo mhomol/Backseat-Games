@@ -79,14 +79,35 @@ road trip,car games,family,bingo,license plate,travel,kids,offline,multiplayer,v
 
 ## Phase 5 — Screenshots
 
-Capture from **TestFlight on a physical iPhone**.
+Capture from **TestFlight on a physical iPhone**, then resize for App Store Connect:
 
+```bash
+# 1. Drop PNG/JPG captures into assets/marketing/app-store-screenshots/raw/
+# 2. Run:
+npm run prepare:app-store-screenshots
+# 3. Upload JPEGs from assets/marketing/app-store-screenshots/output/
+```
 
-| Size | Resolution  | Suggested screens                               |
-| ---- | ----------- | ----------------------------------------------- |
-| 6.7" | 1290 × 2796 | Home, host setup, lobby, game, settings/paywall |
-| 6.5" | 1284 × 2778 | Same set                                        |
+| Slot | Output folder | Resolution | Notes |
+| ---- | ------------- | ---------- | ----- |
+| 6.9" | `output/6.9-inch/` | 1320 × 2868 | Preferred primary tier (2026) |
+| 6.5" | `output/6.5-inch/` | 1284 × 2778 | Required tier if 6.9" not uploaded |
+| 6.3" | `output/6.3-inch/` | 1206 × 2622 | Optional — iPhone 17 native |
 
+Suggested screens: Home, host setup, lobby, game, settings/paywall.
+
+The script flattens transparency (fixes ASC “alpha channel” errors) and exports opaque JPEG.
+
+### App Previews (optional screen recordings)
+
+```bash
+# 1. Drop .mov/.mp4 screen recordings into assets/marketing/app-store-previews/raw/
+# 2. Run:
+npm run prepare:app-store-previews
+# 3. Upload MP4s from assets/marketing/app-store-previews/output/iphone-preview/
+```
+
+Preview videos use **886 × 1920** (not screenshot dimensions). See [assets/marketing/app-store-previews/README.md](../assets/marketing/app-store-previews/README.md).
 
 iPhone only for v1 (`supportsTablet: false` in [app.config.js](../app.config.js)) — no iPad screenshots required.
 
