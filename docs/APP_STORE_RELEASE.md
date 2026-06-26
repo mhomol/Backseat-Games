@@ -59,11 +59,34 @@ Declare honestly:
 
 > Turn road trips into a game. License plates, sign spotting, and travel bingo — one phone hosts, passengers join with a code.
 
-**Description** — include:
+**Description** (paste into App Store Connect — 4,000 char max):
 
-- Free download; join free
-- $0.99 one-time host unlock
-- Three games, local multiplayer, no accounts, works offline on the trip
+> Turn long drives into play time. Backseat Games brings classic road-trip games to one phone: the host runs the session, passengers join with a short code, and everyone plays together from the back seat.
+>
+> HOW IT WORKS
+> One person taps Start a Game and shares a join code from the waiting room. Everyone else enters the code on their own phone — works on cellular or Wi‑Fi, no accounts, no sign-up. When the crew is ready, the host starts the round and scores stay in sync for the whole trip.
+>
+> THREE GAMES FOR THE CAR
+>
+> License Plates — Spot plates from US states and Canadian provinces. Tap to claim on a shared grid; most plates when the host ends the round wins.
+>
+> Sign Game — Race from A to Z using words on road signs. Each player advances at their own pace. First to reach Z wins.
+>
+> Travel Bingo — Everyone gets a unique 5×5 card filled with things to spot along the road. First bingo — a row, column, or diagonal — wins.
+>
+> BUILT FOR FAMILY ROAD TRIPS
+> • Car rules — Set defaults in Settings, then tweak rules per trip in the waiting room
+> • Share invite — Send a link so passengers can join with the code pre-filled
+> • Your record — Wins, losses, and ties tracked on each phone (no Game Center required)
+> • Rejoin mid-trip — Same join code and name if someone loses signal
+> • Optional voice input in Sign Game — Say the word instead of typing
+>
+> PRICING
+> • Free to download; passengers join for free
+> • One-time $0.99 unlock to host and start games on your Apple ID
+> • Three games included — no subscriptions
+>
+> No ads. No login. Just games for the drive.
 
 **Keywords** (100 chars):
 
