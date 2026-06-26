@@ -63,6 +63,7 @@ export default function SignGameScreen() {
     return getSignGameLeaderboard(gameState, session.players).map((entry) => ({
       name: entry.name,
       score: entry.lettersDone,
+      display: entry.currentLetter,
       isYou: entry.playerId === localPlayerId,
     }));
   }, [gameState, session, localPlayerId]);

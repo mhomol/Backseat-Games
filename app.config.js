@@ -18,7 +18,7 @@ module.exports = () => {
         backgroundColor: '#5CB9E0',
       },
       ios: {
-        supportsTablet: true,
+        supportsTablet: false,
         bundleIdentifier: 'com.homolworks.backseatgames',
         buildNumber,
         infoPlist: {

@@ -7,7 +7,7 @@ const SECTIONS = [
   {
     title: 'Getting started',
     body:
-      'One phone hosts the game. Everyone else joins from the Join screen. Keep all phones on the same Personal Hotspot and leave Backseat Games open during play.',
+      'One phone hosts the game. Passengers join with the host join code — it works on cellular or Wi‑Fi. Keep Backseat Games open in the foreground during play. If you lose signal, re-enter the same join code and name to rejoin.',
   },
   {
     title: 'License Plates',

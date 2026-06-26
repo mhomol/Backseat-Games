@@ -186,7 +186,7 @@ Host unlock IAP is enforced in **TestFlight and App Store builds only** (`__DEV_
 ### Prerequisites
 
 1. **Paid Apps Agreement** active in App Store Connect (Agreements, Tax, and Banking).
-2. Non-consumable product `com.homolworks.backseatgames.host_unlock` created at **$1.99**, status **Ready to Submit** — see [MONETIZATION.md](./MONETIZATION.md).
+2. Non-consumable product `com.homolworks.backseatgames.host_unlock` created at **$0.99**, status **Ready to Submit** — see [MONETIZATION.md](./MONETIZATION.md).
 3. **Sandbox Apple ID** — App Store Connect → Users and Access → Sandbox → Testers.
 4. **Physical iPhone** with TestFlight build installed.
 
@@ -194,7 +194,7 @@ Host unlock IAP is enforced in **TestFlight and App Store builds only** (`__DEV_
 
 1. Fresh install from TestFlight (or delete app and reinstall).
 2. Tap **Start a Game** on the home signpost → paywall appears.
-3. Tap **Unlock for $1.99** → sign in with sandbox Apple ID when iOS prompts.
+3. Tap **Unlock for $0.99** → sign in with sandbox Apple ID when iOS prompts.
 4. Confirm purchase completes → host setup screen opens.
 5. Host a session; confirm **Join** still works on a second phone without purchase.
 6. **Settings → Restore purchases** on a reinstall → hosting works without repurchasing.

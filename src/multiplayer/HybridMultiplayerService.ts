@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import type { GameType, NetworkMessage } from '../types/game';
-import type { DiscoveryHandler, MessageHandler, MultiplayerService } from './types';
+import type { DiscoveryHandler, MessageHandler, MultiplayerService, ConnectionChangeHandler } from './types';
 import { createMockMultiplayerService } from './MockMultiplayerService';
 import { createRelayMultiplayerService, RelayMultiplayerService } from './RelayMultiplayerService';
 import { isJoinCode } from '../constants/relay';
@@ -193,6 +193,18 @@ export class HybridMultiplayerService implements MultiplayerService {
   registerHostedSessionGameType(sessionId: string, gameType: GameType | null): void {
     this.mpc.registerHostedSessionGameType?.(sessionId, gameType);
     this.relay.registerHostedSessionGameType(sessionId, gameType);
+  }
+
+  setLocalPeerId(peerId: string): void {
+    this.relay.setLocalPeerId(peerId);
+    this.mpc.setLocalPeerId?.(peerId);
+  }
+
+  onConnectionChange(handler: ConnectionChangeHandler): () => void {
+    if (!this.useRelay) {
+      return () => {};
+    }
+    return this.relay.onConnectionChange(handler);
   }
 }
 

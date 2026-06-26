@@ -7,7 +7,7 @@ How hosting is priced, how purchases work, and how to test them before App Store
 | Role | Cost | Can do |
 |------|------|--------|
 | **Passenger (joiner)** | Free | Install, join nearby games, play |
-| **Host (trip starter)** | **$1.99 one-time** IAP | Start a Game, host lobby, run sessions |
+| **Host (trip starter)** | **$0.99 one-time** IAP | Start a Game, host lobby, run sessions |
 
 - App Store listing: **Free** with **Offers In-App Purchases**
 - Product type: **Non-consumable** (buy once per Apple ID; restore on new devices)
@@ -43,7 +43,7 @@ Complete before TestFlight IAP testing:
 3. **Features → In-App Purchases** → **+** → **Non-Consumable**
 4. Reference name: `Host Unlock`
 5. Product ID: `com.homolworks.backseatgames.host_unlock` (must match code exactly)
-6. Price: **$1.99** (Tier 2)
+6. Price: **$0.99** (Tier 1)
 7. Display name: **Host games**
 8. Description: e.g. "Unlock hosting for road-trip games. Passengers join free."
 9. Optional: enable **Family Sharing**

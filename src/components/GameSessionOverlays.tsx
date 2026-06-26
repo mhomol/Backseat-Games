@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { ConnectionBanner } from '@/components/ConnectionBanner';
 import { WinCelebration } from '@/components/WinCelebration';
 import type { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
+import { useSessionStore } from '@/store/sessionStore';
 
 type GameSessionOverlaysProps = {
   guard: ReturnType<typeof useGameSessionGuard>;
@@ -15,7 +17,10 @@ export function GameSessionOverlays({
   isWinnerYou = false,
 }: GameSessionOverlaysProps) {
   const [celebrationDismissed, setCelebrationDismissed] = useState(false);
+  const connectionStatus = useSessionStore((state) => state.connectionStatus);
   const showWin = guard.isFinished && !!winnerHeadline;
+  const showConnectionBanner =
+    connectionStatus === 'reconnecting' || connectionStatus === 'disconnected';
 
   useEffect(() => {
     if (!guard.isFinished) {
@@ -25,6 +30,11 @@ export function GameSessionOverlays({
 
   return (
     <>
+      {showConnectionBanner ? (
+        <ConnectionBanner
+          status={connectionStatus === 'reconnecting' ? 'reconnecting' : 'disconnected'}
+        />
+      ) : null}
       {guard.exitPrompt ? (
         <ConfirmDialog
           visible={guard.exitPrompt.visible}

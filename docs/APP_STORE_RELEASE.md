@@ -25,7 +25,7 @@ Everything below is **App Store Connect** (browser) unless noted.
 
 - [x] **Paid Apps Agreement** active (Agreements, Tax, and Banking)
 - [x] App record exists: **Backseat Games (road trip fun)**
-- [x] IAP product created — non-consumable, $1.99, **Ready to Submit** ([MONETIZATION.md](./MONETIZATION.md))
+- [x] IAP product created — non-consumable, **$0.99** (Tier 1), **Ready to Submit** — update price in App Store Connect if still at $1.99 ([MONETIZATION.md](./MONETIZATION.md))
 
 ---
 
@@ -62,7 +62,7 @@ Declare honestly:
 **Description** — include:
 
 - Free download; join free
-- $1.99 one-time host unlock
+- $0.99 one-time host unlock
 - Three games, local multiplayer, no accounts, works offline on the trip
 
 **Keywords** (100 chars):
@@ -88,22 +88,23 @@ Capture from **TestFlight on a physical iPhone**.
 | 6.5" | 1284 × 2778 | Same set                                        |
 
 
-iPad supported in app — provide iPad screenshots or decide to drop tablet support before v1.
+iPhone only for v1 (`supportsTablet: false` in [app.config.js](../app.config.js)) — no iPad screenshots required.
 
 ---
 
 ## Phase 6 — Pricing
 
 - [ ] App price: **Free**
-- [ ] In-App Purchases: **Yes**
+- [ ] In-App Purchases: **Yes** — `host_unlock` at **$0.99** (Tier 1 in App Store Connect)
 - [ ] Countries: start with US (expand as needed)
+- [ ] Regenerate IAP review/promo images if ASC still shows old price (`node scripts/prepare-iap-review-screenshot.mjs`)
 
 ---
 
 ## Phase 7 — Submit
 
-- [ ] Playtesting sign-off (you + Grace)
-- [ ] TestFlight sandbox IAP + restore verified
+- [x] Playtesting sign-off (family road trip — Travel Bingo + Sign Game validated)
+- [ ] TestFlight sandbox IAP + restore verified at **$0.99**
 - [ ] Upload build (GitHub Actions iOS TestFlight workflow)
 - [ ] Select build on version 1.0
 - [ ] Attach `host_unlock` IAP to submission
@@ -113,9 +114,10 @@ iPad supported in app — provide iPad screenshots or decide to drop tablet supp
 Backseat Games is family road-trip multiplayer.
 
 - No login.
-- Join is free. Start/host requires one-time $1.99 IAP.
-- Multiplayer: host shares a 6-character join code (internet relay). Optional nearby join on iPhone when on same Wi‑Fi.
+- Join is free. Start/host requires one-time $0.99 IAP.
+- Multiplayer: host shares a 6-character join code (internet relay). Nearby join on iPhone is optional same-Wi‑Fi only — join code works on cellular.
 - Microphone optional (Sign Game voice input only).
+- Rejoin: enter the same join code and player name if disconnected mid-trip.
 
 IAP: sandbox Apple ID on Start a Game.
 Multiplayer: host reads join code from waiting room; joiner enters code on Join screen.

@@ -10,6 +10,10 @@ export type DiscoveryHandler = (session: {
   gameType: GameType | null;
 }) => void;
 
+export type ConnectionChangeHandler = (
+  status: 'connected' | 'reconnecting' | 'disconnected',
+) => void;
+
 export interface MultiplayerService {
   readonly mode: MultiplayerMode;
   readonly activeTransport?: MultiplayerTransport;
@@ -30,6 +34,8 @@ export interface MultiplayerService {
   isHost(): boolean;
   getJoinCode(): string | null;
   registerHostedSessionGameType?(sessionId: string, gameType: GameType | null): void;
+  setLocalPeerId?(peerId: string): void;
+  onConnectionChange?(handler: ConnectionChangeHandler): () => void;
 }
 
 /** Bonjour service name (matches NSBonjourServices `_backseatgames._tcp`). */

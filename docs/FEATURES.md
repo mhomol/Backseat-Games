@@ -8,7 +8,7 @@ How to play Backseat Games — written for family testers, not engineers.
 
 Typically the front-seat parent on their phone. The host picks the game, waits for everyone to join, and taps **Start Game**.
 
-**Pricing:** Joining is **free** for everyone. Starting a game (hosting) requires a **one-time $1.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay.
+**Pricing:** Joining is **free** for everyone. Starting a game (hosting) requires a **one-time $0.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay.
 
 ### How to join
 
@@ -51,9 +51,15 @@ If you break a rule, you'll see a friendly popup — for example:
 - "That word was already used by someone else."
 - "Word must start with H."
 
-### If someone disconnects (MVP)
+### If someone disconnects
 
-If a player closes the app, they remain listed but may not receive updates. The host keeps running. Rejoining the same session in MVP starts fresh — full reconnect handling is a future improvement.
+If a player loses signal or closes the app, the host keeps the game running. To get back in:
+
+1. Re-open Backseat Games and keep it **in the foreground**.
+2. On **Join**, enter the same **join code** and **player name** as before.
+3. Prefer the join code on cellular — nearby games only work on the same Wi‑Fi or hotspot.
+
+The app remembers your player for that trip when you rejoin with the same name. In dead zones with no data, you may need to wait until signal returns.
 
 ---
 

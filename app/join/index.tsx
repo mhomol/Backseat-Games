@@ -112,6 +112,8 @@ export default function JoinScreen() {
   const canJoin = playerName.trim().length >= 2;
   const canJoinByCode = canJoin && normalizeJoinCode(joinCode).length === 6;
   const busy = joiningId !== null || joiningByCode;
+  const showNearbyDiscovery =
+    Platform.OS === 'ios' && normalizeJoinCode(joinCode).length === 0;
 
   return (
     <SceneryBackground variant="join">
@@ -128,9 +130,8 @@ export default function JoinScreen() {
               autoCapitalize="words"
             />
             <Text style={styles.hint}>
-              Ask the host for their join code or tap a shared invite link — works on cellular
-              or Wi‑Fi. Nearby games below are optional on iPhone when everyone is on the same
-              network.
+              On the road, use the host&apos;s join code — it works on cellular or Wi‑Fi. Nearby
+              games below only work when every phone is on the same Wi‑Fi or hotspot.
             </Text>
           </View>
 
@@ -161,10 +162,10 @@ export default function JoinScreen() {
             </Pressable>
           </View>
 
-          {Platform.OS === 'ios' ? (
+          {showNearbyDiscovery ? (
             <>
               <View style={styles.discoveryHeader}>
-                <Text style={styles.label}>Nearby games (optional)</Text>
+                <Text style={styles.label}>Nearby games (same Wi‑Fi only)</Text>
                 <Pressable onPress={refreshDiscovery}>
                   <Text style={styles.refresh}>Refresh</Text>
                 </Pressable>

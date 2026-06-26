@@ -1,5 +1,10 @@
 import type { GameType, NetworkMessage } from '../types/game';
-import type { DiscoveryHandler, MessageHandler, MultiplayerService } from './types';
+import type {
+  ConnectionChangeHandler,
+  DiscoveryHandler,
+  MessageHandler,
+  MultiplayerService,
+} from './types';
 import { getRelayBaseUrl, normalizeJoinCode } from '../constants/relay';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -25,6 +30,7 @@ export class RelayMultiplayerService implements MultiplayerService {
 
   private connection: HubConnection | null = null;
   private messageHandler: MessageHandler | null = null;
+  private connectionHandler: ConnectionChangeHandler | null = null;
   private joinCode: string | null = null;
   private sessionId: string | null = null;
   private hosting = false;
@@ -49,6 +55,10 @@ export class RelayMultiplayerService implements MultiplayerService {
 
   getRelaySessionId(): string | null {
     return this.sessionId;
+  }
+
+  setLocalPeerId(peerId: string): void {
+    this.localPeerId = peerId;
   }
 
   async hostSession(
@@ -77,17 +87,10 @@ export class RelayMultiplayerService implements MultiplayerService {
     const payload = (await response.json()) as { joinCode: string; sessionId: string };
     this.joinCode = normalizeJoinCode(payload.joinCode);
     await this.ensureConnected();
-    await this.connection!.invoke(
-      'JoinRoom',
-      this.joinCode,
-      displayName,
-      true,
-      this.localPeerId,
-    );
+    await this.registerInRoom();
   }
 
   async joinSession(sessionId: string, displayName: string): Promise<void> {
-    // Relay path uses join codes; sessionId arg may be the code from joinByCode flow.
     const code = this.joinCode ?? (isJoinCodeLike(sessionId) ? normalizeJoinCode(sessionId) : null);
     if (!code) {
       throw new Error('Join code required for online join.');
@@ -106,13 +109,7 @@ export class RelayMultiplayerService implements MultiplayerService {
     this.displayName = displayName;
 
     await this.ensureConnected();
-    await this.connection!.invoke(
-      'JoinRoom',
-      normalized,
-      displayName,
-      false,
-      this.localPeerId,
-    );
+    await this.registerInRoom();
 
     const joinMessage: NetworkMessage = { type: 'JOIN', name: displayName };
     await this.connection!.invoke('RouteMessage', normalized, JSON.stringify(joinMessage));
@@ -141,6 +138,15 @@ export class RelayMultiplayerService implements MultiplayerService {
     };
   }
 
+  onConnectionChange(handler: ConnectionChangeHandler): () => void {
+    this.connectionHandler = handler;
+    return () => {
+      if (this.connectionHandler === handler) {
+        this.connectionHandler = null;
+      }
+    };
+  }
+
   getLocalPeerId(): string {
     return this.localPeerId;
   }
@@ -151,6 +157,21 @@ export class RelayMultiplayerService implements MultiplayerService {
 
   registerHostedSessionGameType(_sessionId: string, _gameType: GameType | null): void {
     // Game type is set when the room is created.
+  }
+
+  private async registerInRoom(): Promise<void> {
+    if (!this.connection || !this.joinCode) {
+      return;
+    }
+
+    await this.connection.invoke(
+      'JoinRoom',
+      this.joinCode,
+      this.displayName,
+      this.hosting,
+      this.localPeerId,
+    );
+    this.connectionHandler?.('connected');
   }
 
   private async fetchRoomInfo(joinCode: string): Promise<RoomInfo> {
@@ -214,7 +235,30 @@ export class RelayMultiplayerService implements MultiplayerService {
       }
     });
 
+    this.connection.onreconnecting(() => {
+      this.connectionHandler?.('reconnecting');
+    });
+
+    this.connection.onreconnected(() => {
+      void this.registerInRoom().then(() => {
+        if (!this.hosting && this.joinCode) {
+          const joinMessage: NetworkMessage = { type: 'JOIN', name: this.displayName };
+          void this.connection?.invoke(
+            'RouteMessage',
+            this.joinCode,
+            JSON.stringify(joinMessage),
+          );
+        }
+        this.connectionHandler?.('connected');
+      });
+    });
+
+    this.connection.onclose(() => {
+      this.connectionHandler?.('disconnected');
+    });
+
     await this.connection.start();
+    this.connectionHandler?.('connected');
   }
 
   private async disconnect(): Promise<void> {

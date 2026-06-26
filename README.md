@@ -7,7 +7,7 @@
 
 Backseat Games is an iPhone app that brings classic family car games to everyone's phone — License Plates, Travel Bingo, and the Sign Game. One person hosts a session; passengers join with a **join code** (works on cellular). iPhone can also use optional nearby discovery on the same Wi‑Fi.
 
-**Pricing:** Free to download and join games. **$1.99 one-time** in-app purchase unlocks hosting (start a session for the car). See [docs/MONETIZATION.md](docs/MONETIZATION.md).
+**Pricing:** Free to download and join games. **$0.99 one-time** in-app purchase unlocks hosting (start a session for the car). See [docs/MONETIZATION.md](docs/MONETIZATION.md).
 
 ## Games included
 

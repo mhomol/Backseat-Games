@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { borders, colors, fonts, radii, spacing } from '../theme';
 
 type ScoreboardProps = {
-  scores: Array<{ name: string; score: number; isYou?: boolean }>;
+  scores: Array<{ name: string; score: number; display?: string; isYou?: boolean }>;
 };
 
 export function Scoreboard({ scores }: ScoreboardProps) {
@@ -16,7 +16,7 @@ export function Scoreboard({ scores }: ScoreboardProps) {
           style={[styles.row, entry.isYou && styles.youRow]}
         >
           <Text style={styles.name}>{entry.name}</Text>
-          <Text style={styles.score}>{entry.score}</Text>
+          <Text style={styles.score}>{entry.display ?? entry.score}</Text>
         </View>
       ))}
     </View>

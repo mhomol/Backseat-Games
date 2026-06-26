@@ -17,7 +17,13 @@ import {
   startGame,
 } from '../games/ruleEngine';
 import { getMultiplayerService } from '../multiplayer';
+import { normalizeJoinCode } from '../constants/relay';
 import { loadSavedPlayerName, savePlayerName } from '../services/playerNameStorage';
+import {
+  clearSessionIdentity,
+  loadSessionIdentity,
+  saveSessionIdentity,
+} from '../services/sessionIdentityStorage';
 import { usePreferencesStore } from './preferencesStore';
 import { usePurchaseStore } from './purchaseStore';
 import { useStatsStore } from './statsStore';
@@ -33,7 +39,7 @@ interface SessionStore {
     hostName: string;
     gameType: GameType | null;
   }>;
-  connectionStatus: 'idle' | 'connecting' | 'connected' | 'error';
+  connectionStatus: 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'disconnected' | 'error';
   relayJoinCode: string | null;
   toast: string | null;
   initialized: boolean;
@@ -61,6 +67,7 @@ function playerFromLocal(id: string, name: string, isHost: boolean): Player {
 export const useSessionStore = create<SessionStore>((set, get) => {
   let unsubscribeMessages: (() => void) | null = null;
   let unsubscribeDiscovery: (() => void) | null = null;
+  let unsubscribeConnection: (() => void) | null = null;
 
   const multiplayer = getMultiplayerService();
 
@@ -84,6 +91,20 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         if (!state.isHost || !state.session) {
           return;
         }
+        const joinerName = message.name.trim();
+        const existingPlayer = state.session.players.find(
+          (player) =>
+            !player.isHost &&
+            player.name.trim().toLowerCase() === joinerName.toLowerCase(),
+        );
+        if (existingPlayer) {
+          multiplayer.send({
+            type: 'WELCOME',
+            playerId: existingPlayer.id,
+            state: state.session,
+          });
+          break;
+        }
         const joinerId = fromPeerId ?? uuidv4();
         const joiner = playerFromLocal(joinerId, message.name, false);
         const nextSession = addPlayer(state.session, joiner);
@@ -101,12 +122,21 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         break;
       }
       case 'WELCOME': {
-        // Joiners only — the host sends WELCOME and must keep their own player id.
         if (!state.isHost && message.playerId) {
           commitSession(message.state, {
             localPlayerId: message.playerId,
             connectionStatus: 'connected',
           });
+          const joinCode = multiplayer.getJoinCode();
+          if (joinCode) {
+            void saveSessionIdentity({
+              peerId: message.playerId,
+              sessionId: message.state.sessionId,
+              joinCode,
+              isHost: false,
+              displayName: state.localPlayerName,
+            });
+          }
         }
         break;
       }
@@ -162,6 +192,20 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       await multiplayer.initialize();
       unsubscribeMessages = multiplayer.onMessage(handleNetworkMessage);
+      unsubscribeConnection?.();
+      unsubscribeConnection = multiplayer.onConnectionChange?.((status) => {
+        const current = get();
+        if (!current.session) {
+          return;
+        }
+        if (status === 'connected') {
+          set({ connectionStatus: 'connected' });
+        } else if (status === 'reconnecting') {
+          set({ connectionStatus: 'reconnecting' });
+        } else if (status === 'disconnected') {
+          set({ connectionStatus: 'disconnected' });
+        }
+      }) ?? null;
       const savedName = await loadSavedPlayerName();
       if (savedName) {
         set({ localPlayerName: savedName });
@@ -172,8 +216,11 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     reset: () => {
       unsubscribeMessages?.();
       unsubscribeDiscovery?.();
+      unsubscribeConnection?.();
       unsubscribeMessages = null;
       unsubscribeDiscovery = null;
+      unsubscribeConnection = null;
+      void clearSessionIdentity();
       set({
         session: null,
         isHost: false,
@@ -203,6 +250,16 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const session = createSession(sessionId, host, gameType, gameRules);
       await multiplayer.hostSession(sessionId, hostName, gameType);
       void savePlayerName(hostName);
+      const joinCode = multiplayer.getJoinCode();
+      if (joinCode) {
+        void saveSessionIdentity({
+          peerId: hostId,
+          sessionId,
+          joinCode,
+          isHost: true,
+          displayName: hostName,
+        });
+      }
       set({
         isHost: true,
         localPlayerName: hostName,
@@ -263,9 +320,21 @@ export const useSessionStore = create<SessionStore>((set, get) => {
 
       void savePlayerName(trimmed);
       set({ connectionStatus: 'connecting', localPlayerName: trimmed, isHost: false });
+
+      const normalizedCode = normalizeJoinCode(joinCode);
+      const savedIdentity = await loadSessionIdentity();
+      if (
+        savedIdentity &&
+        normalizeJoinCode(savedIdentity.joinCode) === normalizedCode &&
+        savedIdentity.displayName.trim().toLowerCase() === trimmed.toLowerCase()
+      ) {
+        multiplayer.setLocalPeerId?.(savedIdentity.peerId);
+        set({ localPlayerId: savedIdentity.peerId });
+      }
+
       try {
         const sessionId = await multiplayer.joinByCode(joinCode, trimmed);
-        set({ connectionStatus: 'connecting' });
+        set({ connectionStatus: 'connecting', relayJoinCode: multiplayer.getJoinCode() });
         return sessionId;
       } catch (error) {
         set({
@@ -335,6 +404,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     },
 
     leaveActiveGame: () => {
+      void clearSessionIdentity();
       set({
         session: null,
         isHost: false,
