@@ -3,7 +3,6 @@ import * as Linking from 'expo-linking';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,22 +13,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
 import { formatJoinCodeInput, normalizeJoinCode } from '@/constants/relay';
-import { GAME_LABELS } from '@/data';
 import { useSessionStore } from '@/store/sessionStore';
 import { joinCodeFromUrl } from '@/utils/joinLink';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function JoinScreen() {
   const { code: codeParam } = useLocalSearchParams<{ code?: string }>();
-  const refreshDiscovery = useSessionStore((state) => state.refreshDiscovery);
-  const joinDiscoveredSession = useSessionStore((state) => state.joinDiscoveredSession);
   const joinWithCode = useSessionStore((state) => state.joinWithCode);
-  const discoveredSessions = useSessionStore((state) => state.discoveredSessions);
-  const connectionStatus = useSessionStore((state) => state.connectionStatus);
   const savedName = useSessionStore((state) => state.localPlayerName);
   const [playerName, setPlayerName] = useState('');
   const [joinCode, setJoinCode] = useState('');
-  const [joiningId, setJoiningId] = useState<string | null>(null);
   const [joiningByCode, setJoiningByCode] = useState(false);
   const [inviteJoinPending, setInviteJoinPending] = useState(false);
   const autoJoinStarted = useRef(false);
@@ -103,17 +96,8 @@ export default function JoinScreen() {
     }
   }, [savedName]);
 
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      refreshDiscovery();
-    }
-  }, [refreshDiscovery]);
-
-  const canJoin = playerName.trim().length >= 2;
-  const canJoinByCode = canJoin && normalizeJoinCode(joinCode).length === 6;
-  const busy = joiningId !== null || joiningByCode;
-  const showNearbyDiscovery =
-    Platform.OS === 'ios' && normalizeJoinCode(joinCode).length === 0;
+  const canJoinByCode =
+    playerName.trim().length >= 2 && normalizeJoinCode(joinCode).length === 6;
 
   return (
     <SceneryBackground variant="join">
@@ -130,8 +114,8 @@ export default function JoinScreen() {
               autoCapitalize="words"
             />
             <Text style={styles.hint}>
-              On the road, use the host&apos;s join code — it works on cellular or Wi‑Fi. Nearby
-              games below only work when every phone is on the same Wi‑Fi or hotspot.
+              Ask the host for their join code or tap a shared invite link. Works on cellular or
+              Wi‑Fi — keep the app open during the trip.
             </Text>
           </View>
 
@@ -148,8 +132,8 @@ export default function JoinScreen() {
               maxLength={7}
             />
             <Pressable
-              style={[styles.codeButton, (!canJoinByCode || busy) && styles.codeButtonDisabled]}
-              disabled={!canJoinByCode || busy}
+              style={[styles.codeButton, (!canJoinByCode || joiningByCode) && styles.codeButtonDisabled]}
+              disabled={!canJoinByCode || joiningByCode}
               onPress={() => {
                 void runJoinWithCode();
               }}
@@ -161,52 +145,6 @@ export default function JoinScreen() {
               )}
             </Pressable>
           </View>
-
-          {showNearbyDiscovery ? (
-            <>
-              <View style={styles.discoveryHeader}>
-                <Text style={styles.label}>Nearby games (same Wi‑Fi only)</Text>
-                <Pressable onPress={refreshDiscovery}>
-                  <Text style={styles.refresh}>Refresh</Text>
-                </Pressable>
-              </View>
-
-              {discoveredSessions.length === 0 ? (
-                <View style={styles.empty}>
-                  <Text style={styles.emptyText}>
-                    No nearby hosts found. Use the join code from the host&apos;s waiting room.
-                  </Text>
-                </View>
-              ) : (
-                discoveredSessions.map((session) => (
-                  <Pressable
-                    key={session.sessionId}
-                    style={styles.sessionCard}
-                    disabled={!canJoin || busy}
-                    onPress={async () => {
-                      setJoiningId(session.sessionId);
-                      try {
-                        await joinDiscoveredSession(session.sessionId, playerName.trim());
-                        router.push(`/lobby/${session.sessionId}`);
-                      } finally {
-                        setJoiningId(null);
-                      }
-                    }}
-                  >
-                    <Text style={styles.sessionHost}>{session.hostName}&apos;s game</Text>
-                    <Text style={styles.sessionMeta}>
-                      {session.gameType ? GAME_LABELS[session.gameType] : 'Getting ready…'}
-                    </Text>
-                    {joiningId === session.sessionId || connectionStatus === 'connecting' ? (
-                      <ActivityIndicator color={colors.skyBlueDark} />
-                    ) : (
-                      <Text style={styles.tapHint}>Tap to join nearby</Text>
-                    )}
-                  </Pressable>
-                ))
-              )}
-            </>
-          ) : null}
         </ScrollView>
       </SafeAreaView>
     </SceneryBackground>
@@ -273,47 +211,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bodyBold,
     fontSize: 18,
     color: colors.roadGray,
-  },
-  discoveryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  refresh: {
-    fontFamily: fonts.bodyBold,
-    color: colors.skyBlueDark,
-  },
-  empty: {
-    alignItems: 'center',
-    gap: spacing.md,
-    padding: spacing.lg,
-  },
-  emptyText: {
-    fontFamily: fonts.body,
-    textAlign: 'center',
-    color: colors.roadGrayLight,
-    lineHeight: 22,
-  },
-  sessionCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
-    borderWidth: borders.thick,
-    borderColor: colors.skyBlueDark,
-    borderRadius: radii.lg,
-    padding: spacing.lg,
-    gap: spacing.xs,
-  },
-  sessionHost: {
-    fontFamily: fonts.display,
-    fontSize: 22,
-    color: colors.roadGray,
-  },
-  sessionMeta: {
-    fontFamily: fonts.body,
-    color: colors.roadGrayLight,
-  },
-  tapHint: {
-    fontFamily: fonts.bodyBold,
-    color: colors.grassGreenDark,
-    marginTop: spacing.sm,
   },
 });

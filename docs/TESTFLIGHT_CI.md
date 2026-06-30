@@ -60,9 +60,6 @@ GitHub environments are **per-repo**. Duplicate secret values from Homol Invests
    | Feature | Where it is configured | When the user sees it |
    |---------|------------------------|------------------------|
    | **Join-code relay** | `EXPO_PUBLIC_RELAY_URL` + [`server/BackseatGames.Relay/`](../server/BackseatGames.Relay/) | Internet; host shares 6-character code |
-   | In-car P2P / **Multipeer Connectivity** (optional) | iOS system framework; no App ID checkbox | Works after local network permission |
-   | **Bonjour** / local discovery | `NSBonjourServices` in Info.plist (`_backseatgames._tcp`) | Part of local network permission |
-   | **Local network** | `NSLocalNetworkUsageDescription` in Info.plist | iOS prompt: “Backseat Games would like to find and connect to devices on your local network” |
    | **Microphone** (Sign Game voice input) | `NSMicrophoneUsageDescription` in Info.plist | iOS prompt when voice input is used |
    | **Speech recognition** | `NSSpeechRecognitionUsageDescription` in Info.plist | iOS prompt for Sign Game voice-to-text |
    | **Photo library** (SDK reference) | `NSPhotoLibraryUsageDescription` in Info.plist | Required by speech library; app does not read photos |
@@ -153,7 +150,7 @@ User-visible marketing version (`expo.version` in `app.json`, e.g. `1.0.0`) is e
 ## Verify on device
 
 1. Install from TestFlight on family iPhones.
-2. Host a game on one phone; others join (requires native Multipeer dev build when that plugin is added — MVP TestFlight build supports UI and mock networking validation).
+2. Host a game on one phone; others join with the 6-character code (relay over cellular or Wi‑Fi).
 3. See [FEATURES.md](./FEATURES.md) for play instructions.
 
 ## Troubleshooting

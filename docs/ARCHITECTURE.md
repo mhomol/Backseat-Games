@@ -26,7 +26,7 @@ flowchart TB
 
 ## Session lifecycle
 
-1. **Home** — host picks a game type and name, or joiners browse nearby sessions.
+1. **Home** — host picks a game type and name, or joiners enter a join code.
 2. **Waiting room** — joiners enter display names; host sees roster and taps **Start Game**.
 3. **In-game** — players send actions; host validates via `applyAction()` and broadcasts full state snapshots.
 4. **Finished** — bingo or sign game sets `winnerId` and `phase: 'finished'`; UI shows celebration.
@@ -40,11 +40,9 @@ Located in [`src/multiplayer/types.ts`](../src/multiplayer/types.ts). Implementa
 | Implementation | When used |
 |----------------|-----------|
 | `MockMultiplayerService` | Expo Go, simulators, single-device dev |
-| `MultipeerService` (native bridge) | Optional iOS nearby discovery / join |
-| `RelayMultiplayerService` | Join-code sessions via SignalR relay |
-| `HybridMultiplayerService` | Production — relay + optional iOS Multipeer |
+| `RelayMultiplayerService` | TestFlight / App Store — join-code sessions via SignalR |
 
-The factory [`getMultiplayerService()`](../src/multiplayer/index.ts) returns `HybridMultiplayerService` in dev/production builds.
+The factory [`getMultiplayerService()`](../src/multiplayer/index.ts) returns `RelayMultiplayerService` in production builds and `MockMultiplayerService` in Expo Go.
 
 ### Relay server
 
@@ -63,7 +61,7 @@ Rooms expire after **4 hours** of inactivity. Game logic stays on the host phone
 | Role | Responsibilities |
 |------|------------------|
 | **Host** | Advertises session, owns `SessionState`, runs rule engine, broadcasts updates |
-| **Joiner** | Browses sessions, sends `JOIN`, dispatches `ACTION` messages, renders from snapshots |
+| **Joiner** | Enters join code, sends `JOIN`, dispatches `ACTION` messages, renders from snapshots |
 
 ### Message protocol
 
@@ -89,18 +87,16 @@ MVP uses **full snapshot** broadcast on every valid action. Payloads are small (
 
 ### iOS permissions
 
-Configured in [`app.json`](../app.json):
+Configured in [`app.config.js`](../app.config.js):
 
-- `NSLocalNetworkUsageDescription` — Multipeer / Bonjour
-- `NSBonjourServices` — `_backseatgames._tcp`
-- `NSMicrophoneUsageDescription` — Sign Game recording
+- `NSMicrophoneUsageDescription` — Sign Game voice input
+- `NSSpeechRecognitionUsageDescription` — Sign Game speech-to-text
 
 ### Car reliability
 
-- **Join code (relay)** — primary path; needs internet on each phone, not a shared hotspot.
-- **Foreground-only** — iOS throttles local networking in background.
-- **Nearby Multipeer (iOS)** — optional when phones share Wi‑Fi or Personal Hotspot.
-- **Persistent session** — one connection per trip; avoid reconnecting per action.
+- **Join code (relay)** — needs internet on each phone during play (cellular or Wi‑Fi).
+- **Foreground-only** — iOS throttles networking in background; keep the app open.
+- **Persistent session** — one relay connection per trip; rejoin with same code + name after brief drops.
 
 ## Rule engine
 
@@ -196,7 +192,7 @@ Expo Go on iPhone for UI iteration — no Mac or cloud build required.
 | Expo + TypeScript | Fast Windows → iPhone loop via Expo Go |
 | Host-authoritative | Simple rule enforcement without conflict resolution |
 | No backend rule engine | Host phone stays authoritative; relay only routes messages |
-| Hybrid multiplayer | Join codes work everywhere; Multipeer when LAN allows |
+| Join-code relay multiplayer | Works on cellular or Wi‑Fi; ephemeral rooms on Azure |
 | Mock multiplayer in Expo Go | UI/rules dev without native build |
 | Full state snapshots | Simplicity over bandwidth optimization at family scale |
 
@@ -209,8 +205,7 @@ Enable **Push Notifications** on App ID `com.homolworks.backseatgames` before cr
 ## Future extension points
 
 - Push alerts (host started game, join reminders)
-- Android via relay join codes (Multipeer iOS optional)
+- Android via relay join codes
 - Host migration if host phone dies
 - Relay sign-game audio to all players
 - Patch-based state sync
-- Optional `react-native-multipeer-connectivity` config plugin for production

@@ -23,9 +23,6 @@ module.exports = () => {
         buildNumber,
         infoPlist: {
           ITSAppUsesNonExemptEncryption: false,
-          NSLocalNetworkUsageDescription:
-            'Backseat Games uses the local network to connect phones in the same car for multiplayer games.',
-          NSBonjourServices: ['_backseatgames._tcp'],
           NSMicrophoneUsageDescription:
             'Backseat Games uses the microphone when you say a word aloud in the Sign Game (optional voice input).',
           NSSpeechRecognitionUsageDescription:

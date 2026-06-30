@@ -24,7 +24,7 @@ Backseat Games includes **push notification entitlements** in every native build
 - Player disconnected / reconnected
 - Optional: remind front-seat parent that kids are waiting to join
 
-In-car multiplayer remains **foreground-first**; push is a supplement, not a replacement for Multipeer sync.
+In-car multiplayer remains **foreground-first**; push is a supplement, not a replacement for relay sync.
 
 ## Implementation checklist (when ready)
 

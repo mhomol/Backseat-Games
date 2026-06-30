@@ -8,7 +8,7 @@ Backseat Games ("the app") is a family road-trip game app published by Homol Wor
 
 - **No accounts** — we do not collect names, emails, or Apple IDs in a user database.
 - **No analytics or ads** in v1.
-- **Multiplayer** — phones connect via a short-lived online relay (join code) or, on iPhone, optionally via Apple's local networking when nearby discovery works.
+- **Multiplayer** — phones connect via a short-lived online relay using a join code.
 - **Relay data** — display names and game state pass through our relay only while a room is active (about 4 hours max); we do not store them long-term.
 - **On-device storage** — player name, game preferences, win/loss stats, and purchase entitlement cache stay on your device.
 - **Microphone** — used only when you use optional voice input in the Sign Game; audio stays on device during the session.
@@ -29,8 +29,7 @@ You can clear app data by deleting the app.
 
 | Permission | Why |
 |------------|-----|
-| Internet | Join-code multiplayer via our ephemeral relay |
-| Local network | Optional nearby discovery on iPhone (Multipeer) |
+| Internet | Join-code multiplayer relay |
 | Microphone | Optional Sign Game voice input |
 | Notifications | Optional alerts when a host starts a game (when enabled) |
 

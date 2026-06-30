@@ -5,7 +5,7 @@ import { brand } from '@/theme/brand';
 export function BrandDisclaimer() {
   return (
     <Text style={styles.text}>
-      One phone hosts. Everyone else joins nearby — no internet needed.
+      One phone hosts. Passengers join with a join code.
     </Text>
   );
 }

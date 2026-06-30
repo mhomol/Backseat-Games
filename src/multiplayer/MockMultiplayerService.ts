@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { NetworkMessage } from '../types/game';
-import type { DiscoveryHandler, MessageHandler, MultiplayerService } from './types';
+import type { MessageHandler, MultiplayerService } from './types';
 
 type MockPeer = {
   id: string;
@@ -35,8 +35,6 @@ export class MockMultiplayerService implements MultiplayerService {
   private hosting = false;
   private sessionId: string | null = null;
   private messageHandler: MessageHandler | null = null;
-  private discoveryHandler: DiscoveryHandler | null = null;
-  private discoveryInterval: ReturnType<typeof setInterval> | null = null;
 
   async initialize(): Promise<void> {
     mockRegistry.set(this.peerId, {
@@ -49,9 +47,6 @@ export class MockMultiplayerService implements MultiplayerService {
   }
 
   dispose(): void {
-    if (this.discoveryInterval) {
-      clearInterval(this.discoveryInterval);
-    }
     mockRegistry.delete(this.peerId);
     mockSubscribers.delete(this.peerId);
     if (this.hosting && this.sessionId) {
@@ -92,27 +87,6 @@ export class MockMultiplayerService implements MultiplayerService {
     });
     this.messageHandler?.({ type: 'JOIN', name: displayName }, this.peerId);
     broadcast(sessionId, { type: 'JOIN', name: displayName }, this.peerId);
-  }
-
-  browseSessions(onDiscovered: DiscoveryHandler): () => void {
-    this.discoveryHandler = onDiscovered;
-    const publish = () => {
-      for (const [sessionId, session] of mockSessions.entries()) {
-        onDiscovered({
-          sessionId,
-          hostName: session.hostName,
-          gameType: session.gameType as import('../types/game').GameType | null,
-        });
-      }
-    };
-    publish();
-    this.discoveryInterval = setInterval(publish, 2000);
-    return () => {
-      if (this.discoveryInterval) {
-        clearInterval(this.discoveryInterval);
-        this.discoveryInterval = null;
-      }
-    };
   }
 
   send(message: NetworkMessage): void {

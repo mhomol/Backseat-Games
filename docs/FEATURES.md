@@ -15,10 +15,8 @@ Typically the front-seat parent on their phone. The host picks the game, waits f
 1. Open **Backseat Games** on your phone.
 2. Tap **Join a Game**.
 3. Enter your name (e.g. Emma, Dad).
-4. Enter the **join code** the host reads from their waiting room (e.g. `AB-12CD`). Works on cellular or Wi‑Fi.
+4. Enter the **join code** the host shares from their waiting room (e.g. `AB-12CD`). Works on cellular or Wi‑Fi.
 5. Wait in the **Waiting room** until the host starts.
-
-**Optional on iPhone:** If everyone is on the same Wi‑Fi or Personal Hotspot, you may also tap a game under **Nearby games** instead of using a code.
 
 ### Waiting room
 
@@ -57,7 +55,6 @@ If a player loses signal or closes the app, the host keeps the game running. To 
 
 1. Re-open Backseat Games and keep it **in the foreground**.
 2. On **Join**, enter the same **join code** and **player name** as before.
-3. Prefer the join code on cellular — nearby games only work on the same Wi‑Fi or hotspot.
 
 The app remembers your player for that trip when you rejoin with the same name. In dead zones with no data, you may need to wait until signal returns.
 

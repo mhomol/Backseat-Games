@@ -5,7 +5,7 @@
 > **App Store / TestFlight listing name:** Backseat Games (road trip fun)  
 > **Home screen name:** Backseat Games
 
-Backseat Games is an iPhone app that brings classic family car games to everyone's phone — License Plates, Travel Bingo, and the Sign Game. One person hosts a session; passengers join with a **join code** (works on cellular). iPhone can also use optional nearby discovery on the same Wi‑Fi.
+Backseat Games is an iPhone app that brings classic family car games to everyone's phone — License Plates, Travel Bingo, and the Sign Game. One person hosts a session; passengers join with a **join code** (works on cellular or Wi‑Fi).
 
 **Pricing:** Free to download and join games. **$0.99 one-time** in-app purchase unlocks hosting (start a session for the car). See [docs/MONETIZATION.md](docs/MONETIZATION.md).
 
@@ -24,7 +24,7 @@ _Screenshots will be added before TestFlight. Run the app in Expo Go to preview 
 - **Expo (React Native) + TypeScript**
 - **expo-router** for navigation
 - **Zustand** for session state
-- **Hybrid multiplayer** — join-code relay (SignalR on Azure) + optional iOS Multipeer nearby
+- **Join-code multiplayer** — SignalR relay on Azure
 - **expo-audio** for Sign Game recordings
 - **Lottie** for win celebrations
 
@@ -46,11 +46,11 @@ npx expo start
 
 Scan the QR code with your iPhone camera to open in **Expo Go**.
 
-> **Note:** Multipeer networking uses a **mock adapter** in Expo Go so you can build UI and rules on one device. Real in-car multiplayer requires an **EAS development build** (see below). **In-app purchases** (host unlock) require a **TestFlight or release build** — not Expo Go.
+> **Note:** Expo Go uses a **mock multiplayer adapter** for single-device UI dev. Real join-code multiplayer requires a **TestFlight or release build**. **In-app purchases** (host unlock) also require TestFlight/release — not Expo Go.
 
-## Development build (Multipeer + mic)
+## Development build (mic + TestFlight)
 
-When you need native Multipeer Connectivity or microphone recording on device:
+When you need microphone recording or a device build for TestFlight:
 
 ```bash
 npm install -g eas-cli
@@ -75,7 +75,7 @@ src/
   data/               plates.json, bingo-items.json
   games/              Rule engine per game
   hooks/              useSignGameSpeech
-  multiplayer/        Mock + native Multipeer adapters
+  multiplayer/        Mock (Expo Go) + relay adapters
   store/              Zustand session store
   theme/              Cartoon design tokens
   types/              Shared TypeScript types

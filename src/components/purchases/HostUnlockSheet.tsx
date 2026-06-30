@@ -33,7 +33,7 @@ export function HostUnlockSheet({
           <Text style={styles.title}>Unlock starting games</Text>
           <Text style={styles.lead}>
             You tapped Start a Game. This one-time unlock lets you create sessions for everyone
-            nearby — joining stays free for passengers.
+            in the car — joining stays free for passengers.
           </Text>
 
           <View style={styles.bullets}>

@@ -1,7 +1,6 @@
 import type { GameType, NetworkMessage } from '../types/game';
 import type {
   ConnectionChangeHandler,
-  DiscoveryHandler,
   MessageHandler,
   MultiplayerService,
 } from './types';
@@ -26,7 +25,6 @@ function parseGameType(value: string | null | undefined): GameType | null {
 
 export class RelayMultiplayerService implements MultiplayerService {
   readonly mode = 'relay' as const;
-  readonly activeTransport = 'relay' as const;
 
   private connection: HubConnection | null = null;
   private messageHandler: MessageHandler | null = null;
@@ -115,10 +113,6 @@ export class RelayMultiplayerService implements MultiplayerService {
     await this.connection!.invoke('RouteMessage', normalized, JSON.stringify(joinMessage));
 
     return room.sessionId;
-  }
-
-  browseSessions(_onDiscovered: DiscoveryHandler): () => void {
-    return () => {};
   }
 
   send(message: NetworkMessage): void {

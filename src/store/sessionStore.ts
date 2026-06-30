@@ -34,11 +34,6 @@ interface SessionStore {
   localPlayerName: string;
   isHost: boolean;
   session: SessionState | null;
-  discoveredSessions: Array<{
-    sessionId: string;
-    hostName: string;
-    gameType: GameType | null;
-  }>;
   connectionStatus: 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'disconnected' | 'error';
   relayJoinCode: string | null;
   toast: string | null;
@@ -48,8 +43,6 @@ interface SessionStore {
   reset: () => void;
   setLocalName: (name: string) => void;
   hostGame: (gameType: GameType, hostName: string) => Promise<string>;
-  refreshDiscovery: () => void;
-  joinDiscoveredSession: (sessionId: string, playerName: string) => Promise<void>;
   joinWithCode: (joinCode: string, playerName: string) => Promise<string>;
   startHostedGame: () => void;
   updateSessionRules: (partial: Partial<GameRules>) => void;
@@ -66,7 +59,6 @@ function playerFromLocal(id: string, name: string, isHost: boolean): Player {
 
 export const useSessionStore = create<SessionStore>((set, get) => {
   let unsubscribeMessages: (() => void) | null = null;
-  let unsubscribeDiscovery: (() => void) | null = null;
   let unsubscribeConnection: (() => void) | null = null;
 
   const multiplayer = getMultiplayerService();
@@ -180,7 +172,6 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     localPlayerName: '',
     isHost: false,
     session: null,
-    discoveredSessions: [],
     connectionStatus: 'idle',
     relayJoinCode: null,
     toast: null,
@@ -215,16 +206,13 @@ export const useSessionStore = create<SessionStore>((set, get) => {
 
     reset: () => {
       unsubscribeMessages?.();
-      unsubscribeDiscovery?.();
       unsubscribeConnection?.();
       unsubscribeMessages = null;
-      unsubscribeDiscovery = null;
       unsubscribeConnection = null;
       void clearSessionIdentity();
       set({
         session: null,
         isHost: false,
-        discoveredSessions: [],
         connectionStatus: 'idle',
         toast: null,
         relayJoinCode: null,
@@ -268,48 +256,6 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         relayJoinCode: multiplayer.getJoinCode(),
       });
       return sessionId;
-    },
-
-    refreshDiscovery: () => {
-      unsubscribeDiscovery?.();
-      set({ discoveredSessions: [] });
-      unsubscribeDiscovery = multiplayer.browseSessions((found) => {
-        const state = get();
-        if (state.isHost && state.session?.sessionId === found.sessionId) {
-          return;
-        }
-        set((current) => {
-          const existingIndex = current.discoveredSessions.findIndex(
-            (entry) => entry.sessionId === found.sessionId,
-          );
-          if (existingIndex >= 0) {
-            const next = [...current.discoveredSessions];
-            next[existingIndex] = found;
-            return { discoveredSessions: next };
-          }
-          return {
-            discoveredSessions: [...current.discoveredSessions, found],
-          };
-        });
-      });
-    },
-
-    joinDiscoveredSession: async (sessionId, playerName) => {
-      const trimmed = playerName.trim();
-      void savePlayerName(trimmed);
-      set({ connectionStatus: 'connecting', localPlayerName: trimmed, isHost: false });
-      try {
-        await multiplayer.joinSession(sessionId, trimmed);
-      } catch (error) {
-        set({
-          connectionStatus: 'error',
-          toast:
-            error instanceof Error
-              ? `${error.message} Try entering the host's join code instead.`
-              : 'Could not join that game. Try the join code instead.',
-        });
-        throw error;
-      }
     },
 
     joinWithCode: async (joinCode, playerName) => {

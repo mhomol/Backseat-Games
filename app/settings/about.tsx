@@ -13,7 +13,7 @@ export default function AboutScreen() {
       <SettingsSection title="Backseat Games">
         <Text style={styles.body}>
           Road-trip games for the whole car — license plates, sign spotting, and travel bingo.
-          One phone hosts; everyone else joins nearby with no internet required.
+          One phone hosts; passengers join with the host&apos;s join code.
         </Text>
         <Text style={styles.meta}>Version {version}</Text>
         <Text style={styles.body}>

@@ -6,7 +6,7 @@ How hosting is priced, how purchases work, and how to test them before App Store
 
 | Role | Cost | Can do |
 |------|------|--------|
-| **Passenger (joiner)** | Free | Install, join nearby games, play |
+| **Passenger (joiner)** | Free | Install, join with a code, play |
 | **Host (trip starter)** | **$0.99 one-time** IAP | Start a Game, host lobby, run sessions |
 
 - App Store listing: **Free** with **Offers In-App Purchases**

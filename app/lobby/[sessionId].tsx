@@ -136,7 +136,7 @@ export default function LobbyScreen() {
         <>
           <View style={styles.tipBox}>
             <Text style={styles.tipText}>
-              Passengers can join with the code above or nearby discovery on iPhone.
+              Passengers join with the code above or a shared invite link.
             </Text>
           </View>
           <BigButton
