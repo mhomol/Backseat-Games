@@ -52,7 +52,13 @@ module.exports = () => {
         'expo-font',
         'expo-splash-screen',
         'expo-asset',
-        'expo-audio',
+        [
+          'expo-audio',
+          {
+            enableBackgroundPlayback: false,
+            enableBackgroundRecording: false,
+          },
+        ],
         [
           'expo-notifications',
           {
