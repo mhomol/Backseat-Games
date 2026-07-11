@@ -204,8 +204,4 @@ Enable **Push Notifications** on App ID `com.homolworks.backseatgames` before cr
 
 ## Future extension points
 
-- Push alerts (host started game, join reminders)
-- Android via relay join codes
-- Host migration if host phone dies
-- Relay sign-game audio to all players
-- Patch-based state sync
+Product roadmap and backlog details now live in [ROADMAP.md](./ROADMAP.md) and [BACKLOG.md](./BACKLOG.md).

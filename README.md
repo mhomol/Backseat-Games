@@ -82,6 +82,8 @@ src/
 docs/
   ARCHITECTURE.md     System design
   FEATURES.md         Player-facing rules & FAQ
+  ROADMAP.md          Product roadmap
+  BACKLOG.md          Backlog ideas and priorities
 ```
 
 ## Scripts
@@ -96,6 +98,8 @@ docs/
 
 - [Architecture](docs/ARCHITECTURE.md) — multiplayer, rule engine, state model
 - [Features & rules](docs/FEATURES.md) — how to play, troubleshooting
+- [Roadmap](docs/ROADMAP.md) — release direction and longer-term options
+- [Backlog](docs/BACKLOG.md) — polish, game ideas, and technical follow-ups
 - [Monetization](docs/MONETIZATION.md) — host unlock IAP, sandbox testing
 
 ## TestFlight (recommended — no EAS cloud quota)
