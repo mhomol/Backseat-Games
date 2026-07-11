@@ -218,6 +218,33 @@ Multiplayer: host reads join code from waiting room; joiner enters code on Join 
 
 ---
 
+## Version 1.1 — Delight release
+
+Marketing version: **1.1.0** (`app.config.js` / `package.json`). Build number still comes from CI `run_number`.
+
+### What’s new (for App Review notes)
+
+```
+Backseat Games 1.1 polish release.
+
+- Opening jingle plays once on cold start (Settings: Opening jingle). Not background audio.
+- Game sound effects only while the app is in the foreground (taps, horns, bingo, win).
+- Semi-truck horn on big moments (bingo / wins / first plate claim).
+- First-run cards explain: passengers join free; host unlock is one-time for life (not a subscription).
+- Visual polish: bingo category icons, plate board chrome, ambient scenery critters.
+```
+
+### Ship checklist
+
+- [ ] Run **Actions → iOS TestFlight** on `master` after this release is pushed
+- [ ] Install TestFlight build; confirm no local-network / background-audio prompts
+- [ ] Capture fresh App Store screenshots (home, bingo, plates, first-run / paywall)
+- [ ] Run `npm run prepare:app-store-screenshots` on new raw captures
+- [ ] Create App Store Connect version **1.1** and attach the new build
+- [ ] Paste App Review notes above; submit for review
+
+---
+
 ## After approval
 
 - [ ] Smoke-test production listing and IAP
@@ -228,4 +255,5 @@ Multiplayer: host reads join code from waiting room; joiner enters code on Join 
 - [MONETIZATION.md](./MONETIZATION.md) — IAP product setup
 - [TESTFLIGHT_CI.md](./TESTFLIGHT_CI.md) — build upload + IAP sandbox testing
 - [FEATURES.md](./FEATURES.md) — player-facing rules
+- [ROADMAP.md](./ROADMAP.md) — product direction
 

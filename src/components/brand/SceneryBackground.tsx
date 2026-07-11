@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
+import { AmbientSceneryEffects } from '@/components/brand/AmbientSceneryEffects';
 import { GAME_SCENERY_ASPECT } from '@/data/gameSceneryRotation';
 import { heroAspectRatio, sceneryImages, type SceneryVariant } from '@/data/brandAssets';
 import { brand } from '@/theme/brand';
@@ -9,6 +10,8 @@ type SceneryBackgroundProps = {
   /** Overrides the static variant art (lobby + gameplay rotation). */
   scenerySource?: ImageSourcePropType;
   children?: ReactNode;
+  /** Ambient plane/bird/gopher overlays. Default true. */
+  ambientEffects?: boolean;
 };
 
 /**
@@ -19,6 +22,7 @@ export function SceneryBackground({
   variant,
   scenerySource,
   children,
+  ambientEffects = true,
 }: SceneryBackgroundProps) {
   const ratio = scenerySource ? GAME_SCENERY_ASPECT : heroAspectRatio(variant);
   const source = scenerySource ?? sceneryImages[variant];
@@ -33,6 +37,7 @@ export function SceneryBackground({
             resizeMode="cover"
             accessibilityIgnoresInvertColors
           />
+          {ambientEffects ? <AmbientSceneryEffects /> : null}
           <View style={styles.overlay} pointerEvents="box-none">
             {children}
           </View>

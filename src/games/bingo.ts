@@ -88,6 +88,20 @@ function hasBingoWin(marked: boolean[], winMode: 'line' | 'blackout'): boolean {
   return hasLineBingo(marked);
 }
 
+/** Preview whether marking `index` would complete a bingo for the given win mode. */
+export function wouldCompleteBingo(
+  marked: boolean[],
+  index: number,
+  winMode: 'line' | 'blackout',
+): boolean {
+  if (index < 0 || index >= BINGO_SIZE || marked[index]) {
+    return false;
+  }
+  const next = [...marked];
+  next[index] = true;
+  return hasBingoWin(next, winMode);
+}
+
 export function applyBingoAction(
   session: SessionState,
   playerId: string,
@@ -167,14 +181,18 @@ export function applyBingoAction(
 export function getBingoSquareLabel(
   card: BingoCard,
   index: number,
-): { label: string; icon: string } {
+): { label: string; icon: string; category?: string } {
   if (index === FREE_CENTER_INDEX) {
-    return { label: 'Road Trip!', icon: '🚗' };
+    return { label: 'Road Trip!', icon: '🚗', category: 'vehicles' };
   }
   const itemIndex = index < FREE_CENTER_INDEX ? index : index - 1;
   const itemId = card.itemIds[itemIndex];
   const item = bingoItems.find((entry) => entry.id === itemId);
-  return { label: item?.label ?? '???', icon: item?.icon ?? '❓' };
+  return {
+    label: item?.label ?? '???',
+    icon: item?.icon ?? '❓',
+    category: item?.category,
+  };
 }
 
 export { BINGO_SIZE, FREE_CENTER_INDEX, getMarkedIndices, hasBlackout, hasLineBingo };

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { playWinFeedback } from '../services/feedback';
+import { playTruckHornFeedback, playWinFeedback } from '../services/feedback';
 import { borders, colors, fonts, radii, spacing } from '../theme';
 import { BigButton } from './BigButton';
 
@@ -30,6 +30,7 @@ export function WinCelebration({
     if (visible) {
       animationRef.current?.play();
       void playWinFeedback();
+      void playTruckHornFeedback();
     }
   }, [visible]);
 

@@ -2,9 +2,7 @@
 
 This roadmap is intentionally lightweight. It captures product direction without turning family-game polish into a heavy planning process.
 
-## Current Release: App Store v1
-
-Goal: get the first iPhone release through App Review with the clearest possible experience.
+## Shipped: App Store v1.0
 
 - Relay-only multiplayer with join codes
 - Free joining and $0.99 host unlock
@@ -12,15 +10,18 @@ Goal: get the first iPhone release through App Review with the clearest possible
 - Foreground sound effects and haptics only
 - App Store listing, privacy answers, screenshots, and TestFlight validation
 
-## Next: More Delight In The Existing Games
+## Current: Delight Release v1.1
 
 Goal: make the three launch games feel more custom to Backseat Games before adding major new systems.
 
-- Give Travel Bingo an on-brand icon language instead of relying mostly on text
-- Add more purposeful game-moment sounds, including semi-truck horn moments
-- Revisit License Plates visuals so the board feels more like the brand art
-- Tighten first-run explanation for host, joiner, and paid hosting
-- Add a small set of polish animations for wins, claims, and bingo calls
+- Opening jingle (toggleable, cold-start only)
+- Richer SFX palette with purposeful semi-truck horn moments
+- Travel Bingo category icons (emoji fallback remains)
+- License Plates on-brand board chrome and claim stamps
+- Ambient scenery critters (plane, bird, gopher)
+- First-run teaching that stresses one-time, for-life host unlock
+- Claim / bingo / letter micro-animations
+- Screenshot refresh after TestFlight validation
 
 ## Later: Retention And Family Utility
 
@@ -31,10 +32,10 @@ Goal: make the app more useful across repeat road trips.
 - More themed bingo packs for city, highway, mountains, beach, and nighttime drives
 - Additional family-friendly games that fit short attention spans
 - Better reconnect and host recovery if a host device leaves the session
+- Per-item bingo icon set (beyond category icons)
+- Full Recraft-style regeneration of all 63 plate PNGs
 
 ## Longer-Term Options
-
-These are worth keeping visible, but should not distract from the first iOS release.
 
 - Android support using the relay join-code path
 - Host migration if the host phone dies

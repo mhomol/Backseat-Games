@@ -13,8 +13,8 @@ type HostUnlockSheetProps = {
 };
 
 const BULLETS = [
-  'One-time purchase — start games forever on this Apple ID.',
-  'Passengers join for free — riders never pay.',
+  'One-time, for-life unlock — not a subscription.',
+  'Passengers join free forever — riders never pay.',
   'All three games included — license plates, sign game, and bingo.',
 ];
 
@@ -32,8 +32,8 @@ export function HostUnlockSheet({
         <Pressable style={styles.sheet} onPress={(event) => event.stopPropagation()}>
           <Text style={styles.title}>Unlock starting games</Text>
           <Text style={styles.lead}>
-            You tapped Start a Game. This one-time unlock lets you create sessions for everyone
-            in the car — joining stays free for passengers.
+            You tapped Start a Game. Pay once and host forever on this Apple ID — joining stays
+            free for everyone else in the car.
           </Text>
 
           <View style={styles.bullets}>

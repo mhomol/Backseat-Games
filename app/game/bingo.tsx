@@ -1,19 +1,23 @@
 import { useMemo, useCallback } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
-import { playHornFeedback } from '@/services/feedback';
+import { playBingoFeedback, playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
+import { bingoImageForCategory } from '@/data/bingoCategoryImages';
 import {
   BINGO_SIZE,
   FREE_CENTER_INDEX,
   getBingoSquareLabel,
+  wouldCompleteBingo,
 } from '@/games/bingo';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
@@ -58,25 +62,33 @@ export default function BingoScreen() {
         </ContentCapsule>
         <View style={styles.grid}>
           {Array.from({ length: BINGO_SIZE }).map((_, index) => {
-          const { label, icon } = getBingoSquareLabel(card, index);
-          const isMarked = marked[index];
-          return (
-            <BingoCell
-              key={index}
-              label={label}
-              icon={icon}
-              isMarked={isMarked}
-              isFree={index === FREE_CENTER_INDEX}
-              onPress={() => {
-                void playHornFeedback();
-                if (isMarked && index !== FREE_CENTER_INDEX) {
-                  dispatchAction({ type: 'UNMARK_BINGO', index });
-                } else if (!isMarked) {
-                  dispatchAction({ type: 'MARK_BINGO', index });
-                }
-              }}
-            />
-          );
+            const { label, icon, category } = getBingoSquareLabel(card, index);
+            const isMarked = marked[index];
+            return (
+              <BingoCell
+                key={index}
+                label={label}
+                icon={icon}
+                category={category}
+                isMarked={isMarked}
+                isFree={index === FREE_CENTER_INDEX}
+                onPress={() => {
+                  if (isMarked && index !== FREE_CENTER_INDEX) {
+                    void playClaimFeedback();
+                    dispatchAction({ type: 'UNMARK_BINGO', index });
+                  } else if (!isMarked) {
+                    const winMode = session.gameRules.bingo.winMode;
+                    if (wouldCompleteBingo(marked, index, winMode)) {
+                      void playBingoFeedback();
+                      void playTruckHornFeedback();
+                    } else {
+                      void playClaimFeedback();
+                    }
+                    dispatchAction({ type: 'MARK_BINGO', index });
+                  }
+                }}
+              />
+            );
           })}
         </View>
       </View>
@@ -90,25 +102,43 @@ export default function BingoScreen() {
 function BingoCell({
   label,
   icon,
+  category,
   isMarked,
   isFree,
   onPress,
 }: {
   label: string;
   icon: string;
+  category?: string;
   isMarked: boolean;
   isFree: boolean;
   onPress: () => void;
 }) {
   const scale = useSharedValue(1);
+  const stampScale = useSharedValue(isMarked ? 1 : 0);
+  const categoryImage = bingoImageForCategory(category);
+
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+  }));
+
+  const stampStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: stampScale.value }],
+    opacity: stampScale.value,
   }));
 
   return (
     <Animated.View style={[styles.cellWrap, animatedStyle]}>
       <Pressable
-        onPress={onPress}
+        onPress={() => {
+          if (!isMarked) {
+            stampScale.value = withSequence(
+              withTiming(1.25, { duration: 120 }),
+              withSpring(1),
+            );
+          }
+          onPress();
+        }}
         onPressIn={() => {
           scale.value = withSpring(0.94);
         }}
@@ -121,11 +151,17 @@ function BingoCell({
           isFree && styles.cellFree,
         ]}
       >
-        <Text style={styles.icon}>{icon}</Text>
+        {categoryImage ? (
+          <Image source={categoryImage} style={styles.iconImage} resizeMode="contain" />
+        ) : (
+          <Text style={styles.icon}>{icon}</Text>
+        )}
         <Text style={styles.label} numberOfLines={2}>
           {label}
         </Text>
-        {isMarked ? <Text style={styles.stamp}>✓</Text> : null}
+        {isMarked ? (
+          <Animated.Text style={[styles.stamp, stampStyle]}>✓</Animated.Text>
+        ) : null}
       </Pressable>
     </Animated.View>
   );
@@ -174,6 +210,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 16,
+  },
+  iconImage: {
+    width: 22,
+    height: 22,
+    marginBottom: 1,
   },
   label: {
     fontFamily: fonts.body,

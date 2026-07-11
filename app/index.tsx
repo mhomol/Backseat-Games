@@ -1,24 +1,57 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { BrandDisclaimer } from '@/components/brand/BrandDisclaimer';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { FirstRunTeaching } from '@/components/onboarding/FirstRunTeaching';
 import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
+import { playOpenJingle } from '@/services/feedback';
+import {
+  hasSeenFirstRunTeaching,
+  markFirstRunTeachingSeen,
+} from '@/services/firstRunStorage';
+import { usePreferencesStore } from '@/store/preferencesStore';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import { spacing } from '@/theme';
 
 export default function HomeScreen() {
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [teachingOpen, setTeachingOpen] = useState(false);
+  const preferencesLoaded = usePreferencesStore((state) => state.loaded);
   const canHost = usePurchaseStore((state) => state.canHost);
   const requiresPurchase = usePurchaseStore((state) => state.requiresPurchase);
   const productPrice = usePurchaseStore((state) => state.productPrice);
   const busy = usePurchaseStore((state) => state.busy);
   const purchaseHostUnlock = usePurchaseStore((state) => state.purchaseHostUnlock);
   const restorePurchases = usePurchaseStore((state) => state.restorePurchases);
+
+  useEffect(() => {
+    if (!preferencesLoaded) {
+      return;
+    }
+    void playOpenJingle();
+  }, [preferencesLoaded]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void hasSeenFirstRunTeaching().then((seen) => {
+      if (!cancelled && !seen) {
+        setTeachingOpen(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const finishTeaching = () => {
+    setTeachingOpen(false);
+    void markFirstRunTeachingSeen();
+  };
 
   const handleStartPress = () => {
     if (canHost()) {
@@ -92,6 +125,7 @@ export default function HomeScreen() {
           }
         }}
       />
+      <FirstRunTeaching visible={teachingOpen} onDone={finishTeaching} />
     </SceneryBackground>
   );
 }

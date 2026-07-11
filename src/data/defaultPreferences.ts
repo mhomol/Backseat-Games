@@ -18,6 +18,7 @@ export const DEFAULT_PREFERENCES: AppPreferences = {
   gameRules: DEFAULT_GAME_RULES,
   soundEffectsEnabled: true,
   hapticsEnabled: true,
+  introJingleEnabled: true,
 };
 
 export function cloneGameRules(rules: GameRules): GameRules {

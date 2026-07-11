@@ -10,6 +10,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
@@ -24,7 +31,7 @@ import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { useSignGameSpeech } from '@/hooks/useSignGameSpeech';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
-import { playTapFeedback } from '@/services/feedback';
+import { playClaimFeedback } from '@/services/feedback';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function SignGameScreen() {
@@ -36,6 +43,7 @@ export default function SignGameScreen() {
   const scenerySource = useSessionGameScenery();
   const [modalOpen, setModalOpen] = useState(false);
   const [word, setWord] = useState('');
+  const letterScale = useSharedValue(1);
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
 
@@ -55,6 +63,17 @@ export default function SignGameScreen() {
       stopListening();
     }
   }, [modalOpen, stopListening]);
+
+  useEffect(() => {
+    letterScale.value = withSequence(
+      withTiming(1.18, { duration: 140 }),
+      withSpring(1),
+    );
+  }, [currentLetter, letterScale]);
+
+  const letterAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: letterScale.value }],
+  }));
 
   const leaderboard = useMemo(() => {
     if (!gameState || !session) {
@@ -99,7 +118,7 @@ export default function SignGameScreen() {
       letter: currentLetter,
       word: trimmed,
     });
-    void playTapFeedback();
+    void playClaimFeedback();
     closeModal();
   };
 
@@ -113,9 +132,9 @@ export default function SignGameScreen() {
         />
         <Scoreboard scores={leaderboard} />
 
-        <View style={styles.letterCircle}>
+        <Animated.View style={[styles.letterCircle, letterAnimatedStyle]}>
           <Text style={styles.letter}>{currentLetter}</Text>
-        </View>
+        </Animated.View>
 
         <ContentCapsule>
           <Text style={styles.rule}>{letterMatchHint(currentLetter, signRules)}</Text>

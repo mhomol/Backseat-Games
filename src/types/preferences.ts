@@ -28,6 +28,8 @@ export interface AppPreferences {
   gameRules: GameRules;
   soundEffectsEnabled: boolean;
   hapticsEnabled: boolean;
+  /** Cold-start opening jingle on Home. Independent of sound effects. */
+  introJingleEnabled: boolean;
 }
 
 export type GameRulesSlice<T extends GameType> = GameRules[T];

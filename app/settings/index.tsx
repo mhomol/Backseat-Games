@@ -87,9 +87,15 @@ export default function SettingsScreen() {
       <SettingsSection title="Sound & Haptics">
         <SettingsToggle
           label="Sound effects"
-          description="Button taps and winner celebrations."
+          description="Taps, horns, bingo, and winner celebrations."
           value={preferences.soundEffectsEnabled}
           onValueChange={(soundEffectsEnabled) => updatePreferences({ soundEffectsEnabled })}
+        />
+        <SettingsToggle
+          label="Opening jingle"
+          description="Short tune when the app opens. Separate from game sounds."
+          value={preferences.introJingleEnabled}
+          onValueChange={(introJingleEnabled) => updatePreferences({ introJingleEnabled })}
         />
         <SettingsToggle
           label="Haptics"
