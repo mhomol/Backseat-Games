@@ -12,7 +12,7 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 - P2: Expand scenery rotation
   - Add more road-trip backgrounds for repeat play.
   - Consider seasonal or route-based sets later.
-- P3: Transparent/cutout critter sprites (current drafts have white canvas)
+- P3: ~~Transparent/cutout critter sprites (current drafts have white canvas)~~ done — edge flood-fill alpha
 
 ## Sound And Haptics
 

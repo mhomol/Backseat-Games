@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BigButton } from '@/components/BigButton';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
@@ -27,6 +27,12 @@ export function FirstRunTeaching({ visible, onDone }: FirstRunTeachingProps) {
   const [index, setIndex] = useState(0);
   const card = CARDS[index]!;
   const isLast = index === CARDS.length - 1;
+
+  useEffect(() => {
+    if (visible) {
+      setIndex(0);
+    }
+  }, [visible]);
 
   return (
     <Modal transparent animationType="fade" visible={visible} onRequestClose={onDone}>

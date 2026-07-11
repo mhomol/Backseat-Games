@@ -92,10 +92,11 @@ export function AmbientSceneryEffects() {
 
     const runPlane = () => {
       setActive('plane');
-      translateX.value = -140;
+      // Art faces left — fly right-to-left so the nose leads.
+      translateX.value = width + 140;
       translateY.value = height * 0.12;
       opacity.value = 1;
-      translateX.value = withTiming(width + 140, {
+      translateX.value = withTiming(-140, {
         duration: 9000,
         easing: Easing.linear,
       }, (finished) => {

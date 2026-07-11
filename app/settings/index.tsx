@@ -4,6 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 import { GameRecordRow } from '@/components/settings/GameRecordRow';
 import { SettingsLinkRow } from '@/components/settings/SettingsLinkRow';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
+import { FirstRunTeaching } from '@/components/onboarding/FirstRunTeaching';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
@@ -19,6 +20,7 @@ const GAME_TYPES: GameType[] = ['license-plates', 'sign-game', 'bingo'];
 
 export default function SettingsScreen() {
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [teachingOpen, setTeachingOpen] = useState(false);
   const preferences = usePreferencesStore((state) => state.preferences);
   const updatePreferences = usePreferencesStore((state) => state.updatePreferences);
   const stats = useStatsStore((state) => state.stats);
@@ -129,6 +131,11 @@ export default function SettingsScreen() {
 
       <SettingsSection title="Help">
         <SettingsLinkRow
+          label="Quick start tips"
+          description="Host vs join, free passengers, and one-time unlock"
+          onPress={() => setTeachingOpen(true)}
+        />
+        <SettingsLinkRow
           label="How to play"
           onPress={() => router.push('/settings/how-to-play')}
         />
@@ -154,6 +161,7 @@ export default function SettingsScreen() {
           }
         }}
       />
+      <FirstRunTeaching visible={teachingOpen} onDone={() => setTeachingOpen(false)} />
     </SceneryScrollShell>
   );
 }
