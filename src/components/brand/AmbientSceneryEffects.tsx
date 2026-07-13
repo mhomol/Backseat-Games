@@ -281,8 +281,8 @@ const styles = StyleSheet.create({
   /** Nose hub sits near the left; overlay spins in place over the cowling. */
   planeProp: {
     position: 'absolute',
-    left: -2,
-    top: 14,
+    left: -4,
+    top: 16,
     width: 28,
     height: 28,
   },

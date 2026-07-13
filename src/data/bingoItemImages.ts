@@ -1,6 +1,6 @@
 import type { ImageSourcePropType } from 'react-native';
 
-/** Per-item Travel Bingo icons (animals + signs). Other categories use category art. */
+/** Per-item Travel Bingo icons (animals + signs + vehicles). Other categories use category art. */
 export const bingoItemImages: Record<string, ImageSourcePropType> = {
   'cow': require('../../assets/bingo-icons/items/cow.png'),
   'horse': require('../../assets/bingo-icons/items/horse.png'),
@@ -44,4 +44,34 @@ export const bingoItemImages: Record<string, ImageSourcePropType> = {
   'construction-zone': require('../../assets/bingo-icons/items/construction-zone.png'),
   'out-of-state-plate': require('../../assets/bingo-icons/items/out-of-state-plate.png'),
   'road-work-ahead': require('../../assets/bingo-icons/items/road-work-ahead.png'),
+  'motorcycle': require('../../assets/bingo-icons/items/motorcycle.png'),
+  'rv': require('../../assets/bingo-icons/items/rv.png'),
+  'police-car': require('../../assets/bingo-icons/items/police-car.png'),
+  'ambulance': require('../../assets/bingo-icons/items/ambulance.png'),
+  'fire-truck': require('../../assets/bingo-icons/items/fire-truck.png'),
+  'school-bus': require('../../assets/bingo-icons/items/school-bus.png'),
+  'semi-truck': require('../../assets/bingo-icons/items/semi-truck.png'),
+  'pickup-truck': require('../../assets/bingo-icons/items/pickup-truck.png'),
+  'convertible': require('../../assets/bingo-icons/items/convertible.png'),
+  'sports-car': require('../../assets/bingo-icons/items/sports-car.png'),
+  'tractor': require('../../assets/bingo-icons/items/tractor.png'),
+  'train': require('../../assets/bingo-icons/items/train.png'),
+  'airplane': require('../../assets/bingo-icons/items/airplane.png'),
+  'helicopter': require('../../assets/bingo-icons/items/helicopter.png'),
+  'boat': require('../../assets/bingo-icons/items/boat.png'),
+  'bicycle': require('../../assets/bingo-icons/items/bicycle.png'),
+  'bike-rack': require('../../assets/bingo-icons/items/bike-rack.png'),
+  'roof-cargo': require('../../assets/bingo-icons/items/roof-cargo.png'),
+  'kayak': require('../../assets/bingo-icons/items/kayak.png'),
+  'trolley': require('../../assets/bingo-icons/items/trolley.png'),
+  'tow-truck': require('../../assets/bingo-icons/items/tow-truck.png'),
+  'delivery-van': require('../../assets/bingo-icons/items/delivery-van.png'),
+  'garbage-truck': require('../../assets/bingo-icons/items/garbage-truck.png'),
+  'taxi': require('../../assets/bingo-icons/items/taxi.png'),
+  'moving-truck': require('../../assets/bingo-icons/items/moving-truck.png'),
+  'cement-truck': require('../../assets/bingo-icons/items/cement-truck.png'),
+  'camper': require('../../assets/bingo-icons/items/camper.png'),
+  'mail-truck': require('../../assets/bingo-icons/items/mail-truck.png'),
+  'electric-car': require('../../assets/bingo-icons/items/electric-car.png'),
+  'minivan': require('../../assets/bingo-icons/items/minivan.png'),
 };

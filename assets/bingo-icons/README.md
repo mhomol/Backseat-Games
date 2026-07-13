@@ -15,7 +15,7 @@ Locked Recraft V4 category set (July 2026):
 
 Drafts: `assets/branding/drafts/v11-recraft/`.
 
-## Per-item icons (animals + signs)
+## Per-item icons (animals + signs + vehicles)
 
 Live PNGs live in `items/{id}.png` (edge-flooded alpha). Lookup order in app:
 
@@ -23,7 +23,7 @@ Live PNGs live in `items/{id}.png` (edge-flooded alpha). Lookup order in app:
 2. Category (`bingoCategoryImages`)
 3. Emoji
 
-Generate / refresh:
+Animals + signs (Recraft):
 
 ```bash
 node scripts/generate-bingo-item-icons.mjs --placeholders-only
@@ -31,4 +31,15 @@ node scripts/generate-bingo-item-icons.mjs --pilot
 node scripts/generate-bingo-item-icons.mjs
 ```
 
-Drafts: `assets/branding/drafts/v11-bingo-items/`.
+Vehicles + signs + animals (Cursor GenerateImage → flood-clear promote):
+
+```bash
+node scripts/promote-bingo-vehicle-icons.mjs --vehicles
+node scripts/promote-bingo-vehicle-icons.mjs --signs
+node scripts/promote-bingo-vehicle-icons.mjs --animals
+```
+
+Drafts: `assets/branding/drafts/v11-bingo-items/` (legacy),
+`assets/branding/drafts/v11-bingo-vehicles/`,
+`assets/branding/drafts/v11-bingo-signs/`,
+`assets/branding/drafts/v11-bingo-animals/`.
