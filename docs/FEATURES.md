@@ -6,7 +6,7 @@ How to play Backseat Games — written for family testers, not engineers.
 
 ### Who should host?
 
-Typically the front-seat parent on their phone. The host picks the game, waits for everyone to join, and taps **Start Game**.
+Typically the front-seat parent on their phone. The host picks the game. For a car full of players they wait for everyone to join and tap **Start Game**. For alone time, they turn on **Play solo (offline)** on the game selection screen and jump straight into a local game.
 
 **Pricing:** Joining is **free** for everyone. Starting a game (hosting) requires a **one-time $0.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay.
 
@@ -23,7 +23,7 @@ Typically the front-seat parent on their phone. The host picks the game, waits f
 - Host sees a large **join code** to share with passengers, plus all joined players and the selected game type.
 - Joiners see a spinner: "Waiting for host to start…"
 - Host taps **Start Game!** when everyone is ready.
-- Competitive games (License Plates, Sign Game) need **at least one other player**. Travel Bingo can be played solo for practice.
+- Competitive games in a shared waiting room (License Plates, Sign Game) need **at least one other player**. With **Play solo (offline)** on the host setup screen, any unlocked host can play all three games alone on this phone with no internet or waiting room.
 
 ---
 

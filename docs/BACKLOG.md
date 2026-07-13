@@ -26,6 +26,7 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 - Done in v1.1: First-run teaching (host vs join, free join, one-time for-life host unlock)
 - Done in v1.1: Claim / bingo stamp / letter-advance micro-animations
+- Done in v1.1: Solo Mode (offline) on host setup for all three games
 - P2: Travel Bingo themed packs
   - Highway, city, mountains, beach, small town, construction, nighttime.
 - P2: License Plates collection progress
@@ -44,8 +45,8 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 ## App Store And Growth
 
-- P1: v1.1 TestFlight build + App Store submission (foreground audio note)
-- P2: Refresh screenshots after delight art lands
+- P1: v1.1 TestFlight build + App Store submission (Delight + Solo offline; foreground audio note)
+- P2: Refresh screenshots after delight art + solo setup lands
 - P2: Ratings prompt after successful play sessions
 
 ## Monetization

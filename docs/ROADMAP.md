@@ -10,9 +10,9 @@ This roadmap is intentionally lightweight. It captures product direction without
 - Foreground sound effects and haptics only
 - App Store listing, privacy answers, screenshots, and TestFlight validation
 
-## Current: Delight Release v1.1
+## Current: Delight + Solo Offline v1.1
 
-Goal: make the three launch games feel more custom to Backseat Games before adding major new systems.
+Goal: make the three launch games feel more custom to Backseat Games, and let unlocked hosts play alone without a relay or waiting room.
 
 - Opening jingle (toggleable, cold-start only)
 - Richer SFX palette with purposeful semi-truck horn moments
@@ -21,6 +21,7 @@ Goal: make the three launch games feel more custom to Backseat Games before addi
 - Ambient scenery critters (plane, bird, gopher)
 - First-run teaching that stresses one-time, for-life host unlock
 - Claim / bingo / letter micro-animations
+- Solo Mode on host setup: offline local play for all three games (no relay / lobby)
 - Screenshot refresh after TestFlight validation
 
 ## Later: Retention And Family Utility

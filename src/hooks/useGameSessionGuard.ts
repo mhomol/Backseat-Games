@@ -7,8 +7,10 @@ export function useGameSessionGuard() {
   const router = useRouter();
   const session = useSessionStore((state) => state.session);
   const isHost = useSessionStore((state) => state.isHost);
+  const isSolo = useSessionStore((state) => state.isSolo);
   const finishGameAsHost = useSessionStore((state) => state.finishGameAsHost);
   const returnToLobbyAsHost = useSessionStore((state) => state.returnToLobbyAsHost);
+  const restartSoloGame = useSessionStore((state) => state.restartSoloGame);
   const leaveActiveGame = useSessionStore((state) => state.leaveActiveGame);
 
   const [exitPromptVisible, setExitPromptVisible] = useState(false);
@@ -27,10 +29,13 @@ export function useGameSessionGuard() {
   }, [finishGameAsHost, isHost, leaveActiveGame, router]);
 
   useEffect(() => {
+    if (isSolo) {
+      return;
+    }
     if (session?.phase === 'lobby' && session.sessionId) {
       router.replace(`/lobby/${session.sessionId}`);
     }
-  }, [router, session?.phase, session?.sessionId]);
+  }, [isSolo, router, session?.phase, session?.sessionId]);
 
   useEffect(() => {
     if (!isInProgress) {
@@ -71,11 +76,17 @@ export function useGameSessionGuard() {
   const exitPrompt = isInProgress
     ? {
         visible: exitPromptVisible,
-        title: isHost ? 'End game for everyone?' : 'Leave this game?',
-        message: isHost
-          ? 'This ends the round and shows final scores for everyone.'
-          : 'You can join again if the host is still in the waiting room.',
-        confirmLabel: isHost ? 'End game' : 'Leave game',
+        title: isSolo
+          ? 'End this game?'
+          : isHost
+            ? 'End game for everyone?'
+            : 'Leave this game?',
+        message: isSolo
+          ? 'This ends the round and shows your final score.'
+          : isHost
+            ? 'This ends the round and shows final scores for everyone.'
+            : 'You can join again if the host is still in the waiting room.',
+        confirmLabel: isSolo || isHost ? 'End game' : 'Leave game',
         onConfirm: completeExit,
         onCancel: cancelExit,
       }
@@ -84,11 +95,16 @@ export function useGameSessionGuard() {
   return {
     session,
     isHost,
+    isSolo,
     isInProgress,
     isFinished,
     exitPrompt,
     requestEndGame,
     returnToLobbyAsHost: () => {
+      if (isSolo) {
+        restartSoloGame();
+        return;
+      }
       returnToLobbyAsHost();
       if (session?.sessionId) {
         router.replace(`/lobby/${session.sessionId}`);

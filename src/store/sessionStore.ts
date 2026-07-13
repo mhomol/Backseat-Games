@@ -29,10 +29,16 @@ import { usePurchaseStore } from './purchaseStore';
 import { useStatsStore } from './statsStore';
 import type { GameRules } from '../types/preferences';
 
+type HostGameOptions = {
+  solo?: boolean;
+};
+
 interface SessionStore {
   localPlayerId: string;
   localPlayerName: string;
   isHost: boolean;
+  /** Local offline session — no relay room or waiting room. */
+  isSolo: boolean;
   session: SessionState | null;
   connectionStatus: 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'disconnected' | 'error';
   relayJoinCode: string | null;
@@ -42,9 +48,10 @@ interface SessionStore {
   initialize: () => Promise<void>;
   reset: () => void;
   setLocalName: (name: string) => void;
-  hostGame: (gameType: GameType, hostName: string) => Promise<string>;
+  hostGame: (gameType: GameType, hostName: string, options?: HostGameOptions) => Promise<string>;
   joinWithCode: (joinCode: string, playerName: string) => Promise<string>;
   startHostedGame: () => void;
+  restartSoloGame: () => void;
   updateSessionRules: (partial: Partial<GameRules>) => void;
   finishGameAsHost: () => void;
   returnToLobbyAsHost: () => void;
@@ -171,6 +178,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     localPlayerId: uuidv4(),
     localPlayerName: '',
     isHost: false,
+    isSolo: false,
     session: null,
     connectionStatus: 'idle',
     relayJoinCode: null,
@@ -213,6 +221,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       set({
         session: null,
         isHost: false,
+        isSolo: false,
         connectionStatus: 'idle',
         toast: null,
         relayJoinCode: null,
@@ -225,19 +234,35 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       void savePlayerName(name);
     },
 
-    hostGame: async (gameType, hostName) => {
+    hostGame: async (gameType, hostName, options) => {
       if (!usePurchaseStore.getState().canHost()) {
         set({ toast: 'Host unlock required to start a game.' });
         throw new Error('Host unlock required');
       }
 
+      const solo = options?.solo === true;
       const sessionId = uuidv4().slice(0, 8);
       const hostId = get().localPlayerId;
       const host = playerFromLocal(hostId, hostName, true);
       const gameRules = usePreferencesStore.getState().getDefaultGameRules();
-      const session = createSession(sessionId, host, gameType, gameRules);
-      await multiplayer.hostSession(sessionId, hostName, gameType);
+      let session = createSession(sessionId, host, gameType, gameRules);
       void savePlayerName(hostName);
+
+      if (solo) {
+        session = startGame(session);
+        void clearSessionIdentity();
+        set({
+          isHost: true,
+          isSolo: true,
+          localPlayerName: hostName,
+          session,
+          connectionStatus: 'idle',
+          relayJoinCode: null,
+        });
+        return sessionId;
+      }
+
+      await multiplayer.hostSession(sessionId, hostName, gameType);
       const joinCode = multiplayer.getJoinCode();
       if (joinCode) {
         void saveSessionIdentity({
@@ -250,6 +275,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       set({
         isHost: true,
+        isSolo: false,
         localPlayerName: hostName,
         session,
         connectionStatus: 'connected',
@@ -265,7 +291,12 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
 
       void savePlayerName(trimmed);
-      set({ connectionStatus: 'connecting', localPlayerName: trimmed, isHost: false });
+      set({
+        connectionStatus: 'connecting',
+        localPlayerName: trimmed,
+        isHost: false,
+        isSolo: false,
+      });
 
       const normalizedCode = normalizeJoinCode(joinCode);
       const savedIdentity = await loadSessionIdentity();
@@ -292,13 +323,21 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     },
 
     startHostedGame: () => {
-      const { session, isHost } = get();
-      if (!isHost || !session) {
+      const { session, isHost, isSolo } = get();
+      if (!isHost || !session || isSolo) {
         return;
       }
       const next = startGame(session);
       commitSession(next);
       multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
+    },
+
+    restartSoloGame: () => {
+      const { session, isHost, isSolo } = get();
+      if (!isHost || !isSolo || !session) {
+        return;
+      }
+      commitSession(startGame(returnToLobby(session)));
     },
 
     updateSessionRules: (partial) => {
@@ -354,8 +393,10 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       set({
         session: null,
         isHost: false,
+        isSolo: false,
         connectionStatus: 'idle',
         toast: null,
+        relayJoinCode: null,
       });
     },
 

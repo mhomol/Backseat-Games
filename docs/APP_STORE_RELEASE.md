@@ -218,7 +218,7 @@ Multiplayer: host reads join code from waiting room; joiner enters code on Join 
 
 ---
 
-## Version 1.1 — Delight release
+## Version 1.1 — Delight + Solo offline
 
 Marketing version: **1.1.0** (`app.config.js` / `package.json`). Build number still comes from CI `run_number`.
 
@@ -232,13 +232,15 @@ Backseat Games 1.1 polish release.
 - Semi-truck horn on big moments (bingo / wins / first plate claim).
 - First-run cards explain: passengers join free; host unlock is one-time for life (not a subscription).
 - Visual polish: bingo category icons, plate board chrome, ambient scenery critters.
+- Solo Mode: unlocked hosts can play any game alone offline (no relay / waiting room). Multiplayer join codes unchanged.
 ```
 
 ### Ship checklist
 
 - [ ] Run **Actions → iOS TestFlight** on `master` after this release is pushed
 - [ ] Install TestFlight build; confirm no local-network / background-audio prompts
-- [ ] Capture fresh App Store screenshots (home, bingo, plates, first-run / paywall)
+- [ ] Confirm Solo Mode starts License Plates / Sign Game / Bingo with airplane mode on
+- [ ] Capture fresh App Store screenshots (home, bingo, plates, solo setup, first-run / paywall)
 - [ ] Run `npm run prepare:app-store-screenshots` on new raw captures
 - [ ] Create App Store Connect version **1.1** and attach the new build
 - [ ] Paste App Review notes above; submit for review

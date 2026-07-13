@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
@@ -21,11 +22,18 @@ const signToGameType: Record<string, GameType> = {
   bingo: 'bingo',
 };
 
+const GAME_ROUTES: Record<GameType, string> = {
+  'license-plates': '/game/license-plates',
+  bingo: '/game/bingo',
+  'sign-game': '/game/sign-game',
+};
+
 export default function HostSetupScreen() {
   const hostGame = useSessionStore((state) => state.hostGame);
   const savedName = useSessionStore((state) => state.localPlayerName);
   const canHost = usePurchaseStore((state) => state.canHost);
   const [hostName, setHostName] = useState('');
+  const [soloMode, setSoloMode] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -50,8 +58,12 @@ export default function HostSetupScreen() {
 
     setLoading(true);
     try {
-      const sessionId = await hostGame(gameType, hostName.trim());
-      router.push(`/lobby/${sessionId}`);
+      const sessionId = await hostGame(gameType, hostName.trim(), { solo: soloMode });
+      if (soloMode) {
+        router.replace(GAME_ROUTES[gameType]);
+      } else {
+        router.push(`/lobby/${sessionId}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -82,7 +94,19 @@ export default function HostSetupScreen() {
             style={styles.input}
             autoCapitalize="words"
           />
-          <Text style={styles.hint}>You will host this session for everyone in the car.</Text>
+          <View style={styles.soloRow}>
+            <SettingsToggle
+              label="Play solo (offline)"
+              description="Skip the waiting room and play on this phone with no internet."
+              value={soloMode}
+              onValueChange={setSoloMode}
+            />
+          </View>
+          <Text style={styles.hint}>
+            {soloMode
+              ? 'Tap a game sign above to start playing right away.'
+              : 'You will host this session for everyone in the car.'}
+          </Text>
           {!canContinue ? (
             <Text style={styles.nameHint}>Enter your name, then tap a game sign above.</Text>
           ) : null}
@@ -110,6 +134,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.roadGray,
     marginBottom: spacing.xs,
+  },
+  soloRow: {
+    marginTop: spacing.md,
+    paddingTop: spacing.sm,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.plateOther,
   },
   hint: {
     fontFamily: fonts.body,

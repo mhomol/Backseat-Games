@@ -13,7 +13,7 @@ How hosting is priced, how purchases work, and how to test them before App Store
 - Product type: **Non-consumable** (buy once per Apple ID; restore on new devices)
 - Product ID: `com.homolworks.backseatgames.host_unlock`
 - **Join stays free** — only the Start sign and host flow are gated
-- **Offline trips:** purchase needs internet once; cached entitlement allows hosting offline afterward
+- **Offline trips:** purchase needs internet once; cached entitlement allows **solo offline play** and hosting after unlock (multiplayer still needs network to create/join a relay room)
 - **Android v1:** hosting is free (no IAP wiring yet)
 
 ## User-facing copy
@@ -22,7 +22,7 @@ How hosting is priced, how purchases work, and how to test them before App Store
 
 **Bullets:**
 - Passengers join for free — only the host pays once.
-- Works offline after you unlock — no subscription.
+- Works offline after you unlock — solo play needs no internet; multiplayer needs a connection to create or join a room. No subscription.
 - All three games included.
 
 **FAQ**

@@ -51,7 +51,7 @@ export function GameSessionOverlays({
           winnerName={winnerHeadline}
           isWinnerYou={isWinnerYou}
           isHost={guard.isHost}
-          onStartNewGame={guard.returnToLobbyAsHost}
+          onStartNewGame={guard.isHost ? guard.returnToLobbyAsHost : undefined}
           onDismiss={() => setCelebrationDismissed(true)}
           onLeaveHome={guard.leaveToHome}
         />
