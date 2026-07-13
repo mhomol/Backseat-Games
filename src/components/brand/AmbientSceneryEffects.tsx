@@ -24,7 +24,10 @@ const birdFrames = [
   require('../../../assets/branding/critters/bird-1.png'),
   require('../../../assets/branding/critters/bird-2.png'),
 ];
-const planeSource = require('../../../assets/branding/critters/plane.png');
+const planeFrames = [
+  require('../../../assets/branding/critters/plane.png'),
+  require('../../../assets/branding/critters/plane-2.png'),
+];
 const gopherUp = require('../../../assets/branding/critters/gopher-up.png');
 const gopherWink = require('../../../assets/branding/critters/gopher-wink.png');
 
@@ -44,6 +47,7 @@ export function AmbientSceneryEffects() {
   const [reduceMotion, setReduceMotion] = useState(false);
   const [active, setActive] = useState<CritterKind | null>(null);
   const [birdFrame, setBirdFrame] = useState(0);
+  const [planeFrame, setPlaneFrame] = useState(0);
   const [gopherWinkOn, setGopherWinkOn] = useState(false);
 
   const translateX = useSharedValue(-120);
@@ -92,11 +96,16 @@ export function AmbientSceneryEffects() {
 
     const runPlane = () => {
       setActive('plane');
+      setPlaneFrame(0);
       // Art faces left — fly right-to-left so the nose leads.
       const skyY = height * (0.06 + Math.random() * 0.2);
       translateX.value = width + 140;
       translateY.value = skyY;
       opacity.value = 1;
+      // Fast 2-frame prop swap — enough for a 2-blade spin at this size.
+      flapId = setInterval(() => {
+        setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
+      }, 90);
       translateX.value = withTiming(-140, {
         duration: 8000 + Math.floor(Math.random() * 3000),
         easing: Easing.linear,
@@ -206,7 +215,7 @@ export function AmbientSceneryEffects() {
 
   const source =
     active === 'plane'
-      ? planeSource
+      ? planeFrames[planeFrame]
       : active === 'bird'
         ? birdFrames[birdFrame]
         : gopherWinkOn

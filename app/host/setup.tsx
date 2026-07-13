@@ -104,11 +104,11 @@ export default function HostSetupScreen() {
           </View>
           <Text style={styles.hint}>
             {soloMode
-              ? 'Tap a game sign above to start playing right away.'
+              ? 'Tap a game sign below to start playing right away.'
               : 'You will host this session for everyone in the car.'}
           </Text>
           {!canContinue ? (
-            <Text style={styles.nameHint}>Enter your name, then tap a game sign above.</Text>
+            <Text style={styles.nameHint}>Enter your name, then tap a game sign below.</Text>
           ) : null}
         </View>
       </SafeAreaView>
