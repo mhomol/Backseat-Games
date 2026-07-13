@@ -31,15 +31,15 @@ node scripts/generate-bingo-item-icons.mjs --pilot
 node scripts/generate-bingo-item-icons.mjs
 ```
 
-Vehicles + signs + animals (Cursor GenerateImage → flood-clear promote):
+All item categories (Cursor GenerateImage → flood-clear promote):
 
 ```bash
 node scripts/promote-bingo-vehicle-icons.mjs --vehicles
 node scripts/promote-bingo-vehicle-icons.mjs --signs
 node scripts/promote-bingo-vehicle-icons.mjs --animals
+node scripts/promote-bingo-vehicle-icons.mjs --landmarks
+node scripts/promote-bingo-vehicle-icons.mjs --businesses
+node scripts/promote-bingo-vehicle-icons.mjs --scenery
 ```
 
-Drafts: `assets/branding/drafts/v11-bingo-items/` (legacy),
-`assets/branding/drafts/v11-bingo-vehicles/`,
-`assets/branding/drafts/v11-bingo-signs/`,
-`assets/branding/drafts/v11-bingo-animals/`.
+Drafts under `assets/branding/drafts/v11-bingo-{vehicles,signs,animals,landmarks,businesses,scenery}/`.
