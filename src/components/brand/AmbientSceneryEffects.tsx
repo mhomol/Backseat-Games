@@ -24,9 +24,11 @@ const birdFrames = [
   require('../../../assets/branding/critters/bird-1.png'),
   require('../../../assets/branding/critters/bird-2.png'),
 ];
-const planeFrames = [
-  require('../../../assets/branding/critters/plane.png'),
-  require('../../../assets/branding/critters/plane-2.png'),
+/** Static body (no blades); props alternate on the nose. */
+const planeBody = require('../../../assets/branding/critters/plane.png');
+const planePropFrames = [
+  require('../../../assets/branding/critters/plane-prop-1.png'),
+  require('../../../assets/branding/critters/plane-prop-2.png'),
 ];
 const gopherUp = require('../../../assets/branding/critters/gopher-up.png');
 const gopherWink = require('../../../assets/branding/critters/gopher-wink.png');
@@ -213,31 +215,41 @@ export function AmbientSceneryEffects() {
     return null;
   }
 
-  const source =
-    active === 'plane'
-      ? planeFrames[planeFrame]
-      : active === 'bird'
-        ? birdFrames[birdFrame]
-        : gopherWinkOn
-          ? gopherWink
-          : gopherUp;
-
-  const sizeStyle =
-    active === 'plane'
-      ? styles.plane
-      : active === 'bird'
-        ? styles.bird
-        : styles.gopher;
-
   const positionStyle =
     active === 'gopher'
       ? styles.gopherAnchor
       : styles.skyAnchor;
 
+  let critter = null;
+  if (active === 'plane') {
+    critter = (
+      <View style={styles.plane}>
+        <Image source={planeBody} style={styles.planeBody} resizeMode="contain" />
+        <Image
+          source={planePropFrames[planeFrame]}
+          style={styles.planeProp}
+          resizeMode="contain"
+        />
+      </View>
+    );
+  } else if (active === 'bird') {
+    critter = (
+      <Image source={birdFrames[birdFrame]} style={styles.bird} resizeMode="contain" />
+    );
+  } else {
+    critter = (
+      <Image
+        source={gopherWinkOn ? gopherWink : gopherUp}
+        style={styles.gopher}
+        resizeMode="contain"
+      />
+    );
+  }
+
   return (
     <View style={styles.root} pointerEvents="none">
       <Animated.View style={[positionStyle, animatedStyle]}>
-        <Image source={source} style={sizeStyle} resizeMode="contain" />
+        {critter}
       </Animated.View>
     </View>
   );
@@ -261,6 +273,18 @@ const styles = StyleSheet.create({
   plane: {
     width: 88,
     height: 56,
+  },
+  planeBody: {
+    width: 88,
+    height: 56,
+  },
+  /** Nose hub sits near the left; overlay spins in place over the cowling. */
+  planeProp: {
+    position: 'absolute',
+    left: -2,
+    top: 14,
+    width: 28,
+    height: 28,
   },
   bird: {
     width: 56,
