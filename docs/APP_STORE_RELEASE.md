@@ -231,7 +231,7 @@ Backseat Games 1.1 polish release.
 - Game sound effects only while the app is in the foreground (taps, horns, bingo, win).
 - Semi-truck horn on big moments (bingo / wins / first plate claim).
 - First-run cards explain: passengers join free; host unlock is one-time for life (not a subscription).
-- Visual polish: bingo category icons, plate board chrome, ambient scenery critters.
+- Visual polish: bingo fill-cell icons (animals/signs per-item), landmark plate scenes, ambient scenery critters.
 - Solo Mode: unlocked hosts can play any game alone offline (no relay / waiting room). Multiplayer join codes unchanged.
 ```
 
@@ -240,6 +240,7 @@ Backseat Games 1.1 polish release.
 - [ ] Run **Actions → iOS TestFlight** on `master` after this release is pushed
 - [ ] Install TestFlight build; confirm no local-network / background-audio prompts
 - [ ] Confirm Solo Mode starts License Plates / Sign Game / Bingo with airplane mode on
+- [ ] Confirm bingo cells show large icons + readable labels; plates show landmark scenes with one frame
 - [ ] Capture fresh App Store screenshots (home, bingo, plates, solo setup, first-run / paywall)
 - [ ] Run `npm run prepare:app-store-screenshots` on new raw captures
 - [ ] Create App Store Connect version **1.1** and attach the new build

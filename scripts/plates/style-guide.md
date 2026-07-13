@@ -1,6 +1,6 @@
 # License Plate Art — Style Guide
 
-Backseat Games uses **original stylized plate backgrounds** — not photorealistic DMV replicas.
+Backseat Games uses **landmark scene tiles** — one recognizable place per state/territory — not photorealistic DMV plates.
 
 ## Canvas
 
@@ -10,27 +10,27 @@ Backseat Games uses **original stylized plate backgrounds** — not photorealist
 
 ## Visual language
 
-- Flat cartoon / game UI aesthetic (family road-trip app)
-- White or cream plate body (`#FFFDF8`)
-- **Accent color** from `plates.json` `tint` — used for border, top band, and corner accents
-- Rounded rectangle with thick border (`border-radius` ~12px at 300px width)
-- Simple geometric decorations only (stripes, dots, hills) — **no government seals or official logos**
+- Family cartoon / road-trip illustration matching `scripts/brand-prompts.json` style bible
+- Full-bleed landmark scene (no fake plate body, no tinted chrome bands, no bolts)
+- Landmark from `plates.json` `landmark` field — manmade or natural, clearly readable at tile size
+- Soft sky / landscape depth; cheerful and kid-friendly
 - **No baked text** — state code and name render in React Native over the image
+- **No government seals, flags, or official logos**
 
 ## Claim-state overlays (in app, not in art)
 
 | State | UI treatment |
 |-------|----------------|
-| Available | Full-color plate image |
-| Yours | Green tint overlay + green border |
-| Taken | Desaturated overlay + owner name text |
+| Available | Full-color landmark image + single pink board frame |
+| Yours | Green tint overlay + green border + SPOTTED stamp |
+| Taken | Dim overlay + owner name on the label bar |
 
 ## Generation
 
-- Pilot style validated via Replicate `flux-schnell` (flat cartoon, no text)
-- Production assets generated with `scripts/generate-plates.mjs` for consistency across all 63 jurisdictions
-- Re-run with `REPLICATE_API_TOKEN` set to optionally regenerate via API (`--replicate`)
+- Prefer Recraft V4 via `scripts/generate-plates.mjs --replicate`
+- Filter with `--codes=GA,CA,AB` for pilots
+- Landmark prompt seed comes from `plates.json`
 
 ## Legal
 
-Art is **fictional and inspired by** common plate color palettes only. Do not trace official seal artwork or specialty plate graphics.
+Art is **fictional and inspired by** well-known places. Do not trace official seal artwork or specialty plate graphics.

@@ -16,8 +16,8 @@ Goal: make the three launch games feel more custom to Backseat Games, and let un
 
 - Opening jingle (toggleable, cold-start only)
 - Richer SFX palette with purposeful semi-truck horn moments
-- Travel Bingo category icons (emoji fallback remains)
-- License Plates on-brand board chrome and claim stamps
+- Travel Bingo fill-cell icons + animals/signs per-item art (other categories keep category icons)
+- License Plates landmark scenes for all 63 jurisdictions + simplified single-frame chrome
 - Ambient scenery critters (plane, bird, gopher)
 - First-run teaching that stresses one-time, for-life host unlock
 - Claim / bingo / letter micro-animations
@@ -33,8 +33,7 @@ Goal: make the app more useful across repeat road trips.
 - More themed bingo packs for city, highway, mountains, beach, and nighttime drives
 - Additional family-friendly games that fit short attention spans
 - Better reconnect and host recovery if a host device leaves the session
-- Per-item bingo icon set (beyond category icons)
-- Full Recraft-style regeneration of all 63 plate PNGs
+- Remaining per-item bingo icons (vehicles, businesses, landmarks, scenery)
 
 ## Longer-Term Options
 

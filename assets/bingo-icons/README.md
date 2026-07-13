@@ -1,4 +1,6 @@
-# Travel Bingo category icons
+# Travel Bingo icons
+
+## Category icons (fallback)
 
 Locked Recraft V4 category set (July 2026):
 
@@ -11,6 +13,22 @@ Locked Recraft V4 category set (July 2026):
 | `signs.png` | `bingo-signs.webp` |
 | `vehicles.png` | `bingo-vehicles.webp` |
 
-Drafts live under `assets/branding/drafts/v11-recraft/`. Emoji remains the per-item fallback.
-Next: expand to per-item icons once this aesthetic is approved for broader use.
+Drafts: `assets/branding/drafts/v11-recraft/`.
 
+## Per-item icons (animals + signs)
+
+Live PNGs live in `items/{id}.png` (edge-flooded alpha). Lookup order in app:
+
+1. Per-item (`bingoItemImages`)
+2. Category (`bingoCategoryImages`)
+3. Emoji
+
+Generate / refresh:
+
+```bash
+node scripts/generate-bingo-item-icons.mjs --placeholders-only
+node scripts/generate-bingo-item-icons.mjs --pilot
+node scripts/generate-bingo-item-icons.mjs
+```
+
+Drafts: `assets/branding/drafts/v11-bingo-items/`.

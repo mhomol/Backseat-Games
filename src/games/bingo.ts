@@ -181,7 +181,7 @@ export function applyBingoAction(
 export function getBingoSquareLabel(
   card: BingoCard,
   index: number,
-): { label: string; icon: string; category?: string } {
+): { id?: string; label: string; icon: string; category?: string } {
   if (index === FREE_CENTER_INDEX) {
     return { label: 'Road Trip!', icon: '🚗', category: 'vehicles' };
   }
@@ -189,6 +189,7 @@ export function getBingoSquareLabel(
   const itemId = card.itemIds[itemIndex];
   const item = bingoItems.find((entry) => entry.id === itemId);
   return {
+    id: item?.id,
     label: item?.label ?? '???',
     icon: item?.icon ?? '❓',
     category: item?.category,

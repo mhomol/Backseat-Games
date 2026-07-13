@@ -5,14 +5,15 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 ## Brand And Visual Polish
 
 - Done in v1.1: Travel Bingo category icons (animals, signs, vehicles, businesses, landmarks, scenery) with emoji fallback
-- Done in v1.1: License Plates branded chrome, dashed road-yellow frame, SPOTTED claim stamp
+- Done in v1.1: Travel Bingo fill-cell layout + animals/signs per-item icons
+- Done in v1.1: License Plates landmark scenes (63) + simplified single-frame chrome + SPOTTED stamp
 - Done in v1.1: Ambient scenery critters (plane, bird, gopher)
-- P2: Per-item Travel Bingo icons (beyond category art)
-- P2: Full Recraft-style regeneration of all 63 plate PNGs
+- P2: Remaining per-item Travel Bingo icons (vehicles, businesses, landmarks, scenery)
 - P2: Expand scenery rotation
   - Add more road-trip backgrounds for repeat play.
   - Consider seasonal or route-based sets later.
 - P3: ~~Transparent/cutout critter sprites (current drafts have white canvas)~~ done — edge flood-fill alpha
+- P3: ~~Full Recraft-style regeneration of all 63 plate PNGs~~ done — landmark scenes
 
 ## Sound And Haptics
 

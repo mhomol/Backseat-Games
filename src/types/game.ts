@@ -84,6 +84,8 @@ export interface Plate {
   name: string;
   region: 'US' | 'CA';
   tint: string;
+  /** Landmark used for scene art prompts (not shown in UI). */
+  landmark: string;
 }
 
 export interface BingoItem {

@@ -1,6 +1,7 @@
 import type { ImageSourcePropType } from 'react-native';
+import { bingoItemImages } from './bingoItemImages';
 
-/** Category-level on-brand icons for Travel Bingo (emoji remains per-item fallback). */
+/** Category-level on-brand icons for Travel Bingo (emoji remains last-resort fallback). */
 export const bingoCategoryImages: Record<string, ImageSourcePropType> = {
   animals: require('../../assets/bingo-icons/animals.png'),
   signs: require('../../assets/bingo-icons/signs.png'),
@@ -17,4 +18,15 @@ export function bingoImageForCategory(
     return undefined;
   }
   return bingoCategoryImages[category];
+}
+
+/** Prefer per-item art, then category art. */
+export function bingoImageForSquare(
+  itemId: string | undefined,
+  category: string | undefined,
+): ImageSourcePropType | undefined {
+  if (itemId && bingoItemImages[itemId]) {
+    return bingoItemImages[itemId];
+  }
+  return bingoImageForCategory(category);
 }

@@ -10,6 +10,7 @@
     "test": "npx tsx --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "generate:plates": "node scripts/generate-plates.mjs",
+    "generate:bingo-items": "node scripts/generate-bingo-item-icons.mjs",
     "generate:brand": "node scripts/generate-brand-assets.mjs",
     "prepare:hero-flux": "node scripts/prepare-hero-flux-input.mjs",
     "generate:sounds": "node scripts/generate-sounds.mjs",

@@ -12,7 +12,7 @@ import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
-import { bingoImageForCategory } from '@/data/bingoCategoryImages';
+import { bingoImageForSquare } from '@/data/bingoCategoryImages';
 import {
   BINGO_SIZE,
   FREE_CENTER_INDEX,
@@ -62,11 +62,12 @@ export default function BingoScreen() {
         </ContentCapsule>
         <View style={styles.grid}>
           {Array.from({ length: BINGO_SIZE }).map((_, index) => {
-            const { label, icon, category } = getBingoSquareLabel(card, index);
+            const { id, label, icon, category } = getBingoSquareLabel(card, index);
             const isMarked = marked[index];
             return (
               <BingoCell
                 key={index}
+                itemId={id}
                 label={label}
                 icon={icon}
                 category={category}
@@ -100,6 +101,7 @@ export default function BingoScreen() {
 }
 
 function BingoCell({
+  itemId,
   label,
   icon,
   category,
@@ -107,6 +109,7 @@ function BingoCell({
   isFree,
   onPress,
 }: {
+  itemId?: string;
   label: string;
   icon: string;
   category?: string;
@@ -116,7 +119,7 @@ function BingoCell({
 }) {
   const scale = useSharedValue(1);
   const stampScale = useSharedValue(isMarked ? 1 : 0);
-  const categoryImage = bingoImageForCategory(category);
+  const squareImage = bingoImageForSquare(itemId, category);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -147,18 +150,23 @@ function BingoCell({
         }}
         style={[
           styles.cell,
-          isMarked && styles.cellMarked,
           isFree && styles.cellFree,
+          isMarked && styles.cellMarked,
         ]}
       >
-        {categoryImage ? (
-          <Image source={categoryImage} style={styles.iconImage} resizeMode="contain" />
+        {squareImage ? (
+          <Image source={squareImage} style={styles.iconImage} resizeMode="cover" />
         ) : (
-          <Text style={styles.icon}>{icon}</Text>
+          <View style={styles.emojiFallback}>
+            <Text style={styles.icon}>{icon}</Text>
+          </View>
         )}
-        <Text style={styles.label} numberOfLines={2}>
-          {label}
-        </Text>
+        {isMarked ? <View style={styles.markedWash} pointerEvents="none" /> : null}
+        <View style={styles.labelBar} pointerEvents="none">
+          <Text style={styles.label} numberOfLines={2}>
+            {label}
+          </Text>
+        </View>
         {isMarked ? (
           <Animated.Text style={[styles.stamp, stampStyle]}>✓</Animated.Text>
         ) : null}
@@ -196,29 +204,52 @@ const styles = StyleSheet.create({
     borderWidth: borders.thick,
     borderColor: colors.roadGrayLight,
     borderRadius: radii.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 4,
+    overflow: 'hidden',
   },
   cellMarked: {
-    backgroundColor: '#FFF3B0',
     borderColor: colors.sunnyYellowDark,
   },
   cellFree: {
-    backgroundColor: '#E8F8EA',
     borderColor: colors.grassGreenDark,
   },
-  icon: {
-    fontSize: 16,
-  },
   iconImage: {
-    width: 22,
-    height: 22,
-    marginBottom: 1,
+    ...StyleSheet.absoluteFill,
+    top: 2,
+    right: 2,
+    bottom: 2,
+    left: 2,
+    width: undefined,
+    height: undefined,
+    borderRadius: radii.sm - 2,
+  },
+  emojiFallback: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 18,
+  },
+  icon: {
+    fontSize: 28,
+  },
+  markedWash: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(255, 243, 176, 0.35)',
+  },
+  labelBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 248, 238, 0.92)',
+    paddingHorizontal: 2,
+    paddingVertical: 2,
+    minHeight: 20,
+    justifyContent: 'center',
   },
   label: {
-    fontFamily: fonts.body,
-    fontSize: 8,
+    fontFamily: fonts.bodyBold,
+    fontSize: 10,
+    lineHeight: 12,
     textAlign: 'center',
     color: colors.roadGray,
   },
@@ -229,5 +260,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.displayBold,
     color: colors.grassGreenDark,
     fontSize: 14,
+    textShadowColor: 'rgba(255, 255, 255, 0.9)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

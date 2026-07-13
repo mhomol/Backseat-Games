@@ -165,7 +165,6 @@ function PlateTile({
           scale.value = withSpring(1);
         }}
       >
-        <View style={styles.innerFrame} pointerEvents="none" />
         {plateImage ? (
           <Image source={plateImage} style={styles.plateImage} resizeMode="cover" />
         ) : (
@@ -173,7 +172,7 @@ function PlateTile({
         )}
         {isMine ? <View style={styles.overlayMine} /> : null}
         {isTaken ? <View style={styles.overlayTaken} /> : null}
-        <View style={styles.labelStack}>
+        <View style={styles.labelBar}>
           <Text style={[styles.code, isTaken && styles.textMuted]}>{code}</Text>
           <Text style={[styles.name, isTaken && styles.textMuted]} numberOfLines={2}>
             {name}
@@ -211,9 +210,7 @@ const styles = StyleSheet.create({
     aspectRatio: 2.2,
     borderRadius: radii.md,
     overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: borders.extraThick,
+    borderWidth: borders.thick,
     borderColor: brand.pink,
     backgroundColor: colors.cream,
   },
@@ -222,15 +219,6 @@ const styles = StyleSheet.create({
   },
   cellTaken: {
     borderColor: colors.roadGrayLight,
-  },
-  innerFrame: {
-    ...StyleSheet.absoluteFill,
-    margin: 3,
-    borderRadius: radii.sm,
-    borderWidth: 2,
-    borderColor: brand.roadYellow,
-    borderStyle: 'dashed',
-    zIndex: 2,
   },
   plateImage: {
     ...StyleSheet.absoluteFill,
@@ -249,19 +237,23 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(120, 120, 120, 0.45)',
   },
-  labelStack: {
+  labelBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xs,
+    paddingTop: spacing.xs,
+    paddingBottom: spacing.sm,
+    backgroundColor: 'rgba(255, 248, 238, 0.9)',
     zIndex: 1,
   },
   code: {
     fontFamily: fonts.displayBold,
     fontSize: 20,
     color: colors.roadGray,
-    textShadowColor: 'rgba(255, 255, 255, 0.9)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
   },
   name: {
     fontFamily: fonts.bodyBold,
@@ -269,13 +261,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.roadGray,
     marginTop: 2,
-    textShadowColor: 'rgba(255, 255, 255, 0.9)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   textMuted: {
-    color: colors.cloudWhite,
-    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    color: colors.roadGrayLight,
   },
   owner: {
     fontFamily: fonts.bodyBold,

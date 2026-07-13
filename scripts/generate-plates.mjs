@@ -1,13 +1,14 @@
 /**
- * Generate stylized license plate PNGs for all jurisdictions in plates.json.
+ * Generate landmark scene PNGs for all jurisdictions in plates.json.
  *
- * Default: programmatic SVG → PNG (consistent, no API).
- * Optional: --replicate uses Replicate flux-schnell (requires REPLICATE_API_TOKEN).
+ * Default: programmatic SVG placeholder (cream + tint band).
+ * --replicate uses Recraft V4 landmark scenes (requires REPLICATE_API_TOKEN).
  *
  * Usage:
  *   node scripts/generate-plates.mjs
  *   node scripts/generate-plates.mjs --replicate
- *   node scripts/generate-plates.mjs --codes TX,CA,NY
+ *   node scripts/generate-plates.mjs --replicate --pilot
+ *   node scripts/generate-plates.mjs --replicate --codes=GA,CA,AB,NY,TX
  */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -18,9 +19,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const PLATES_JSON = join(ROOT, 'src/data/plates.json');
 const OUT_DIR = join(ROOT, 'assets/plates');
-
+const DRAFTS = join(ROOT, 'assets/branding/drafts/v11-plate-landmarks');
+const MODEL = 'recraft-ai/recraft-v4';
 const WIDTH = 300;
 const HEIGHT = 150;
+const PILOT_CODES = ['GA', 'CA', 'AB', 'NY', 'TX'];
 
 function shadeHex(hex, amount) {
   const n = hex.replace('#', '');
@@ -30,44 +33,20 @@ function shadeHex(hex, amount) {
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
-function decorForCode(code) {
-  const hash = [...code].reduce((a, c) => a + c.charCodeAt(0), 0);
-  const variant = hash % 4;
-  if (variant === 0) {
-    return `<circle cx="42" cy="75" r="8" fill="currentAccent" opacity="0.35"/>
-      <circle cx="258" cy="75" r="8" fill="currentAccent" opacity="0.35"/>`;
-  }
-  if (variant === 1) {
-    return `<path d="M30 95 Q75 70 120 95" stroke="currentAccent" stroke-width="3" fill="none" opacity="0.4"/>
-      <path d="M180 95 Q225 70 270 95" stroke="currentAccent" stroke-width="3" fill="none" opacity="0.4"/>`;
-  }
-  if (variant === 2) {
-    return `<rect x="28" y="68" width="6" height="14" rx="2" fill="currentAccent" opacity="0.35"/>
-      <rect x="266" y="68" width="6" height="14" rx="2" fill="currentAccent" opacity="0.35"/>`;
-  }
-  return `<polygon points="36,82 44,66 52,82" fill="currentAccent" opacity="0.35"/>
-    <polygon points="248,82 256,66 264,82" fill="currentAccent" opacity="0.35"/>`;
-}
-
 function plateSvg(plate) {
-  const { tint, region } = plate;
-  const dark = shadeHex(tint, -30);
-  const light = shadeHex(tint, 40);
-  const decor = decorForCode(plate.code).replaceAll('currentAccent', tint);
-  const bolts = region === 'CA'
-    ? `<circle cx="24" cy="24" r="4" fill="#C0C0C0"/><circle cx="276" cy="24" r="4" fill="#C0C0C0"/>`
-    : `<circle cx="24" cy="24" r="4" fill="#D4D4D4"/><circle cx="276" cy="24" r="4" fill="#D4D4D4"/>`;
-
+  const dark = shadeHex(plate.tint, -30);
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
-  <rect width="${WIDTH}" height="${HEIGHT}" fill="#F5F0E6"/>
-  <rect x="8" y="8" width="284" height="134" rx="14" fill="#FFFDF8" stroke="${tint}" stroke-width="6"/>
-  <rect x="14" y="14" width="272" height="28" rx="6" fill="${dark}"/>
-  <rect x="14" y="108" width="272" height="8" rx="3" fill="${light}" opacity="0.85"/>
-  <rect x="14" y="48" width="272" height="54" rx="4" fill="#FFFDF8"/>
-  ${decor}
-  ${bolts}
-  <rect x="130" y="58" width="40" height="34" rx="4" fill="${tint}" opacity="0.12"/>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7EC8F7"/>
+      <stop offset="100%" stop-color="#FFF8EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#sky)"/>
+  <rect x="0" y="95" width="${WIDTH}" height="55" fill="${plate.tint}" opacity="0.55"/>
+  <circle cx="240" cy="40" r="18" fill="#FFE08A" opacity="0.8"/>
+  <rect x="20" y="70" width="90" height="40" rx="8" fill="${dark}" opacity="0.35"/>
 </svg>`;
 }
 
@@ -78,15 +57,16 @@ async function svgToPng(svg, outPath) {
 
 function buildPrompt(plate) {
   return (
-    `Flat cartoon vehicle license plate illustration, fictional design inspired by ${plate.name}, ` +
-    `accent color ${plate.tint}, white plate body, rounded corners, simple decorative border stripes, ` +
-    `no text, no letters, no numbers, no government seal, no official logos, clean vector game art style, ` +
-    `centered on plain cream background`
+    `Wide landscape 2:1 mobile game tile of ${plate.landmark} representing ${plate.name}. ` +
+    `Full-bleed scenic landmark only. Vibrant cheerful cartoon vector style, bold black outlines, flat colors, subtle texture. ` +
+    `Light sky blue #7EC8F7 sky with fluffy white clouds. ` +
+    `NO pink car, NO wooden signpost, NO license plate frame, NO chrome border, NO bolts, ` +
+    `NO text, NO letters, NO numbers, NO government seal, NO official logos, NO watermark.`
   );
 }
 
-async function generateViaReplicate(plate, token) {
-  const res = await fetch('https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions', {
+async function generateViaRecraft(plate, token) {
+  const res = await fetch(`https://api.replicate.com/v1/models/${MODEL}/predictions`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -97,29 +77,35 @@ async function generateViaReplicate(plate, token) {
       input: {
         prompt: buildPrompt(plate),
         aspect_ratio: '3:2',
-        num_outputs: 1,
-        output_format: 'png',
-        output_quality: 85,
       },
     }),
   });
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Replicate ${plate.code}: ${res.status} ${err}`);
+    throw new Error(`Replicate ${plate.code}: ${res.status} ${await res.text()}`);
   }
   const data = await res.json();
-  if (data.status !== 'succeeded' || !data.output?.[0]) {
+  if (data.status !== 'succeeded' || !data.output) {
     throw new Error(`Replicate ${plate.code} failed: ${data.error ?? data.status}`);
   }
-  const imgRes = await fetch(data.output[0]);
+  const url = Array.isArray(data.output) ? data.output[0] : data.output;
+  const imgRes = await fetch(url);
   if (!imgRes.ok) throw new Error(`Download ${plate.code} failed`);
   return Buffer.from(await imgRes.arrayBuffer());
 }
 
+async function sleep(ms) {
+  await new Promise((r) => setTimeout(r, ms));
+}
+
 async function main() {
   const useReplicate = process.argv.includes('--replicate');
+  const pilot = process.argv.includes('--pilot');
   const codesArg = process.argv.find((a) => a.startsWith('--codes='));
-  const filterCodes = codesArg ? codesArg.split('=')[1].split(',') : null;
+  const filterCodes = codesArg
+    ? codesArg.split('=')[1].split(',')
+    : pilot
+      ? PILOT_CODES
+      : null;
 
   const plates = JSON.parse(await readFile(PLATES_JSON, 'utf8'));
   const selected = filterCodes
@@ -127,34 +113,51 @@ async function main() {
     : plates;
 
   await mkdir(OUT_DIR, { recursive: true });
+  await mkdir(DRAFTS, { recursive: true });
 
   const token = process.env.REPLICATE_API_TOKEN;
+  const replicateDir = join(process.env.USERPROFILE || process.env.HOME || '', 'Pictures', 'Replicate');
+  if (useReplicate) await mkdir(replicateDir, { recursive: true });
 
   for (const plate of selected) {
     const outPath = join(OUT_DIR, `${plate.code}.png`);
-    if (useReplicate && token) {
-      process.stdout.write(`Replicate ${plate.code}... `);
-      const buf = await generateViaReplicate(plate, token);
-      const sharp = (await import('sharp')).default;
-      await sharp(buf).resize(WIDTH, HEIGHT, { fit: 'cover' }).png({ compressionLevel: 9 }).toFile(outPath);
-      console.log('ok');
+    if (useReplicate) {
+      if (!token) {
+        console.error('Set REPLICATE_API_TOKEN for --replicate');
+        process.exit(1);
+      }
+      process.stdout.write(`Recraft ${plate.code} (${plate.landmark})... `);
+      let attempt = 0;
+      for (;;) {
+        try {
+          attempt += 1;
+          const buf = await generateViaRecraft(plate, token);
+          await writeFile(join(DRAFTS, `${plate.code}.webp`), buf);
+          const sharp = (await import('sharp')).default;
+          await sharp(buf).resize(WIDTH, HEIGHT, { fit: 'cover' }).png({ compressionLevel: 9 }).toFile(outPath);
+          const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, (m) => (m === 'T' ? '_' : ''));
+          await writeFile(join(replicateDir, `${stamp}_plate-${plate.code}.png`), await readFile(outPath));
+          console.log('ok');
+          await sleep(1500);
+          break;
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          if (attempt < 4 && /429|rate/i.test(msg)) {
+            console.log(`rate-limited, retry ${attempt}`);
+            await sleep(8000 * attempt);
+            continue;
+          }
+          console.log(`FAIL ${msg}`);
+          break;
+        }
+      }
     } else {
-      const svg = plateSvg(plate);
-      await svgToPng(svg, outPath);
-      console.log(`Generated ${plate.code}.png`);
+      await svgToPng(plateSvg(plate), outPath);
+      console.log(`SVG ${plate.code}`);
     }
   }
 
-  const mapLines = plates.map((p) => `  ${p.code}: require('../../assets/plates/${p.code}.png'),`);
-  const mapPath = join(ROOT, 'src/data/plateImages.ts');
-  await writeFile(
-    mapPath,
-    `import type { ImageSourcePropType } from 'react-native';\n\n` +
-      `export const plateImageByCode: Record<string, ImageSourcePropType> = {\n` +
-      `${mapLines.join('\n')}\n};\n`,
-  );
-  console.log(`Updated ${mapPath}`);
-  console.log(`\nDone: ${selected.length} plates → ${OUT_DIR}`);
+  console.log(`Done (${selected.length} plates).`);
 }
 
 main().catch((err) => {
