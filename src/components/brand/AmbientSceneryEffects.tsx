@@ -93,35 +93,46 @@ export function AmbientSceneryEffects() {
     const runPlane = () => {
       setActive('plane');
       // Art faces left — fly right-to-left so the nose leads.
+      const skyY = height * (0.06 + Math.random() * 0.2);
       translateX.value = width + 140;
-      translateY.value = height * 0.12;
+      translateY.value = skyY;
       opacity.value = 1;
       translateX.value = withTiming(-140, {
-        duration: 9000,
+        duration: 8000 + Math.floor(Math.random() * 3000),
         easing: Easing.linear,
       }, (finished) => {
         if (finished) {
           runOnJS(finish)();
         }
       });
+      // Mild altitude drift so the path is not a flat line every time.
+      translateY.value = withTiming(skyY + (Math.random() - 0.5) * height * 0.08, {
+        duration: 8000,
+        easing: Easing.inOut(Easing.sin),
+      });
     };
 
     const runBird = () => {
       setActive('bird');
       setBirdFrame(0);
+      const skyY = height * (0.1 + Math.random() * 0.22);
       translateX.value = -100;
-      translateY.value = height * 0.18;
+      translateY.value = skyY;
       opacity.value = 1;
       flapId = setInterval(() => {
         setBirdFrame((frame) => (frame === 0 ? 1 : 0));
       }, 180);
       translateX.value = withTiming(width + 100, {
-        duration: 7000,
+        duration: 6000 + Math.floor(Math.random() * 2500),
         easing: Easing.linear,
       }, (finished) => {
         if (finished) {
           runOnJS(finish)();
         }
+      });
+      translateY.value = withTiming(skyY + (Math.random() - 0.5) * height * 0.1, {
+        duration: 6500,
+        easing: Easing.inOut(Easing.sin),
       });
     };
 
@@ -129,13 +140,14 @@ export function AmbientSceneryEffects() {
       setActive('gopher');
       setGopherWinkOn(false);
       translateX.value = width * 0.2 + Math.random() * width * 0.5;
-      translateY.value = 90;
+      // Peek sits slightly below the screen edge so paws don't float.
+      const hiddenY = 98;
+      const peekedY = 8;
+      translateY.value = hiddenY;
       opacity.value = 1;
       translateY.value = withSequence(
-        withTiming(0, { duration: 600, easing: Easing.out(Easing.cubic) }),
-        withDelay(700, withTiming(0, { duration: 50 })),
-        withTiming(0, { duration: 50 }),
-        withDelay(900, withTiming(100, { duration: 500, easing: Easing.in(Easing.cubic) })),
+        withTiming(peekedY, { duration: 600, easing: Easing.out(Easing.cubic) }),
+        withDelay(1600, withTiming(hiddenY, { duration: 500, easing: Easing.in(Easing.cubic) })),
       );
       setTimeout(() => {
         if (!cancelled) {
