@@ -222,7 +222,19 @@ Multiplayer: host reads join code from waiting room; joiner enters code on Join 
 
 Marketing version: **1.1.0** (`app.config.js` / `package.json`). Build number still comes from CI `run_number`.
 
-### What’s new (for App Review notes)
+### What’s New (App Store Connect — paste into version 1.1)
+
+```
+What’s new in 1.1
+
+• Solo Mode — play License Plates, Sign Game, or Travel Bingo offline by yourself (unlocked hosts)
+• Travel Bingo — unique illustrated icons for every square, plus clearer filled-cell layout
+• License Plates — landmark scene art for every state and province, with cleaner plate chrome
+• Sound & motion — opening jingle, richer SFX (including truck horns on big wins), and ambient critters on menus
+• Clearer first-run tips — passengers join free; host unlock is one-time for life (not a subscription)
+```
+
+### App Review notes (submission form)
 
 ```
 Backseat Games 1.1 polish release.
@@ -231,8 +243,12 @@ Backseat Games 1.1 polish release.
 - Game sound effects only while the app is in the foreground (taps, horns, bingo, win).
 - Semi-truck horn on big moments (bingo / wins / first plate claim).
 - First-run cards explain: passengers join free; host unlock is one-time for life (not a subscription).
-- Visual polish: bingo fill-cell icons (animals/signs per-item), landmark plate scenes, ambient scenery critters.
+- Visual polish: per-item Travel Bingo icons across all categories; landmark plate scenes; ambient scenery critters (plane propeller spin, bird, gopher).
 - Solo Mode: unlocked hosts can play any game alone offline (no relay / waiting room). Multiplayer join codes unchanged.
+
+IAP: sandbox Apple ID on Start a Game.
+Multiplayer: host reads join code from waiting room; joiner enters code on Join screen.
+Solo: Host setup → Play solo (offline).
 ```
 
 ### Ship checklist
@@ -240,11 +256,11 @@ Backseat Games 1.1 polish release.
 - [ ] Run **Actions → iOS TestFlight** on `master` after this release is pushed
 - [ ] Install TestFlight build; confirm no local-network / background-audio prompts
 - [ ] Confirm Solo Mode starts License Plates / Sign Game / Bingo with airplane mode on
-- [ ] Confirm bingo cells show large icons + readable labels; plates show landmark scenes with one frame
-- [ ] Capture fresh App Store screenshots (home, bingo, plates, solo setup, first-run / paywall)
-- [ ] Run `npm run prepare:app-store-screenshots` on new raw captures
+- [ ] Confirm bingo cells show large per-item icons + readable labels across categories; plates show landmark scenes with one frame
+- [ ] Capture fresh App Store screenshots (home, bingo board, plates grid, solo setup, first-run / paywall)
+- [ ] Drop captures into `assets/marketing/app-store-screenshots/raw/` then run `npm run prepare:app-store-screenshots`
 - [ ] Create App Store Connect version **1.1** and attach the new build
-- [ ] Paste App Review notes above; submit for review
+- [ ] Paste **What’s New** (customer) + App Review notes above; submit for review
 
 ---
 
