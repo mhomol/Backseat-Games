@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
@@ -32,15 +33,15 @@ export default function HostSetupScreen() {
   const hostGame = useSessionStore((state) => state.hostGame);
   const savedName = useSessionStore((state) => state.localPlayerName);
   const canHost = usePurchaseStore((state) => state.canHost);
+  const requiresPurchase = usePurchaseStore((state) => state.requiresPurchase);
+  const productPrice = usePurchaseStore((state) => state.productPrice);
+  const busy = usePurchaseStore((state) => state.busy);
+  const purchaseHostUnlock = usePurchaseStore((state) => state.purchaseHostUnlock);
+  const restorePurchases = usePurchaseStore((state) => state.restorePurchases);
   const [hostName, setHostName] = useState('');
-  const [soloMode, setSoloMode] = useState(false);
+  const [playOnline, setPlayOnline] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!canHost()) {
-      router.replace('/');
-    }
-  }, [canHost]);
 
   useEffect(() => {
     if (savedName) {
@@ -50,20 +51,67 @@ export default function HostSetupScreen() {
 
   const canContinue = hostName.trim().length >= 2;
 
+  const handlePlayOnlineChange = (next: boolean) => {
+    if (!next) {
+      setPlayOnline(false);
+      return;
+    }
+    if (canHost()) {
+      setPlayOnline(true);
+      return;
+    }
+    setPaywallOpen(true);
+  };
+
+  const handlePurchase = async () => {
+    const result = await purchaseHostUnlock();
+    if (result.success) {
+      setPaywallOpen(false);
+      setPlayOnline(true);
+      return;
+    }
+    if (!result.cancelled) {
+      useSessionStore.setState({
+        toast: requiresPurchase()
+          ? 'Could not complete purchase. Check your connection and try again, or use Restore purchases.'
+          : 'Purchase failed. Try again or contact support.',
+      });
+    }
+  };
+
+  const handleRestore = async () => {
+    const restored = await restorePurchases();
+    if (restored) {
+      setPaywallOpen(false);
+      setPlayOnline(true);
+      return;
+    }
+    useSessionStore.setState({
+      toast: 'No previous host unlock found for this Apple ID.',
+    });
+  };
+
   const handleSignPress = async (signId: string) => {
     const gameType = signToGameType[signId];
     if (!gameType || !canContinue || loading) {
       return;
     }
 
+    if (playOnline && !canHost()) {
+      setPaywallOpen(true);
+      return;
+    }
+
     setLoading(true);
     try {
-      const sessionId = await hostGame(gameType, hostName.trim(), { solo: soloMode });
-      if (soloMode) {
+      const sessionId = await hostGame(gameType, hostName.trim(), { solo: !playOnline });
+      if (!playOnline) {
         router.replace(GAME_ROUTES[gameType]);
       } else {
         router.push(`/lobby/${sessionId}`);
       }
+    } catch {
+      // Toast set in hostGame when online unlock is missing.
     } finally {
       setLoading(false);
     }
@@ -96,22 +144,39 @@ export default function HostSetupScreen() {
           />
           <View style={styles.soloRow}>
             <SettingsToggle
-              label="Play solo (offline)"
-              description="Skip the waiting room and play on this phone with no internet."
-              value={soloMode}
-              onValueChange={setSoloMode}
+              label="Play online"
+              description="Share a join code so others can play. Requires a one-time host unlock."
+              value={playOnline}
+              onValueChange={handlePlayOnlineChange}
             />
           </View>
           <Text style={styles.hint}>
-            {soloMode
-              ? 'Tap a game sign below to start playing right away.'
-              : 'You will host this session for everyone in the car.'}
+            {playOnline
+              ? 'You will host this session for everyone in the car.'
+              : 'Tap a game sign below to start playing right away — free, offline, on this phone.'}
           </Text>
           {!canContinue ? (
             <Text style={styles.nameHint}>Enter your name, then tap a game sign below.</Text>
           ) : null}
         </View>
       </SafeAreaView>
+      <HostUnlockSheet
+        visible={paywallOpen}
+        priceLabel={productPrice}
+        busy={busy}
+        onPurchase={() => {
+          void handlePurchase();
+        }}
+        onRestore={() => {
+          void handleRestore();
+        }}
+        onDismiss={() => {
+          if (!busy) {
+            setPaywallOpen(false);
+            setPlayOnline(false);
+          }
+        }}
+      />
     </SceneryBackground>
   );
 }

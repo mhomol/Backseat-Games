@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { HOST_UNLOCK_PRODUCT_ID } from '../types/purchases';
 import {
   canHostForPlatform,
+  canStartHostedSession,
   hasHostUnlockPurchase,
   mergeHostEntitlement,
 } from './hostEntitlement';
@@ -32,5 +33,12 @@ describe('hostEntitlement', () => {
     assert.equal(canHostForPlatform('ios', { hostUnlocked: false, isDev: true }), true);
     assert.equal(canHostForPlatform('ios', { hostUnlocked: false, isDev: false }), false);
     assert.equal(canHostForPlatform('ios', { hostUnlocked: true, isDev: false }), true);
+  });
+
+  it('canStartHostedSession allows solo when locked; online needs unlock', () => {
+    assert.equal(canStartHostedSession({ solo: true, canHost: false }), true);
+    assert.equal(canStartHostedSession({ solo: true, canHost: true }), true);
+    assert.equal(canStartHostedSession({ solo: false, canHost: false }), false);
+    assert.equal(canStartHostedSession({ solo: false, canHost: true }), true);
   });
 });

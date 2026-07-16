@@ -6,31 +6,35 @@ How hosting is priced, how purchases work, and how to test them before App Store
 
 | Role | Cost | Can do |
 |------|------|--------|
+| **Anyone** | Free | Solo Mode (offline, this phone) |
 | **Passenger (joiner)** | Free | Install, join with a code, play |
-| **Host (trip starter)** | **$0.99 one-time** IAP | Start a Game, host lobby, run sessions |
+| **Online host** | **$0.99 one-time** IAP | Turn on **Play online**, share join codes, run waiting-room sessions |
 
 - App Store listing: **Free** with **Offers In-App Purchases**
 - Product type: **Non-consumable** (buy once per Apple ID; restore on new devices)
 - Product ID: `com.homolworks.backseatgames.host_unlock`
-- **Join stays free** — only the Start sign and host flow are gated
-- **Offline trips:** purchase needs internet once; cached entitlement allows **solo offline play** and hosting after unlock (multiplayer still needs network to create/join a relay room)
+- **Solo stays free** — Start a Game always opens setup; paywall only when enabling **Play online**
+- **Join stays free** — passengers never pay
+- **Offline trips:** purchase needs internet once; cached entitlement allows hosting online after unlock (multiplayer still needs network to create/join a relay room). Solo needs no unlock and no internet.
 - **Android v1:** hosting is free (no IAP wiring yet)
 
 ## User-facing copy
 
-**Paywall headline:** Unlock hosting
+**Paywall headline:** Unlock hosting online
 
 **Bullets:**
-- Passengers join for free — only the host pays once.
-- Works offline after you unlock — solo play needs no internet; multiplayer needs a connection to create or join a room. No subscription.
+- Solo play stays free — unlock only when you host online.
+- Passengers join for free — only the online host pays once.
+- Works offline after you unlock for online hosting. No subscription.
 - All three games included.
 
 **FAQ**
 
 | Question | Answer |
 |----------|--------|
-| Do passengers pay? | No. Only whoever taps **Start a Game** needs the host unlock. |
-| Do I need internet on the trip? | No, after the one-time unlock. You need connectivity once to buy or restore. |
+| Do I need to pay to play alone? | No. Solo Mode is free with **Play online** off. |
+| Do passengers pay? | No. Only whoever turns on **Play online** needs the host unlock. |
+| Do I need internet on the trip? | Solo: no. Online: yes, to create or join a room. Buy or restore needs connectivity once. |
 | New phone? | Settings → Restore purchases with the same Apple ID. |
 | Family Sharing? | Optional in App Store Connect — one purchase may cover family Apple IDs if enabled. |
 
@@ -44,8 +48,8 @@ Complete before TestFlight IAP testing:
 4. Reference name: `Host Unlock`
 5. Product ID: `com.homolworks.backseatgames.host_unlock` (must match code exactly)
 6. Price: **$0.99** (Tier 1)
-7. Display name: **Host games**
-8. Description: e.g. "Unlock hosting for road-trip games. Passengers join free."
+7. Display name: **Host online**
+8. Description: e.g. "Unlock online hosting with join codes. Solo play stays free. Passengers join free."
 9. Optional: enable **Family Sharing**
 10. **Review screenshot** — Apple has **two different image uploads** (see below)
 11. Status: **Ready to Submit** (sandbox works before App Store approval)

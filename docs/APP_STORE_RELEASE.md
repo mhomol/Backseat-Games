@@ -126,8 +126,8 @@ Choose **Yes** only if you embed content you do not own (licensed music, third-p
 > • Optional voice input in Sign Game — Say the word instead of typing
 >
 > PRICING
-> • Free to download; passengers join for free
-> • One-time $0.99 unlock to host and start games on your Apple ID
+> • Free to download; Solo Mode free; passengers join for free
+> • One-time $0.99 unlock to host online with a join code on your Apple ID
 > • Three games included — no subscriptions
 >
 > No ads. No login. Just games for the drive.
@@ -204,12 +204,12 @@ iPhone only for v1 (`supportsTablet: false` in [app.config.js](../app.config.js)
 Backseat Games is family road-trip multiplayer.
 
 - No login.
-- Join is free. Start/host requires one-time $0.99 IAP.
+- Join is free. Solo Mode is free. Online host requires one-time $0.99 IAP.
 - Multiplayer: host shares a 6-character join code (internet relay on cellular or Wi‑Fi).
 - Microphone optional (Sign Game voice input only).
 - Rejoin: enter the same join code and player name if disconnected mid-trip.
 
-IAP: sandbox Apple ID on Start a Game.
+IAP: Host setup → Play online on → sandbox Apple ID.
 Multiplayer: host reads join code from waiting room; joiner enters code on Join screen.
 ```
 
@@ -227,11 +227,12 @@ Marketing version: **1.1.0** (`app.config.js` / `package.json`). Build number st
 ```
 What’s new in 1.1
 
-• Solo Mode — play License Plates, Sign Game, or Travel Bingo offline by yourself (unlocked hosts)
+• Solo Mode — play License Plates, Sign Game, or Travel Bingo offline by yourself — free for everyone
+• Play online unlock — one-time $0.99 only when you share a join code (passengers still join free)
 • Travel Bingo — unique illustrated icons for every square, plus clearer filled-cell layout
 • License Plates — landmark scene art for every state and province, with cleaner plate chrome
 • Sound & motion — opening jingle, richer SFX (including truck horns on big wins), and ambient critters on menus
-• Clearer first-run tips — passengers join free; host unlock is one-time for life (not a subscription)
+• Clearer first-run tips — solo free; pay only to host online; unlock is one-time for life
 ```
 
 ### App Review notes (submission form)
@@ -242,13 +243,14 @@ Backseat Games 1.1 polish release.
 - Opening jingle plays once on cold start (Settings: Opening jingle). Not background audio.
 - Game sound effects only while the app is in the foreground (taps, horns, bingo, win).
 - Semi-truck horn on big moments (bingo / wins / first plate claim).
-- First-run cards explain: passengers join free; host unlock is one-time for life (not a subscription).
+- First-run cards explain: solo is free; passengers join free; host unlock is one-time for life (online hosting only).
 - Visual polish: per-item Travel Bingo icons across all categories; landmark plate scenes; ambient scenery critters (plane propeller spin, bird, gopher).
-- Solo Mode: unlocked hosts can play any game alone offline (no relay / waiting room). Multiplayer join codes unchanged.
+- Solo Mode: anyone can play any game alone offline with Play online off (no IAP, no relay / waiting room).
+- Online: Play online toggle on host setup gates the $0.99 host unlock; then join codes work as before.
 
-IAP: sandbox Apple ID on Start a Game.
+IAP: Host setup → turn on Play online → paywall (sandbox Apple ID).
 Multiplayer: host reads join code from waiting room; joiner enters code on Join screen.
-Solo: Host setup → Play solo (offline).
+Solo: Host setup → leave Play online off → tap a game sign.
 ```
 
 ### Ship checklist

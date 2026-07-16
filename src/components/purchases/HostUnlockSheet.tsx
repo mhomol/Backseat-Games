@@ -14,6 +14,7 @@ type HostUnlockSheetProps = {
 
 const BULLETS = [
   'One-time, for-life unlock — not a subscription.',
+  'Solo play stays free — unlock only when you host online.',
   'Passengers join free forever — riders never pay.',
   'All three games included — license plates, sign game, and bingo.',
 ];
@@ -30,10 +31,10 @@ export function HostUnlockSheet({
     <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
       <Pressable style={styles.overlay} onPress={onDismiss}>
         <Pressable style={styles.sheet} onPress={(event) => event.stopPropagation()}>
-          <Text style={styles.title}>Unlock starting games</Text>
+          <Text style={styles.title}>Unlock hosting online</Text>
           <Text style={styles.lead}>
-            You tapped Start a Game. Pay once and host forever on this Apple ID — joining stays
-            free for everyone else in the car.
+            Turn on Play online to share a join code. Pay once and host multiplayer forever on this
+            Apple ID — solo play stays free, and joining stays free for everyone else.
           </Text>
 
           <View style={styles.bullets}>

@@ -5,16 +5,16 @@ import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 const CARDS = [
   {
-    title: 'One host, everyone plays',
-    body: 'Someone starts a game and shares a short join code. Passengers type the code on their phones — works on cellular or Wi‑Fi.',
+    title: 'Solo is always free',
+    body: 'Start a Game anytime and play License Plates, Sign Game, or Travel Bingo offline on this phone — no purchase needed.',
   },
   {
-    title: 'Joining is always free',
-    body: 'Riders never pay. Only the person who starts games needs the host unlock.',
+    title: 'Play online when the car joins',
+    body: 'Turn on Play online to share a join code. Passengers type the code on their phones — works on cellular or Wi‑Fi. Joining stays free.',
   },
   {
-    title: 'Host unlock is one-time, for life',
-    body: 'Pay once — not a subscription. Host forever on this Apple ID. Restore purchases anytime if you get a new phone.',
+    title: 'Unlock once to host online',
+    body: 'One-time purchase — not a subscription — unlocks hosting with a join code forever on this Apple ID. Restore anytime on a new phone.',
   },
 ] as const;
 

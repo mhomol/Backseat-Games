@@ -24,6 +24,13 @@ export function canHost(params: CanHostParams): boolean {
   return canHostForPlatform(Platform.OS, params);
 }
 
+/**
+ * Solo offline play is free. Online hosting (join codes / waiting room) requires unlock.
+ */
+export function canStartHostedSession(params: { solo: boolean; canHost: boolean }): boolean {
+  return params.solo || params.canHost;
+}
+
 /** Merge local cache with a fresh StoreKit entitlement check. */
 export function mergeHostEntitlement(cachedUnlocked: boolean, storeKitUnlocked: boolean): boolean {
   return cachedUnlocked || storeKitUnlocked;

@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   planeProp: {
     position: 'absolute',
     left: -4,
-    top: 16,
+    top: 18,
     width: 28,
     height: 28,
   },

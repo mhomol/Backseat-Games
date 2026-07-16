@@ -6,9 +6,9 @@ How to play Backseat Games — written for family testers, not engineers.
 
 ### Who should host?
 
-Typically the front-seat parent on their phone. The host picks the game. For a car full of players they wait for everyone to join and tap **Start Game**. For alone time, they turn on **Play solo (offline)** on the game selection screen and jump straight into a local game.
+Typically the front-seat parent on their phone. The host picks the game. For alone time, leave **Play online** off on the game selection screen and jump straight into a free local game. For a car full of players, turn **Play online** on, wait for everyone to join, and tap **Start Game**.
 
-**Pricing:** Joining is **free** for everyone. Starting a game (hosting) requires a **one-time $0.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay.
+**Pricing:** Solo Mode is **free**. Joining is **free** for everyone. Hosting online (join codes / waiting room) requires a **one-time $0.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay.
 
 ### How to join
 
@@ -23,7 +23,7 @@ Typically the front-seat parent on their phone. The host picks the game. For a c
 - Host sees a large **join code** to share with passengers, plus all joined players and the selected game type.
 - Joiners see a spinner: "Waiting for host to start…"
 - Host taps **Start Game!** when everyone is ready.
-- Competitive games in a shared waiting room (License Plates, Sign Game) need **at least one other player**. With **Play solo (offline)** on the host setup screen, any unlocked host can play all three games alone on this phone with no internet or waiting room.
+- Competitive games in a shared waiting room (License Plates, Sign Game) need **at least one other player**. With **Play online** off on the host setup screen, anyone can play all three games alone on this phone for free — no internet, unlock, or waiting room.
 
 ---
 

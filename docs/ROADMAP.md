@@ -12,16 +12,16 @@ This roadmap is intentionally lightweight. It captures product direction without
 
 ## Current: Delight + Solo Offline v1.1
 
-Goal: make the three launch games feel more custom to Backseat Games, and let unlocked hosts play alone without a relay or waiting room.
+Goal: make the three launch games feel more custom to Backseat Games, and let anyone play Solo Mode free without a relay or waiting room (pay only to host online).
 
 - Opening jingle (toggleable, cold-start only)
 - Richer SFX palette with purposeful semi-truck horn moments
 - Travel Bingo fill-cell icons + animals/signs per-item art (other categories keep category icons)
 - License Plates landmark scenes for all 63 jurisdictions + simplified single-frame chrome
 - Ambient scenery critters (plane, bird, gopher)
-- First-run teaching that stresses one-time, for-life host unlock
+- First-run teaching: solo free; pay once to host online
 - Claim / bingo / letter micro-animations
-- Solo Mode on host setup: offline local play for all three games (no relay / lobby)
+- Solo Mode free on host setup (Play online off); IAP gates Play online / join codes
 - Screenshot refresh after TestFlight validation
 
 ## Later: Retention And Family Utility

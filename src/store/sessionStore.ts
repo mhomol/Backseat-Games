@@ -27,6 +27,7 @@ import {
 import { usePreferencesStore } from './preferencesStore';
 import { usePurchaseStore } from './purchaseStore';
 import { useStatsStore } from './statsStore';
+import { canStartHostedSession } from '../utils/hostEntitlement';
 import type { GameRules } from '../types/preferences';
 
 type HostGameOptions = {
@@ -235,12 +236,17 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     },
 
     hostGame: async (gameType, hostName, options) => {
-      if (!usePurchaseStore.getState().canHost()) {
-        set({ toast: 'Host unlock required to start a game.' });
+      const solo = options?.solo === true;
+      if (
+        !canStartHostedSession({
+          solo,
+          canHost: usePurchaseStore.getState().canHost(),
+        })
+      ) {
+        set({ toast: 'Host unlock required to play online.' });
         throw new Error('Host unlock required');
       }
 
-      const solo = options?.solo === true;
       const sessionId = uuidv4().slice(0, 8);
       const hostId = get().localPlayerId;
       const host = playerFromLocal(hostId, hostName, true);

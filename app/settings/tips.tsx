@@ -8,7 +8,7 @@ const TIPS = [
   'Keep every phone on the same Personal Hotspot — usually the host or a parent phone.',
   'Leave Backseat Games open and on screen during play. iOS limits background sync.',
   'Tap Refresh on the Join screen if a session does not appear after ~30 seconds.',
-  'Competitive games need at least one other player. Travel Bingo can be played solo.',
+  'Competitive online games need at least one other player. Solo Mode is free on this phone with Play online off.',
 ];
 
 export default function TipsScreen() {

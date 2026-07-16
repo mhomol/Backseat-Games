@@ -190,12 +190,13 @@ Host unlock IAP is enforced in **TestFlight and App Store builds only** (`__DEV_
 ### Sandbox test flow
 
 1. Fresh install from TestFlight (or delete app and reinstall).
-2. Tap **Start a Game** on the home signpost → paywall appears.
-3. Tap **Unlock for $0.99** → sign in with sandbox Apple ID when iOS prompts.
-4. Confirm purchase completes → host setup screen opens.
-5. Host a session; confirm **Join** still works on a second phone without purchase.
-6. **Settings → Restore purchases** on a reinstall → hosting works without repurchasing.
-7. Optional: enable airplane mode after unlock → confirm hosting still works offline.
+2. Tap **Start a Game** → host setup opens (no paywall yet). Leave **Play online** off → confirm Solo Mode starts without purchase.
+3. Turn **Play online** on → paywall appears.
+4. Tap **Unlock for $0.99** → sign in with sandbox Apple ID when iOS prompts.
+5. Confirm purchase completes → Play online stays on; host a session and confirm join codes work.
+6. Confirm **Join** still works on a second phone without purchase.
+7. **Settings → Restore purchases** on a reinstall → online hosting works without repurchasing.
+8. Optional: enable airplane mode → confirm Solo Mode still works without unlock.
 
 ### Troubleshooting IAP
 

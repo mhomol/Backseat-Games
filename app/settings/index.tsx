@@ -58,10 +58,10 @@ export default function SettingsScreen() {
   return (
     <SceneryScrollShell>
       {requiresPurchase() ? (
-        <SettingsSection title="Starting games">
+        <SettingsSection title="Hosting online">
           <SettingsLinkRow
-            label="Unlock starting games"
-            description={`One-time ${productPrice} — create sessions for the car`}
+            label="Unlock hosting online"
+            description={`One-time ${productPrice} — share join codes for the car. Solo stays free.`}
             onPress={() => setPaywallOpen(true)}
           />
           <SettingsLinkRow
@@ -73,13 +73,15 @@ export default function SettingsScreen() {
           />
         </SettingsSection>
       ) : (
-        <SettingsSection title="Starting games">
+        <SettingsSection title="Hosting online">
           <Text style={styles.recordHint}>
-            {canHost() ? 'You can start games on this device.' : 'Starting games available.'}
+            {canHost()
+              ? 'You can host online sessions on this device. Solo play is always free.'
+              : 'Solo play is free. Unlock to host online with a join code.'}
           </Text>
           <SettingsLinkRow
             label="Restore purchases"
-            description="Re-sync your start-games unlock from the App Store"
+            description="Re-sync your host-online unlock from the App Store"
             onPress={() => {
               void handleRestore();
             }}
@@ -132,7 +134,7 @@ export default function SettingsScreen() {
       <SettingsSection title="Help">
         <SettingsLinkRow
           label="Quick start tips"
-          description="Host vs join, free passengers, and one-time unlock"
+          description="Free solo, free join, and one-time unlock to host online"
           onPress={() => setTeachingOpen(true)}
         />
         <SettingsLinkRow
