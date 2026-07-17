@@ -28,15 +28,31 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 - Done in v1.1: First-run teaching (host vs join, free join, one-time for-life host unlock)
 - Done in v1.1: Claim / bingo stamp / letter-advance micro-animations
 - Done in v1.1: Solo Mode (offline) on host setup for all three games
+- P2: Hangman
+  - Standard letter-guessing game where incorrect guesses progressively draw the hangman.
+  - Define the word source, age-appropriate categories, turn rules, and win conditions.
+  - Explore whether online multiplayer adds value and how guesses, turns, and the secret word should synchronize.
+- P2: Vehicle color hunt (working title)
+  - Find vehicles of different colors while traveling.
+  - Explore variants such as a shared checklist, individual randomized cards, color rarity, timed rounds, and vehicle-type combinations.
+  - Choose a more distinctive, kid-friendly name before implementation.
 - P2: Travel Bingo themed packs
   - Highway, city, mountains, beach, small town, construction, nighttime.
 - P2: License Plates collection progress
 - P2: Sign Game quality-of-life (voice confidence, clearer invalid feedback)
 - P3: New game concepts
-  - Car color hunt
   - Road-trip scavenger hunt
   - Alphabet categories
   - "Would you rather?" family prompts
+
+## Accessibility
+
+- P1: Support Larger Accessibility Sizes on host setup
+  - The setup section box currently grows over and obscures the game signs.
+  - Make the layout adapt or scroll while keeping the game choices visible and reachable.
+- P1: Keep the Host IAP sheet within the viewport at larger text sizes
+  - The additional text currently pushes the dialog past the top edge of smaller phones.
+  - Respect safe areas and allow scrolling without hiding purchase, restore, or dismiss controls.
 
 ## Multiplayer And Reliability
 
