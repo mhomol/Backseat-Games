@@ -49,3 +49,4 @@ assets/marketing/app-store-previews/output/*
 google-services.json
 GoogleService-Info.plist
 credentials.json
+google-service-account.json

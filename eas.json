@@ -9,12 +9,20 @@
       "distribution": "internal",
       "ios": {
         "simulator": false
+      },
+      "android": {
+        "buildType": "apk",
+        "credentialsSource": "remote"
       }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "simulator": false
+      },
+      "android": {
+        "buildType": "apk",
+        "credentialsSource": "remote"
       }
     },
     "production": {
@@ -22,6 +30,13 @@
       "credentialsSource": "local",
       "ios": {
         "simulator": false
+      }
+    },
+    "production-android": {
+      "autoIncrement": false,
+      "credentialsSource": "remote",
+      "android": {
+        "buildType": "app-bundle"
       }
     }
   },
@@ -31,6 +46,11 @@
         "appleId": "your-apple-id@example.com",
         "ascAppId": "0000000000",
         "appleTeamId": "YOUR_TEAM_ID"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "internal",
+        "releaseStatus": "draft"
       }
     }
   }

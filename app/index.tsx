@@ -13,6 +13,11 @@ import {
   markFirstRunTeachingSeen,
 } from '@/services/firstRunStorage';
 import { usePreferencesStore } from '@/store/preferencesStore';
+import { useSessionStore } from '@/store/sessionStore';
+import {
+  isOnlineMultiplayerAvailable,
+  MULTIPLAYER_COMING_SOON_MESSAGE,
+} from '@/utils/platformFeatures';
 import { spacing } from '@/theme';
 
 export default function HomeScreen() {
@@ -52,6 +57,10 @@ export default function HomeScreen() {
           if (id === 'start') {
             router.push('/host/setup');
           } else if (id === 'join') {
+            if (!isOnlineMultiplayerAvailable()) {
+              useSessionStore.setState({ toast: MULTIPLAYER_COMING_SOON_MESSAGE });
+              return;
+            }
             router.push('/join');
           } else if (id === 'settings') {
             router.push('/settings');

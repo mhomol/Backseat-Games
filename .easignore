@@ -1,0 +1,38 @@
+# Keep EAS upload lean — runtime assets stay included under assets/ (games art, sounds, brand).
+
+# Dependencies / tooling (EAS installs on the builder)
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+
+# Git / IDE / local secrets
+.git/
+.github/
+.cursor/
+.vscode/
+*.p12
+*.mobileprovision
+credentials.json
+google-service-account.json
+GoogleService-Info.plist
+google-services.json
+
+# Marketing / store capture pipelines (not shipped in the app binary)
+assets/marketing/
+
+# Local docs & scripts not needed at runtime
+docs/
+scripts/
+*.md
+!package.json
+
+# Test sources
+**/*.test.ts
+**/*.test.tsx
+
+# Misc build noise
+*.log
+.DS_Store
+Thumbs.db

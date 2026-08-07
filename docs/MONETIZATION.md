@@ -16,7 +16,7 @@ How hosting is priced, how purchases work, and how to test them before App Store
 - **Solo stays free** — Start a Game always opens setup; paywall only when enabling **Play online**
 - **Join stays free** — passengers never pay
 - **Offline trips:** purchase needs internet once; cached entitlement allows hosting online after unlock (multiplayer still needs network to create/join a relay room). Solo needs no unlock and no internet.
-- **Android v1:** hosting is free (no IAP wiring yet)
+- **Android v1 (solo launch):** free app; Solo Mode only. Join / Play online show **coming soon**. No Play Billing yet — see [PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md).
 
 ## User-facing copy
 

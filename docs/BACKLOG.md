@@ -63,6 +63,8 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 ## App Store And Growth
 
 - P1: v1.1 TestFlight build + App Store submission (Delight + Solo offline; foreground audio note)
+- P1: Android Solo Launch — Play internal + listing ([PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md))
+- P2: Android Online + Play Billing (join codes, host unlock parity)
 - P2: Refresh screenshots after delight art + solo setup lands
 - P2: Ratings prompt after successful play sessions
 
@@ -79,5 +81,6 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 ## Longer-term
 
-- Android / Google Play (hosting already free on non-iOS in code)
+- (Moved) Android Solo Launch — see App Store And Growth
+- Android Online + Billing follow-up after solo ships
 

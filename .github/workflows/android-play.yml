@@ -1,0 +1,68 @@
+name: Android Play Internal
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  play-internal:
+    name: Build and submit to Play internal
+    runs-on: ubuntu-latest
+    environment: play
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Write Google Play service account
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${GOOGLE_SERVICE_ACCOUNT_JSON:-}" ]; then
+            echo "Set GOOGLE_SERVICE_ACCOUNT_JSON (full service account JSON) on the play environment."
+            exit 1
+          fi
+          printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > google-service-account.json
+          echo "Wrote google-service-account.json ($(wc -c < google-service-account.json) bytes)."
+
+      - name: Build Android app (EAS cloud)
+        env:
+          ANDROID_VERSION_CODE: ${{ github.run_number }}
+          EAS_BUILD_NO_EXPO_GO_WARNING: 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Android versionCode: $ANDROID_VERSION_CODE"
+          eas build \
+            --non-interactive \
+            --platform android \
+            --profile production-android \
+            --wait
+
+      - name: Submit to Play internal track
+        shell: bash
+        run: |
+          set -euo pipefail
+          eas submit \
+            --non-interactive \
+            --platform android \
+            --profile production \
+            --latest

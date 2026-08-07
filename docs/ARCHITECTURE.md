@@ -174,6 +174,17 @@ Setup: [TESTFLIGHT_CI.md](./TESTFLIGHT_CI.md). Reuse six Apple secrets from Homo
 
 Build numbers: GitHub `run_number` → `IOS_BUILD_NUMBER` → [`app.config.js`](../app.config.js).
 
+### Android Play (solo launch)
+
+Workflow: [`.github/workflows/android-play.yml`](../.github/workflows/android-play.yml)
+
+- EAS **cloud** build with profile `production-android` (EAS-managed keystore).
+- Submit to Play **internal** track (`releaseStatus: draft` until listing is complete).
+- Secrets on GitHub **`play`** environment: `EXPO_TOKEN`, `GOOGLE_SERVICE_ACCOUNT_JSON`.
+- `versionCode`: GitHub `run_number` → `ANDROID_VERSION_CODE`.
+
+Setup: [PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md).
+
 ### Optional: EAS cloud (uses monthly quota)
 
 ```bash

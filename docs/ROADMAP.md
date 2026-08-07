@@ -10,7 +10,16 @@ This roadmap is intentionally lightweight. It captures product direction without
 - Foreground sound effects and haptics only
 - App Store listing, privacy answers, screenshots, and TestFlight validation
 
-## Current: Delight + Solo Offline v1.1
+## Current: Android Solo Launch (Play Store v1)
+
+Goal: ship free Solo Mode on Google Play without multiplayer or billing.
+
+- EAS Android builds + Play internal CI ([PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md))
+- Join / Play online visible but gated with Coming soon
+- Three games offline; no IAP on Android yet
+- Follow-up: Android Online + Play Billing (parity with iOS host unlock)
+
+## Current: Delight + Solo Offline (iOS 1.2)
 
 Goal: make the three launch games feel more custom to Backseat Games, and let anyone play Solo Mode free without a relay or waiting room (pay only to host online).
 
@@ -37,7 +46,7 @@ Goal: make the app more useful across repeat road trips.
 
 ## Longer-Term Options
 
-- Android support using the relay join-code path
+- Android Online + Play Billing (join codes, host unlock)
 - Host migration if the host phone dies
 - Relay Sign Game audio snippets to other players, if privacy and review risk remain acceptable
 - Patch-based state sync if full snapshots ever become a performance issue

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Platform, StyleSheet, Text } from 'react-native';
 import { GameRecordRow } from '@/components/settings/GameRecordRow';
 import { SettingsLinkRow } from '@/components/settings/SettingsLinkRow';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
@@ -15,6 +15,7 @@ import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
 import { colors, fonts, spacing } from '@/theme';
+import { isOnlineMultiplayerAvailable } from '@/utils/platformFeatures';
 
 const GAME_TYPES: GameType[] = ['license-plates', 'sign-game', 'bingo'];
 
@@ -57,35 +58,44 @@ export default function SettingsScreen() {
 
   return (
     <SceneryScrollShell>
-      {requiresPurchase() ? (
-        <SettingsSection title="Hosting online">
-          <SettingsLinkRow
-            label="Unlock hosting online"
-            description={`One-time ${productPrice} — share join codes for the car. Solo stays free.`}
-            onPress={() => setPaywallOpen(true)}
-          />
-          <SettingsLinkRow
-            label="Restore purchases"
-            description="Already unlocked on this Apple ID?"
-            onPress={() => {
-              void handleRestore();
-            }}
-          />
-        </SettingsSection>
+      {isOnlineMultiplayerAvailable() ? (
+        requiresPurchase() ? (
+          <SettingsSection title="Hosting online">
+            <SettingsLinkRow
+              label="Unlock hosting online"
+              description={`One-time ${productPrice} — share join codes for the car. Solo stays free.`}
+              onPress={() => setPaywallOpen(true)}
+            />
+            <SettingsLinkRow
+              label="Restore purchases"
+              description="Already unlocked on this Apple ID?"
+              onPress={() => {
+                void handleRestore();
+              }}
+            />
+          </SettingsSection>
+        ) : (
+          <SettingsSection title="Hosting online">
+            <Text style={styles.recordHint}>
+              {canHost()
+                ? 'You can host online sessions on this device. Solo play is always free.'
+                : 'Solo play is free. Unlock to host online with a join code.'}
+            </Text>
+            <SettingsLinkRow
+              label="Restore purchases"
+              description="Re-sync your host-online unlock from the App Store"
+              onPress={() => {
+                void handleRestore();
+              }}
+            />
+          </SettingsSection>
+        )
       ) : (
         <SettingsSection title="Hosting online">
           <Text style={styles.recordHint}>
-            {canHost()
-              ? 'You can host online sessions on this device. Solo play is always free.'
-              : 'Solo play is free. Unlock to host online with a join code.'}
+            Solo Mode is free on Android. Join and Play online are coming soon — no purchase needed
+            for this version.
           </Text>
-          <SettingsLinkRow
-            label="Restore purchases"
-            description="Re-sync your host-online unlock from the App Store"
-            onPress={() => {
-              void handleRestore();
-            }}
-          />
         </SettingsSection>
       )}
       <SettingsSection title="Sound & Haptics">
@@ -134,7 +144,11 @@ export default function SettingsScreen() {
       <SettingsSection title="Help">
         <SettingsLinkRow
           label="Quick start tips"
-          description="Free solo, free join, and one-time unlock to host online"
+          description={
+            isOnlineMultiplayerAvailable()
+              ? 'Free solo, free join, and one-time unlock to host online'
+              : 'Free solo play now; multiplayer coming soon on Android'
+          }
           onPress={() => setTeachingOpen(true)}
         />
         <SettingsLinkRow
@@ -142,7 +156,7 @@ export default function SettingsScreen() {
           onPress={() => router.push('/settings/how-to-play')}
         />
         <SettingsLinkRow
-          label="Multiplayer tips"
+          label={Platform.OS === 'android' ? 'Android tips' : 'Multiplayer tips'}
           onPress={() => router.push('/settings/tips')}
         />
         <SettingsLinkRow label="About" onPress={() => router.push('/settings/about')} />

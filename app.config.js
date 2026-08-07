@@ -1,6 +1,7 @@
 /** @type {import('expo/config').ExpoConfig} */
 module.exports = () => {
   const buildNumber = process.env.IOS_BUILD_NUMBER?.trim() || '1';
+  const versionCode = Number.parseInt(process.env.ANDROID_VERSION_CODE?.trim() || '1', 10);
 
   return {
     expo: {
@@ -43,6 +44,7 @@ module.exports = () => {
         },
         predictiveBackGestureEnabled: false,
         package: 'com.homolworks.backseatgames',
+        versionCode: Number.isFinite(versionCode) && versionCode > 0 ? versionCode : 1,
       },
       web: {
         favicon: './assets/favicon.png',

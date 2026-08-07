@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, Platform, StyleSheet, Text, View } from 'react-native';
 import { BigButton } from '@/components/BigButton';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
-const CARDS = [
+const IOS_CARDS = [
   {
     title: 'Solo is always free',
     body: 'Start a Game anytime and play License Plates, Sign Game, or Travel Bingo offline on this phone — no purchase needed.',
@@ -18,15 +18,31 @@ const CARDS = [
   },
 ] as const;
 
+const ANDROID_CARDS = [
+  {
+    title: 'Solo is always free',
+    body: 'Start a Game anytime and play License Plates, Sign Game, or Travel Bingo offline on this phone — no purchase needed.',
+  },
+  {
+    title: 'Three games for the road',
+    body: 'Spot plates, race A to Z on signs, or fill a Travel Bingo card. Everything works without internet once the app is installed.',
+  },
+  {
+    title: 'Multiplayer coming soon',
+    body: 'Join and Play online will arrive in a future update. For now, leave Play online off and play solo on this phone.',
+  },
+] as const;
+
 type FirstRunTeachingProps = {
   visible: boolean;
   onDone: () => void;
 };
 
 export function FirstRunTeaching({ visible, onDone }: FirstRunTeachingProps) {
+  const cards = Platform.OS === 'android' ? ANDROID_CARDS : IOS_CARDS;
   const [index, setIndex] = useState(0);
-  const card = CARDS[index]!;
-  const isLast = index === CARDS.length - 1;
+  const card = cards[index]!;
+  const isLast = index === cards.length - 1;
 
   useEffect(() => {
     if (visible) {
@@ -39,7 +55,7 @@ export function FirstRunTeaching({ visible, onDone }: FirstRunTeachingProps) {
       <View style={styles.overlay}>
         <View style={styles.card}>
           <Text style={styles.eyebrow}>
-            {index + 1} of {CARDS.length}
+            {index + 1} of {cards.length}
           </Text>
           <Text style={styles.title}>{card.title}</Text>
           <Text style={styles.body}>{card.body}</Text>

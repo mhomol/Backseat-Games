@@ -15,6 +15,10 @@ import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
+import {
+  isOnlineMultiplayerAvailable,
+  MULTIPLAYER_COMING_SOON_MESSAGE,
+} from '@/utils/platformFeatures';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 const signToGameType: Record<string, GameType> = {
@@ -56,6 +60,11 @@ export default function HostSetupScreen() {
       setPlayOnline(false);
       return;
     }
+    if (!isOnlineMultiplayerAvailable()) {
+      setPlayOnline(false);
+      useSessionStore.setState({ toast: MULTIPLAYER_COMING_SOON_MESSAGE });
+      return;
+    }
     if (canHost()) {
       setPlayOnline(true);
       return;
@@ -94,6 +103,11 @@ export default function HostSetupScreen() {
   const handleSignPress = async (signId: string) => {
     const gameType = signToGameType[signId];
     if (!gameType || !canContinue || loading) {
+      return;
+    }
+
+    if (playOnline && !isOnlineMultiplayerAvailable()) {
+      useSessionStore.setState({ toast: MULTIPLAYER_COMING_SOON_MESSAGE });
       return;
     }
 
@@ -145,7 +159,11 @@ export default function HostSetupScreen() {
           <View style={styles.soloRow}>
             <SettingsToggle
               label="Play online"
-              description="Share a join code so others can play. Requires a one-time host unlock."
+              description={
+                isOnlineMultiplayerAvailable()
+                  ? 'Share a join code so others can play. Requires a one-time host unlock.'
+                  : 'Coming soon on Android. Solo Mode is free on this phone today.'
+              }
               value={playOnline}
               onValueChange={handlePlayOnlineChange}
             />
