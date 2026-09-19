@@ -255,14 +255,34 @@ Solo: Host setup → leave Play online off → tap a game sign.
 
 ### Ship checklist
 
-- [ ] Run **Actions → iOS TestFlight** on `master` after this release is pushed
-- [ ] Install TestFlight build; confirm no local-network / background-audio prompts
-- [ ] Confirm Solo Mode starts License Plates / Sign Game / Bingo with airplane mode on
-- [ ] Confirm bingo cells show large per-item icons + readable labels across categories; plates show landmark scenes with one frame
-- [ ] Capture fresh App Store screenshots (home, bingo board, plates grid, solo setup, first-run / paywall)
-- [ ] Drop captures into `assets/marketing/app-store-screenshots/raw/` then run `npm run prepare:app-store-screenshots`
-- [ ] Create App Store Connect version **1.1** and attach the new build
-- [ ] Paste **What’s New** (customer) + App Review notes above; submit for review
+- [x] Run **Actions → iOS TestFlight** on `master` after this release is pushed
+- [x] Install TestFlight build; confirm no local-network / background-audio prompts
+- [x] Confirm Solo Mode starts License Plates / Sign Game / Bingo with airplane mode on
+- [x] Confirm bingo cells show large per-item icons + readable labels across categories; plates show landmark scenes with one frame
+- [x] Capture fresh App Store screenshots (home, bingo board, plates grid, solo setup, first-run / paywall)
+- [x] Drop captures into `assets/marketing/app-store-screenshots/raw/` then run `npm run prepare:app-store-screenshots`
+- [x] Create App Store Connect version **1.1** / **1.2.0** and attach the new build
+- [x] Paste **What’s New** (customer) + App Review notes above; submit for review
+
+---
+
+## Version 1.2.1 — Accessibility follow-up
+
+Marketing version: **1.2.1**. Apple approved **1.2.0**, so that train is closed for new builds.
+
+### What’s New (App Store Connect — paste into version 1.2.1)
+
+```
+What’s new in 1.2.1
+
+• Host setup and the host unlock sheet work better with Larger Accessibility Sizes
+```
+
+### Ship checklist
+
+- [ ] Run **Actions → iOS TestFlight** on `master` after this version bump is pushed
+- [ ] Create App Store Connect version **1.2.1** and attach the new build
+- [ ] Paste **What’s New** above; submit for review when ready
 
 ---
 

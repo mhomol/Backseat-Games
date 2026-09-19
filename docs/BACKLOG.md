@@ -61,7 +61,7 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 ## App Store And Growth
 
-- P1: TestFlight build + App Store submission for delight + Solo offline (foreground audio note; marketing version is 1.2.0)
+- P1: TestFlight build + App Store submission for delight + Solo offline (foreground audio note; marketing version is 1.2.1)
 - Done: Refresh screenshots after delight art + solo setup lands
 - P2: Ratings prompt after successful play sessions
 
