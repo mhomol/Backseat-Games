@@ -13,8 +13,9 @@ jobs:
     runs-on: macos-26
     environment: testflight
     env:
-      # Always defined so the always() artifact step has a path even if the build never runs.
-      IPA_PATH: ${{ runner.temp }}/backseat-games.ipa
+      # Job-level env cannot use `runner.*`. github.workspace is always defined here
+      # so the always() artifact step still has a path if the build never runs.
+      IPA_PATH: ${{ github.workspace }}/backseat-games.ipa
     steps:
       - uses: actions/checkout@v5
 
