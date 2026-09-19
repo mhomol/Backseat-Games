@@ -141,6 +141,8 @@ Current project: `@sevign/backseat-games` — `3760b2e7-04b8-4d7f-b7c1-b6b21e65c
 
 Workflow file: [`.github/workflows/ios-testflight.yml`](../.github/workflows/ios-testflight.yml)
 
+CI uses **Node 22** (not `.nvmrc`) because current `eas-cli` cannot install on Node 20.
+
 ## Build numbers
 
 CI sets **`IOS_BUILD_NUMBER`** from the GitHub Actions **`run_number`** (monotonic per workflow). [`app.config.js`](../app.config.js) maps that to `ios.buildNumber` / `CFBundleVersion`.

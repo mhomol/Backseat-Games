@@ -12,13 +12,17 @@ jobs:
     # App Store Connect requires iOS 26 SDK (Xcode 26+). macos-latest is still Xcode 16.x.
     runs-on: macos-26
     environment: testflight
+    env:
+      # Always defined so the always() artifact step has a path even if the build never runs.
+      IPA_PATH: ${{ runner.temp }}/backseat-games.ipa
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
+          # eas-cli latest requires Node >=22 (@oclif/plugin-autocomplete). SDK 56 min is 20.19.x.
+          node-version: '22'
           cache: npm
           cache-dependency-path: package-lock.json
 
@@ -26,10 +30,11 @@ jobs:
         run: npm ci
 
       - name: Setup EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@v9
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+          packager: npm
 
       - name: Import code signing certificate
         env:
@@ -126,8 +131,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          IPA_PATH="$RUNNER_TEMP/backseat-games.ipa"
-          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
           echo "iOS build number (CFBundleVersion): $IOS_BUILD_NUMBER"
           eas build \
             --local \
@@ -225,7 +228,7 @@ jobs:
             --apiIssuer "$ISSUER_ID"
 
       - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: backseat-games-ios-ipa
