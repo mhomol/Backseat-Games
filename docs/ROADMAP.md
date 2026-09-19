@@ -10,13 +10,11 @@ This roadmap is intentionally lightweight. It captures product direction without
 - Foreground sound effects and haptics only
 - App Store listing, privacy answers, screenshots, and TestFlight validation
 
-## Current: Android Solo Launch (Play Store v1)
+## On hold: Android (Play Store)
 
-Goal: ship free Solo Mode on Google Play without multiplayer or billing.
+Paused until we can recruit enough Play testers. Do not treat Google Play as an active release track.
 
-- EAS Android builds + Play internal CI ([PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md))
-- Join / Play online visible but gated with Coming soon
-- Three games offline; no IAP on Android yet
+- Solo launch (free offline, Join / Play online gated Coming soon) — [PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md)
 - Follow-up: Android Online + Play Billing (parity with iOS host unlock)
 
 ## Current: Delight + Solo Offline (iOS 1.2)
@@ -31,7 +29,7 @@ Goal: make the three launch games feel more custom to Backseat Games, and let an
 - First-run teaching: solo free; pay once to host online
 - Claim / bingo / letter micro-animations
 - Solo Mode free on host setup (Play online off); IAP gates Play online / join codes
-- Screenshot refresh after TestFlight validation
+- Done: Screenshot refresh after TestFlight validation
 
 ## Later: Retention And Family Utility
 
@@ -46,7 +44,6 @@ Goal: make the app more useful across repeat road trips.
 
 ## Longer-Term Options
 
-- Android Online + Play Billing (join codes, host unlock)
 - Host migration if the host phone dies
 - Relay Sign Game audio snippets to other players, if privacy and review risk remain acceptable
 - Patch-based state sync if full snapshots ever become a performance issue
@@ -57,4 +54,5 @@ Goal: make the app more useful across repeat road trips.
 - Prefer polish on the existing three games before adding new games.
 - Keep App Store review risk low: no background audio, no local-network permission, no analytics unless there is a clear reason.
 - Treat the brand art as the north star for UI, icons, and sounds.
+- Android / Google Play is on hold until tester recruitment is realistic.
 - Backlog details live in [BACKLOG.md](./BACKLOG.md).

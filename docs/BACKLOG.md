@@ -47,25 +47,22 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 ## Accessibility
 
-- P1: Support Larger Accessibility Sizes on host setup
-  - The setup section box currently grows over and obscures the game signs.
-  - Make the layout adapt or scroll while keeping the game choices visible and reachable.
-- P1: Keep the Host IAP sheet within the viewport at larger text sizes
-  - The additional text currently pushes the dialog past the top edge of smaller phones.
-  - Respect safe areas and allow scrolling without hiding purchase, restore, or dismiss controls.
+- Done: Support Larger Accessibility Sizes on host setup
+  - Setup card is height-capped above the game signs and scrolls so the signs stay tappable.
+- Done: Keep the Host IAP sheet within the viewport at larger text sizes
+  - Sheet respects the top/bottom safe area and scrolls so unlock, restore, and dismiss stay reachable.
 
 ## Multiplayer And Reliability
 
-- P1: Keep relay reconnect behavior battle-tested
+- Done: Relay reconnect is implemented (SignalR automatic reconnect, re-JOIN, connection banner)
+- P2: Focused tests around session reconnect
 - P2: Host recovery / host migration decision
 - P3: Patch-based state sync
 
 ## App Store And Growth
 
-- P1: v1.1 TestFlight build + App Store submission (Delight + Solo offline; foreground audio note)
-- P1: Android Solo Launch — Play internal + listing ([PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md))
-- P2: Android Online + Play Billing (join codes, host unlock parity)
-- P2: Refresh screenshots after delight art + solo setup lands
+- P1: TestFlight build + App Store submission for delight + Solo offline (foreground audio note; marketing version is 1.2.0)
+- Done: Refresh screenshots after delight art + solo setup lands
 - P2: Ratings prompt after successful play sessions
 
 ## Monetization
@@ -75,12 +72,12 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 ## Technical Debt
 
-- P1: Keep permissions minimal (no background audio, no local network)
-- P2: Focused tests around session reconnect
 - P3: Checklist for plist-impacting plugins before every App Store submission
 
-## Longer-term
+## On hold: Android
 
-- (Moved) Android Solo Launch — see App Store And Growth
-- Android Online + Billing follow-up after solo ships
+Paused until we can recruit enough Play testers. Keep the existing Android gates and Play checklist, but do not prioritize further Play Store work.
+
+- Android Solo Launch — Play internal + listing ([PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md))
+- Android Online + Play Billing (join codes, host unlock parity)
 

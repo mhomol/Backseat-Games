@@ -1,4 +1,5 @@
-import { Linking, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Linking, Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BigButton } from '@/components/BigButton';
 import { APP_URLS } from '@/constants/urls';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
@@ -27,41 +28,56 @@ export function HostUnlockSheet({
   onRestore,
   onDismiss,
 }: HostUnlockSheetProps) {
+  const insets = useSafeAreaInsets();
+  const { height: windowHeight } = useWindowDimensions();
+  const sheetMaxHeight = windowHeight - insets.top - spacing.lg;
+
   return (
     <Modal transparent animationType="slide" visible={visible} onRequestClose={onDismiss}>
       <Pressable style={styles.overlay} onPress={onDismiss}>
-        <Pressable style={styles.sheet} onPress={(event) => event.stopPropagation()}>
-          <Text style={styles.title}>Unlock hosting online</Text>
-          <Text style={styles.lead}>
-            Turn on Play online to share a join code. Pay once and host multiplayer forever on this
-            Apple ID — solo play stays free, and joining stays free for everyone else.
-          </Text>
-
-          <View style={styles.bullets}>
-            {BULLETS.map((bullet) => (
-              <Text key={bullet} style={styles.bullet}>
-                • {bullet}
-              </Text>
-            ))}
-          </View>
-
-          <BigButton
-            label={`Unlock for ${priceLabel}`}
-            onPress={onPurchase}
-            loading={busy}
-            variant="accent"
-          />
-          <BigButton label="Restore purchases" onPress={onRestore} disabled={busy} variant="secondary" />
-          <Pressable onPress={onDismiss} disabled={busy} style={styles.dismiss}>
-            <Text style={styles.dismissLabel}>Not now</Text>
-          </Pressable>
-
-          <Text style={styles.legal}>
-            One-time purchase for life on this Apple ID. No subscription.{' '}
-            <Text style={styles.link} onPress={() => void Linking.openURL(APP_URLS.privacy)}>
-              Privacy policy
+        <Pressable
+          style={[styles.sheet, { maxHeight: sheetMaxHeight, paddingBottom: Math.max(insets.bottom, spacing.md) }]}
+          onPress={(event) => event.stopPropagation()}
+          accessibilityViewIsModal
+        >
+          <ScrollView
+            bounces={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.sheetContent}
+            style={[styles.sheetScroll, { maxHeight: sheetMaxHeight }]}
+          >
+            <Text style={styles.title}>Unlock hosting online</Text>
+            <Text style={styles.lead}>
+              Turn on Play online to share a join code. Pay once and host multiplayer forever on this
+              Apple ID — solo play stays free, and joining stays free for everyone else.
             </Text>
-          </Text>
+
+            <View style={styles.bullets}>
+              {BULLETS.map((bullet) => (
+                <Text key={bullet} style={styles.bullet}>
+                  • {bullet}
+                </Text>
+              ))}
+            </View>
+
+            <BigButton
+              label={`Unlock for ${priceLabel}`}
+              onPress={onPurchase}
+              loading={busy}
+              variant="accent"
+            />
+            <BigButton label="Restore purchases" onPress={onRestore} disabled={busy} variant="secondary" />
+            <Pressable onPress={onDismiss} disabled={busy} style={styles.dismiss}>
+              <Text style={styles.dismissLabel}>Not now</Text>
+            </Pressable>
+
+            <Text style={styles.legal}>
+              One-time purchase for life on this Apple ID. No subscription.{' '}
+              <Text style={styles.link} onPress={() => void Linking.openURL(APP_URLS.privacy)}>
+                Privacy policy
+              </Text>
+            </Text>
+          </ScrollView>
         </Pressable>
       </Pressable>
     </Modal>
@@ -81,8 +97,15 @@ const styles = StyleSheet.create({
     borderWidth: borders.extraThick,
     borderColor: colors.skyBlueDark,
     borderBottomWidth: 0,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+  },
+  sheetScroll: {
+    flexGrow: 0,
+  },
+  sheetContent: {
     gap: spacing.md,
+    flexGrow: 1,
   },
   title: {
     fontFamily: fonts.displayBold,
