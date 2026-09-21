@@ -19,7 +19,7 @@ Paused until we can recruit enough Play testers. Do not treat Google Play as an 
 
 ## Current: Delight + Solo Offline (iOS 1.2)
 
-Shipped through App Store **1.2.1** (approved).
+Shipped through App Store **1.2.1** (approved). Next marketing train: **1.3.0**.
 
 Goal: make the three launch games feel more custom to Backseat Games, and let anyone play Solo Mode free without a relay or waiting room (pay only to host online).
 

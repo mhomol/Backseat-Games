@@ -280,8 +280,31 @@ What’s new in 1.2.1
 
 ### Ship checklist
 
+- [x] Run **Actions → iOS TestFlight** on `master` after this version bump is pushed
+- [x] Create App Store Connect version **1.2.1** and attach the new build
+- [x] Paste **What’s New** above; submit for review when ready
+
+---
+
+## Version 1.3.0 — P2 polish
+
+Marketing version: **1.3.0**. Apple approved **1.2.1**, so that train is closed for new builds.
+
+### What’s New (App Store Connect — paste into version 1.3)
+
+```
+What’s new in 1.3
+
+• Sign Game — if a word doesn’t count, you stay on the entry screen and see why (plus a clearer “try again” sound)
+• License Plates — a lifetime spotted collection on this iPhone (unclaiming later doesn’t erase it)
+• Fresh scenery — more waiting-room and in-game backgrounds that stay the same for everyone in the car
+• If the host’s phone drops off, passengers see a clear banner: keep the app open, or start a new join code if they can’t come back
+```
+
+### Ship checklist
+
 - [ ] Run **Actions → iOS TestFlight** on `master` after this version bump is pushed
-- [ ] Create App Store Connect version **1.2.1** and attach the new build
+- [ ] Create App Store Connect version **1.3.0** and attach the new build
 - [ ] Paste **What’s New** above; submit for review when ready
 
 ---
