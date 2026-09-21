@@ -33,7 +33,7 @@ Default rules live in **Settings**. When you host, the waiting room copies those
 
 ## Your record (this device)
 
-**Settings → Your record** shows wins, losses, and ties (**W–L–T**) for each game type. Stats are saved on **this iPhone only** — no internet or Game Center required. A round counts when the game reaches the finished celebration (host ends the game, or someone wins bingo/sign spotting). Ties and “nobody scored” endings count in the **T** column. Each phone tracks its own player in the car.
+**Settings → Your record** shows wins, losses, and ties (**W–L–T**) for each game type. Stats are saved on **this iPhone only** — no internet or Game Center required. A round counts when the game reaches the finished celebration (host ends the game, or someone wins bingo/sign spotting). Ties and “nobody scored” endings count in the **T** column. Each phone tracks its own player in the car. License plates you claim are also saved as a **lifetime spotted collection** on this phone (unclaiming later does not remove them).
 
 ## Shared behavior
 
@@ -51,12 +51,14 @@ If you break a rule, you'll see a friendly popup — for example:
 
 ### If someone disconnects
 
-If a player loses signal or closes the app, the host keeps the game running. To get back in:
+If a **passenger** loses signal or closes the app, the host keeps the game running. To get back in:
 
 1. Re-open Backseat Games and keep it **in the foreground**.
 2. On **Join**, enter the same **join code** and **player name** as before.
 
 The app remembers your player for that trip when you rejoin with the same name. In dead zones with no data, you may need to wait until signal returns.
+
+If the **host’s phone** leaves (dies, force-quit, or loses data), passengers stay in the room and see a banner. Keep the app open. The host should reopen Backseat Games so the same join code works again. If they cannot come back, start a **new game** with a new join code. The app does not promote a passenger to host.
 
 ---
 
@@ -188,6 +190,6 @@ These differ slightly from how some families played growing up:
 - No Android support yet
 - No cloud accounts or cross-trip leaderboards
 - Voice input requires a TestFlight/dev build (not Expo Go)
-- Host migration not supported if host phone dies
+- Host handoff is not supported if the host phone dies — passengers see a banner; host should reopen, or start a new join code
 - App must stay in foreground for reliable multiplayer sync
 - **Push notifications:** entitlement is included in native builds, but no alerts are sent yet (see [PUSH_SETUP.md](./PUSH_SETUP.md))

@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { BigButton } from '@/components/BigButton';
+import { ConnectionBanner } from '@/components/ConnectionBanner';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
@@ -37,6 +38,9 @@ export default function LobbyScreen() {
   const updateSessionRules = useSessionStore((state) => state.updateSessionRules);
   const scenerySource = useSessionGameScenery();
   const relayJoinCode = useSessionStore((state) => state.relayJoinCode);
+  const hostPresent = useSessionStore((state) => state.hostPresent);
+  const isSolo = useSessionStore((state) => state.isSolo);
+  const connectionStatus = useSessionStore((state) => state.connectionStatus);
 
   useEffect(() => {
     if (session?.phase === 'playing' && session.gameType) {
@@ -69,6 +73,13 @@ export default function LobbyScreen() {
 
   return (
     <SceneryScrollShell scenerySource={scenerySource} contentContainerStyle={styles.container}>
+      {!isHost && !isSolo && !hostPresent ? <ConnectionBanner status="host-away" /> : null}
+      {!isSolo &&
+      (connectionStatus === 'reconnecting' || connectionStatus === 'disconnected') ? (
+        <ConnectionBanner
+          status={connectionStatus === 'reconnecting' ? 'reconnecting' : 'disconnected'}
+        />
+      ) : null}
       {isHost && relayJoinCode ? (
         <View style={styles.joinCodeCard}>
           <Text style={styles.joinCodeLabel}>Share this join code</Text>

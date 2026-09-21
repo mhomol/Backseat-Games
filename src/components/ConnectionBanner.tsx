@@ -2,13 +2,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 type ConnectionBannerProps = {
-  status: 'reconnecting' | 'disconnected';
+  status: 'reconnecting' | 'disconnected' | 'host-away';
 };
 
 const MESSAGES = {
   reconnecting: 'Reconnecting… keep the app open.',
   disconnected:
     'Connection lost. Re-open the app and re-enter the host join code with the same name.',
+  'host-away':
+    "The host's phone left the trip. Keep this app open so they can come back. If they can't, start a new game with a new join code.",
 } as const;
 
 export function ConnectionBanner({ status }: ConnectionBannerProps) {
@@ -16,7 +18,7 @@ export function ConnectionBanner({ status }: ConnectionBannerProps) {
     <View
       style={[
         styles.banner,
-        status === 'disconnected' ? styles.disconnected : styles.reconnecting,
+        status === 'disconnected' || status === 'host-away' ? styles.disconnected : styles.reconnecting,
       ]}
     >
       <Text style={styles.text}>{MESSAGES[status]}</Text>

@@ -4,6 +4,7 @@ import { loadStats, saveStats } from '../services/statsStorage';
 import type { SessionState } from '../types/game';
 import type { PlayerStats } from '../types/stats';
 import { recordGameResult } from '../utils/recordGameResult';
+import { maybeRequestReview } from '../services/reviewPrompt';
 
 interface StatsStore {
   stats: PlayerStats;
@@ -32,5 +33,6 @@ export const useStatsStore = create<StatsStore>((set, get) => ({
     }
     set({ stats: result.stats });
     void saveStats(result.stats);
+    void maybeRequestReview();
   },
 }));

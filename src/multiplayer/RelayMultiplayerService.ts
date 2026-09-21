@@ -1,9 +1,15 @@
 import type { GameType, NetworkMessage } from '../types/game';
 import type {
   ConnectionChangeHandler,
+  HostPresenceHandler,
   MessageHandler,
   MultiplayerService,
 } from './types';
+import {
+  beginRelayReconnect,
+  isHostGoneHubError,
+  resumeRelayAfterReconnect,
+} from './relayReconnect';
 import { getRelayBaseUrl, normalizeJoinCode } from '../constants/relay';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -29,6 +35,7 @@ export class RelayMultiplayerService implements MultiplayerService {
   private connection: HubConnection | null = null;
   private messageHandler: MessageHandler | null = null;
   private connectionHandler: ConnectionChangeHandler | null = null;
+  private hostPresenceHandler: HostPresenceHandler | null = null;
   private joinCode: string | null = null;
   private sessionId: string | null = null;
   private hosting = false;
@@ -120,7 +127,11 @@ export class RelayMultiplayerService implements MultiplayerService {
       return;
     }
 
-    void this.connection.invoke('RouteMessage', this.joinCode, JSON.stringify(message));
+    void this.connection.invoke('RouteMessage', this.joinCode, JSON.stringify(message)).catch((error) => {
+      if (isHostGoneHubError(error)) {
+        this.hostPresenceHandler?.(false);
+      }
+    });
   }
 
   onMessage(handler: MessageHandler): () => void {
@@ -128,6 +139,15 @@ export class RelayMultiplayerService implements MultiplayerService {
     return () => {
       if (this.messageHandler === handler) {
         this.messageHandler = null;
+      }
+    };
+  }
+
+  onHostPresence(handler: HostPresenceHandler): () => void {
+    this.hostPresenceHandler = handler;
+    return () => {
+      if (this.hostPresenceHandler === handler) {
+        this.hostPresenceHandler = null;
       }
     };
   }
@@ -229,21 +249,26 @@ export class RelayMultiplayerService implements MultiplayerService {
       }
     });
 
+    this.connection.on('HostStatus', (hostPresent: boolean) => {
+      this.hostPresenceHandler?.(Boolean(hostPresent));
+    });
+
     this.connection.onreconnecting(() => {
-      this.connectionHandler?.('reconnecting');
+      beginRelayReconnect(this.connectionHandler);
     });
 
     this.connection.onreconnected(() => {
-      void this.registerInRoom().then(() => {
-        if (!this.hosting && this.joinCode) {
-          const joinMessage: NetworkMessage = { type: 'JOIN', name: this.displayName };
-          void this.connection?.invoke(
-            'RouteMessage',
-            this.joinCode,
-            JSON.stringify(joinMessage),
-          );
-        }
-        this.connectionHandler?.('connected');
+      void resumeRelayAfterReconnect({
+        hosting: this.hosting,
+        joinCode: this.joinCode,
+        displayName: this.displayName,
+        registerInRoom: () => this.registerInRoom(),
+        routeJoinMessage: async (joinCode, displayName) => {
+          const joinMessage: NetworkMessage = { type: 'JOIN', name: displayName };
+          await this.connection?.invoke('RouteMessage', joinCode, JSON.stringify(joinMessage));
+        },
+        onStatus: this.connectionHandler,
+        onHostGone: () => this.hostPresenceHandler?.(false),
       });
     });
 

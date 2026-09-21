@@ -25,13 +25,13 @@ import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { Scoreboard } from '@/components/Scoreboard';
 import { ALPHABET, letterMatchHint } from '@/games/signGameUtils';
-import { getSignGameLeaderboard } from '@/games/signGame';
+import { getSignGameLeaderboard, getSignWordRejection } from '@/games/signGame';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { useSignGameSpeech } from '@/hooks/useSignGameSpeech';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
-import { playClaimFeedback } from '@/services/feedback';
+import { playClaimFeedback, playInvalidFeedback } from '@/services/feedback';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
 
 export default function SignGameScreen() {
@@ -43,6 +43,7 @@ export default function SignGameScreen() {
   const scenerySource = useSessionGameScenery();
   const [modalOpen, setModalOpen] = useState(false);
   const [word, setWord] = useState('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const letterScale = useSharedValue(1);
 
   const requestEnd = useCallback(() => guard.requestEndGame(), [guard]);
@@ -106,6 +107,7 @@ export default function SignGameScreen() {
     stopListening();
     setModalOpen(false);
     setWord('');
+    setSubmitError(null);
   };
 
   const submitWord = () => {
@@ -113,11 +115,18 @@ export default function SignGameScreen() {
     if (trimmed.length < 2) {
       return;
     }
-    dispatchAction({
-      type: 'SUBMIT_SIGN_WORD',
+    const action = {
+      type: 'SUBMIT_SIGN_WORD' as const,
       letter: currentLetter,
       word: trimmed,
-    });
+    };
+    const rejection = getSignWordRejection(session, localPlayerId, action);
+    if (rejection) {
+      setSubmitError(rejection);
+      void playInvalidFeedback();
+      return;
+    }
+    dispatchAction(action);
     void playClaimFeedback();
     closeModal();
   };
@@ -193,13 +202,19 @@ export default function SignGameScreen() {
               <Text style={styles.modalTitle}>Letter {currentLetter}</Text>
               <TextInput
                 value={word}
-                onChangeText={setWord}
+                onChangeText={(next) => {
+                  setWord(next);
+                  if (submitError) {
+                    setSubmitError(null);
+                  }
+                }}
                 placeholder="Type the word you saw"
                 style={styles.input}
                 autoCapitalize="words"
                 autoFocus
                 onSubmitEditing={submitWord}
               />
+              {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
 
               {available ? (
                 <Pressable
@@ -354,6 +369,13 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     fontFamily: fonts.body,
     fontSize: 18,
+  },
+  submitError: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 15,
+    color: colors.coralDark,
+    textAlign: 'center',
+    lineHeight: 20,
   },
   voiceButton: {
     backgroundColor: colors.cloudWhite,

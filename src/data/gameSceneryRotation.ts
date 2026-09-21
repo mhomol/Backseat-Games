@@ -51,6 +51,21 @@ export const gameSceneryRotation: GameSceneryEntry[] = [
     label: 'Golden Gate bridge',
     source: require('../../assets/branding/game-scenery/golden-gate-blue-sky.webp'),
   },
+  {
+    id: 'host-hero-blue-sky',
+    label: 'Host hills and game signs',
+    source: require('../../assets/branding/game-scenery/host-hero-blue-sky.webp'),
+  },
+  {
+    id: 'join-hero-blue-sky',
+    label: 'Join the open road',
+    source: require('../../assets/branding/game-scenery/join-hero-blue-sky.webp'),
+  },
+  {
+    id: 'home-hero-blue-sky',
+    label: 'Home highway signs',
+    source: require('../../assets/branding/game-scenery/home-hero-blue-sky.webp'),
+  },
 ];
 
 export function sceneryIndexForSession(sessionId: string): number {

@@ -17,5 +17,8 @@ Target size: **720×1456** (same as `waiting-hero.webp`). The promote script res
 | `serengeti-blue-sky` | `serengeti-blue-sky.webp` | Serengeti safari |
 | `city-blue-sky` | `city-blue-sky.webp` | City street |
 | `golden-gate-blue-sky` | `golden-gate-blue-sky.webp` | Golden Gate bridge |
+| `host-hero-blue-sky` | `host-hero-blue-sky.webp` | Host hills and game signs |
+| `join-hero-blue-sky` | `join-hero-blue-sky.webp` | Join the open road |
+| `home-hero-blue-sky` | `home-hero-blue-sky.webp` | Home highway signs |
 
 All players in a session see the same pick (derived from session id).

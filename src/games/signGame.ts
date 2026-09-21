@@ -106,6 +106,15 @@ export function applySignGameAction(
   };
 }
 
+export function getSignWordRejection(
+  session: SessionState,
+  playerId: string,
+  action: GameAction,
+): string | null {
+  const result = applySignGameAction(session, playerId, action);
+  return result.ok ? null : result.reason;
+}
+
 export function getSignGameLeaderboard(
   state: SignGameState,
   players: SessionState['players'],

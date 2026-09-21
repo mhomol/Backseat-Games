@@ -19,6 +19,7 @@ public sealed class GameHub(RoomRegistry registry) : Hub
         if (isHost)
         {
             room.HostConnectionId = Context.ConnectionId;
+            await Clients.Group(room.GroupName).SendAsync("HostStatus", true);
         }
 
         room.ConnectionPlayers[Context.ConnectionId] = playerId;
@@ -73,9 +74,14 @@ public sealed class GameHub(RoomRegistry registry) : Hub
         }
     }
 
-    public override Task OnDisconnectedAsync(Exception? exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        registry.RemoveConnection(Context.ConnectionId);
-        return base.OnDisconnectedAsync(exception);
+        var (room, hostLeft) = registry.RemoveConnection(Context.ConnectionId);
+        if (room is not null && hostLeft)
+        {
+            await Clients.Group(room.GroupName).SendAsync("HostStatus", false);
+        }
+
+        await base.OnDisconnectedAsync(exception);
     }
 }

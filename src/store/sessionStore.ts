@@ -8,7 +8,6 @@ import type {
   SessionState,
 } from '../types/game';
 import {
-  addPlayer,
   applyAction,
   createSession,
   finishGame,
@@ -27,7 +26,10 @@ import {
 import { usePreferencesStore } from './preferencesStore';
 import { usePurchaseStore } from './purchaseStore';
 import { useStatsStore } from './statsStore';
+import { resolveIncomingJoin } from '../games/hostJoin';
+import { collectNewlySpottedPlates } from '../utils/collectSpottedPlates';
 import { canStartHostedSession } from '../utils/hostEntitlement';
+import { usePlateCollectionStore } from './plateCollectionStore';
 import type { GameRules } from '../types/preferences';
 
 type HostGameOptions = {
@@ -42,6 +44,8 @@ interface SessionStore {
   isSolo: boolean;
   session: SessionState | null;
   connectionStatus: 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'disconnected' | 'error';
+  /** Guests: false when the host phone has left the relay room. Hosts/solo stay true. */
+  hostPresent: boolean;
   relayJoinCode: string | null;
   toast: string | null;
   initialized: boolean;
@@ -68,17 +72,21 @@ function playerFromLocal(id: string, name: string, isHost: boolean): Player {
 export const useSessionStore = create<SessionStore>((set, get) => {
   let unsubscribeMessages: (() => void) | null = null;
   let unsubscribeConnection: (() => void) | null = null;
+  let unsubscribeHostPresence: (() => void) | null = null;
 
   const multiplayer = getMultiplayerService();
 
   const commitSession = (
     nextSession: SessionState,
-    extra?: Partial<Pick<SessionStore, 'connectionStatus' | 'localPlayerId' | 'toast'>>,
+    extra?: Partial<Pick<SessionStore, 'connectionStatus' | 'localPlayerId' | 'toast' | 'hostPresent'>>,
   ) => {
     const previousSession = get().session;
+    const localPlayerId = extra?.localPlayerId ?? get().localPlayerId;
     useStatsStore
       .getState()
-      .recordFinishedSession(previousSession, nextSession, get().localPlayerId);
+      .recordFinishedSession(previousSession, nextSession, localPlayerId);
+    const spotted = collectNewlySpottedPlates(previousSession, nextSession, localPlayerId);
+    usePlateCollectionStore.getState().recordSpotted(spotted);
     set({ session: nextSession, ...extra });
   };
 
@@ -91,33 +99,31 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         if (!state.isHost || !state.session) {
           return;
         }
-        const joinerName = message.name.trim();
-        const existingPlayer = state.session.players.find(
-          (player) =>
-            !player.isHost &&
-            player.name.trim().toLowerCase() === joinerName.toLowerCase(),
+        const joinerId = fromPeerId ?? uuidv4();
+        const resolution = resolveIncomingJoin(
+          state.session,
+          message.name,
+          joinerId,
+          (id, name) => playerFromLocal(id, name, false),
         );
-        if (existingPlayer) {
+        if (resolution.kind === 'rewelcome') {
           multiplayer.send({
             type: 'WELCOME',
-            playerId: existingPlayer.id,
+            playerId: resolution.playerId,
             state: state.session,
           });
           break;
         }
-        const joinerId = fromPeerId ?? uuidv4();
-        const joiner = playerFromLocal(joinerId, message.name, false);
-        const nextSession = addPlayer(state.session, joiner);
-        commitSession(nextSession);
+        commitSession(resolution.nextSession);
         multiplayer.send({
           type: 'WELCOME',
-          playerId: joinerId,
-          state: nextSession,
+          playerId: resolution.player.id,
+          state: resolution.nextSession,
         });
         multiplayer.send({
           type: 'PLAYER_JOINED',
-          player: joiner,
-          state: nextSession,
+          player: resolution.player,
+          state: resolution.nextSession,
         });
         break;
       }
@@ -126,6 +132,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           commitSession(message.state, {
             localPlayerId: message.playerId,
             connectionStatus: 'connected',
+            hostPresent: true,
           });
           const joinCode = multiplayer.getJoinCode();
           if (joinCode) {
@@ -182,6 +189,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     isSolo: false,
     session: null,
     connectionStatus: 'idle',
+    hostPresent: true,
     relayJoinCode: null,
     toast: null,
     initialized: false,
@@ -206,6 +214,14 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           set({ connectionStatus: 'disconnected' });
         }
       }) ?? null;
+      unsubscribeHostPresence?.();
+      unsubscribeHostPresence = multiplayer.onHostPresence?.((present) => {
+        const current = get();
+        if (!current.session || current.isHost || current.isSolo) {
+          return;
+        }
+        set({ hostPresent: present });
+      }) ?? null;
       const savedName = await loadSavedPlayerName();
       if (savedName) {
         set({ localPlayerName: savedName });
@@ -216,14 +232,17 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     reset: () => {
       unsubscribeMessages?.();
       unsubscribeConnection?.();
+      unsubscribeHostPresence?.();
       unsubscribeMessages = null;
       unsubscribeConnection = null;
+      unsubscribeHostPresence = null;
       void clearSessionIdentity();
       set({
         session: null,
         isHost: false,
         isSolo: false,
         connectionStatus: 'idle',
+        hostPresent: true,
         toast: null,
         relayJoinCode: null,
         localPlayerId: uuidv4(),
@@ -263,6 +282,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           localPlayerName: hostName,
           session,
           connectionStatus: 'idle',
+          hostPresent: true,
           relayJoinCode: null,
         });
         return sessionId;
@@ -285,6 +305,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         localPlayerName: hostName,
         session,
         connectionStatus: 'connected',
+        hostPresent: true,
         relayJoinCode: multiplayer.getJoinCode(),
       });
       return sessionId;
@@ -401,6 +422,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         isHost: false,
         isSolo: false,
         connectionStatus: 'idle',
+        hostPresent: true,
         toast: null,
         relayJoinCode: null,
       });

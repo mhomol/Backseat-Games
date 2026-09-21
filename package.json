@@ -38,6 +38,7 @@
     "expo-speech-recognition": "^56.0.1",
     "expo-splash-screen": "~56.0.10",
     "expo-status-bar": "~56.0.4",
+    "expo-store-review": "~56.0.4",
     "lottie-react-native": "~7.3.4",
     "react": "19.2.3",
     "react-native": "0.85.3",

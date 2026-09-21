@@ -7,6 +7,8 @@ export type ConnectionChangeHandler = (
   status: 'connected' | 'reconnecting' | 'disconnected',
 ) => void;
 
+export type HostPresenceHandler = (hostPresent: boolean) => void;
+
 export interface MultiplayerService {
   readonly mode: MultiplayerMode;
   initialize(): Promise<void>;
@@ -27,4 +29,5 @@ export interface MultiplayerService {
   registerHostedSessionGameType(sessionId: string, gameType: GameType | null): void;
   setLocalPeerId?(peerId: string): void;
   onConnectionChange?(handler: ConnectionChangeHandler): () => void;
+  onHostPresence?(handler: HostPresenceHandler): () => void;
 }

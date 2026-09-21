@@ -19,6 +19,8 @@ Paused until we can recruit enough Play testers. Do not treat Google Play as an 
 
 ## Current: Delight + Solo Offline (iOS 1.2)
 
+Shipped through App Store **1.2.1** (approved).
+
 Goal: make the three launch games feel more custom to Backseat Games, and let anyone play Solo Mode free without a relay or waiting room (pay only to host online).
 
 - Opening jingle (toggleable, cold-start only)
@@ -31,20 +33,26 @@ Goal: make the three launch games feel more custom to Backseat Games, and let an
 - Solo Mode free on host setup (Play online off); IAP gates Play online / join codes
 - Done: Screenshot refresh after TestFlight validation
 
+## Shipped: P2 polish (existing games)
+
+- Sign Game invalid words stay in the dialog with the invalid sting; voice skips low STT confidence when the API reports it
+- Lifetime license-plate collection on this device (sticky after unclaim)
+- Wider session scenery rotation (no GPS/season routing)
+- StoreKit review prompt after a finished session (14-day cooldown)
+- Fake-SignalR reconnect tests; host-gone banner when the host phone leaves (no host handoff)
+
 ## Later: Retention And Family Utility
 
 Goal: make the app more useful across repeat road trips.
 
 - Local achievements tied to wins, plate discoveries, and bingo streaks
 - Optional push notifications for host started game or join reminders
-- More themed bingo packs for city, highway, mountains, beach, and nighttime drives
-- Additional family-friendly games that fit short attention spans
-- Better reconnect and host recovery if a host device leaves the session
-- Remaining per-item bingo icons (vehicles, businesses, landmarks, scenery)
+- Additional family-friendly games that fit short attention spans (Hangman, vehicle color hunt — separate plan)
 
 ## Longer-Term Options
 
-- Host migration if the host phone dies
+- Later IAP: purchasable game themes (full look-and-feel, including themed bingo packs) and purchasable animations
+- Host migration if the host phone dies (not in the current phase — host must reopen or start a new code)
 - Relay Sign Game audio snippets to other players, if privacy and review risk remain acceptable
 - Patch-based state sync if full snapshots ever become a performance issue
 - Family stats export or shareable road-trip recap

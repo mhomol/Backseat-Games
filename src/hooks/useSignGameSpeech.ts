@@ -29,10 +29,15 @@ export function useSignGameSpeech({ onTranscript, enabled }: UseSignGameSpeechOp
   useSpeechRecognitionEvent('start', () => setListening(true));
   useSpeechRecognitionEvent('end', () => setListening(false));
   useSpeechRecognitionEvent('result', (event) => {
-    const text = event.results[0]?.transcript?.trim();
-    if (text) {
-      onTranscript(text);
+    const first = event.results[0] as { transcript?: string; confidence?: number } | undefined;
+    const text = first?.transcript?.trim();
+    if (!text) {
+      return;
     }
+    if (typeof first?.confidence === 'number' && first.confidence < 0.45) {
+      return;
+    }
+    onTranscript(text);
   });
 
   const stopListening = useCallback(() => {

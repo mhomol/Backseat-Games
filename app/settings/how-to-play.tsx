@@ -7,7 +7,7 @@ const SECTIONS = [
   {
     title: 'Getting started',
     body:
-      'One phone hosts the game. Passengers join with the host join code — it works on cellular or Wi‑Fi. Keep Backseat Games open in the foreground during play. If you lose signal, re-enter the same join code and name to rejoin.',
+      'One phone hosts the game. Passengers join with the host join code — it works on cellular or Wi‑Fi. Keep Backseat Games open in the foreground during play. If you lose signal, re-enter the same join code and name to rejoin. If the host’s phone leaves, keep this app open so they can come back; the app does not hand hosting to a passenger. If they cannot return, start a new game with a new join code.',
   },
   {
     title: 'License Plates',

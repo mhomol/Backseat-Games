@@ -10,6 +10,7 @@ import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { usePurchaseStore } from '@/store/purchaseStore';
+import { usePlateCollectionStore, plateCollectionTotal } from '@/store/plateCollectionStore';
 import { useStatsStore } from '@/store/statsStore';
 import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
 import { useSessionStore } from '@/store/sessionStore';
@@ -25,6 +26,7 @@ export default function SettingsScreen() {
   const preferences = usePreferencesStore((state) => state.preferences);
   const updatePreferences = usePreferencesStore((state) => state.updatePreferences);
   const stats = useStatsStore((state) => state.stats);
+  const spottedCodes = usePlateCollectionStore((state) => state.spottedCodes);
   const canHost = usePurchaseStore((state) => state.canHost);
   const requiresPurchase = usePurchaseStore((state) => state.requiresPurchase);
   const productPrice = usePurchaseStore((state) => state.productPrice);
@@ -128,6 +130,10 @@ export default function SettingsScreen() {
             outcome={stats.byGame[gameType]}
           />
         ))}
+        <Text style={styles.recordHint}>
+          License plates spotted on this phone: {spottedCodes.length} of {plateCollectionTotal()}
+          . Unclaiming later does not remove a plate from this collection.
+        </Text>
       </SettingsSection>
 
       <SettingsSection title="Car rules (defaults)">

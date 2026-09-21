@@ -84,19 +84,20 @@ public sealed class RoomRegistry
         }
     }
 
-    public void RemoveConnection(string connectionId)
+    public (RoomRecord? Room, bool HostLeft) RemoveConnection(string connectionId)
     {
         lock (_lock)
         {
             if (!_connectionToCode.TryGetValue(connectionId, out var joinCode) ||
                 !_byCode.TryGetValue(joinCode, out var room))
             {
-                return;
+                return (null, false);
             }
 
             _connectionToCode.Remove(connectionId);
 
-            if (room.HostConnectionId == connectionId)
+            var hostLeft = room.HostConnectionId == connectionId;
+            if (hostLeft)
             {
                 room.HostConnectionId = null;
             }
@@ -105,6 +106,8 @@ public sealed class RoomRegistry
             {
                 room.PlayerConnections.Remove(playerId);
             }
+
+            return (room, hostLeft);
         }
     }
 

@@ -18,9 +18,14 @@ export function GameSessionOverlays({
 }: GameSessionOverlaysProps) {
   const [celebrationDismissed, setCelebrationDismissed] = useState(false);
   const connectionStatus = useSessionStore((state) => state.connectionStatus);
+  const hostPresent = useSessionStore((state) => state.hostPresent);
+  const isHost = useSessionStore((state) => state.isHost);
+  const isSolo = useSessionStore((state) => state.isSolo);
   const showWin = guard.isFinished && !!winnerHeadline;
+  const showHostAway = !isHost && !isSolo && !hostPresent;
   const showConnectionBanner =
-    connectionStatus === 'reconnecting' || connectionStatus === 'disconnected';
+    !showHostAway &&
+    (connectionStatus === 'reconnecting' || connectionStatus === 'disconnected');
 
   useEffect(() => {
     if (!guard.isFinished) {
@@ -30,6 +35,7 @@ export function GameSessionOverlays({
 
   return (
     <>
+      {showHostAway ? <ConnectionBanner status="host-away" /> : null}
       {showConnectionBanner ? (
         <ConnectionBanner
           status={connectionStatus === 'reconnecting' ? 'reconnecting' : 'disconnected'}
