@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   clonePreferences,
   DEFAULT_PREFERENCES,
+  mergeGameRules,
 } from '../data/defaultPreferences';
 import type { AppPreferences } from '../types/preferences';
 
@@ -15,22 +16,7 @@ function mergeWithDefaults(partial: Partial<AppPreferences> | null): AppPreferen
   return clonePreferences({
     ...DEFAULT_PREFERENCES,
     ...partial,
-    gameRules: {
-      ...DEFAULT_PREFERENCES.gameRules,
-      ...partial.gameRules,
-      'sign-game': {
-        ...DEFAULT_PREFERENCES.gameRules['sign-game'],
-        ...partial.gameRules?.['sign-game'],
-      },
-      'license-plates': {
-        ...DEFAULT_PREFERENCES.gameRules['license-plates'],
-        ...partial.gameRules?.['license-plates'],
-      },
-      bingo: {
-        ...DEFAULT_PREFERENCES.gameRules.bingo,
-        ...partial.gameRules?.bingo,
-      },
-    },
+    gameRules: mergeGameRules(DEFAULT_PREFERENCES.gameRules, partial.gameRules),
   });
 }
 

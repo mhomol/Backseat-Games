@@ -18,10 +18,21 @@ export interface BingoRules {
   winMode: BingoWinMode;
 }
 
+export interface HangmanRules {
+  maxMisses: number;
+  pointsToWin: number;
+}
+
+export interface ColorCatchRules {
+  winMode: BingoWinMode;
+}
+
 export interface GameRules {
   'sign-game': SignGameRules;
   'license-plates': LicensePlatesRules;
   bingo: BingoRules;
+  hangman: HangmanRules;
+  'color-catch': ColorCatchRules;
 }
 
 export interface AppPreferences {

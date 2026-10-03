@@ -27,6 +27,8 @@ import { usePreferencesStore } from './preferencesStore';
 import { usePurchaseStore } from './purchaseStore';
 import { useStatsStore } from './statsStore';
 import { resolveIncomingJoin } from '../games/hostJoin';
+import { stripHangmanSecret } from '../games/hangman';
+import { mergeGameRules } from '../data/defaultPreferences';
 import { collectNewlySpottedPlates } from '../utils/collectSpottedPlates';
 import { canStartHostedSession } from '../utils/hostEntitlement';
 import { usePlateCollectionStore } from './plateCollectionStore';
@@ -90,6 +92,8 @@ export const useSessionStore = create<SessionStore>((set, get) => {
     set({ session: nextSession, ...extra });
   };
 
+  const outboundSession = (session: SessionState): SessionState => stripHangmanSecret(session);
+
   const handleNetworkMessage = (message: NetworkMessage, fromPeerId?: string) => {
     const state = get();
     const localId = state.localPlayerId;
@@ -106,11 +110,19 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           joinerId,
           (id, name) => playerFromLocal(id, name, false),
         );
+        if (resolution.kind === 'rejected') {
+          multiplayer.send({
+            type: 'JOIN_REJECTED',
+            reason: resolution.reason,
+            playerId: joinerId,
+          });
+          break;
+        }
         if (resolution.kind === 'rewelcome') {
           multiplayer.send({
             type: 'WELCOME',
             playerId: resolution.playerId,
-            state: state.session,
+            state: outboundSession(state.session),
           });
           break;
         }
@@ -118,12 +130,12 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         multiplayer.send({
           type: 'WELCOME',
           playerId: resolution.player.id,
-          state: resolution.nextSession,
+          state: outboundSession(resolution.nextSession),
         });
         multiplayer.send({
           type: 'PLAYER_JOINED',
           player: resolution.player,
-          state: resolution.nextSession,
+          state: outboundSession(resolution.nextSession),
         });
         break;
       }
@@ -159,7 +171,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         const result = applyAction(state.session, message.playerId, message.action);
         if (result.ok) {
           commitSession(result.state);
-          multiplayer.send({ type: 'STATE_UPDATE', state: result.state });
+          multiplayer.send({ type: 'STATE_UPDATE', state: outboundSession(result.state) });
         } else {
           const rejected = rejectAction(state.session, message.playerId, result.reason);
           commitSession(rejected);
@@ -175,6 +187,20 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         if (message.playerId === localId) {
           set({ toast: message.reason });
         }
+        break;
+      }
+      case 'JOIN_REJECTED': {
+        if (state.isHost) {
+          break;
+        }
+        if (message.playerId && message.playerId !== localId) {
+          break;
+        }
+        set({
+          toast: message.reason,
+          connectionStatus: 'error',
+          session: null,
+        });
         break;
       }
       default:
@@ -356,7 +382,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       const next = startGame(session);
       commitSession(next);
-      multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: next });
+      multiplayer.send({ type: 'START_GAME', gameType: next.gameType!, state: outboundSession(next) });
     },
 
     restartSoloGame: () => {
@@ -374,25 +400,10 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       const next: SessionState = {
         ...session,
-        gameRules: {
-          ...session.gameRules,
-          ...partial,
-          'sign-game': {
-            ...session.gameRules['sign-game'],
-            ...partial['sign-game'],
-          },
-          'license-plates': {
-            ...session.gameRules['license-plates'],
-            ...partial['license-plates'],
-          },
-          bingo: {
-            ...session.gameRules.bingo,
-            ...partial.bingo,
-          },
-        },
+        gameRules: mergeGameRules(session.gameRules, partial),
       };
       commitSession(next);
-      multiplayer.send({ type: 'STATE_UPDATE', state: next });
+      multiplayer.send({ type: 'STATE_UPDATE', state: outboundSession(next) });
     },
 
     finishGameAsHost: () => {
@@ -402,7 +413,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       const next = finishGame(session);
       commitSession(next);
-      multiplayer.send({ type: 'STATE_UPDATE', state: next });
+      multiplayer.send({ type: 'STATE_UPDATE', state: outboundSession(next) });
     },
 
     returnToLobbyAsHost: () => {
@@ -412,7 +423,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       }
       const next = returnToLobby(session);
       commitSession(next);
-      multiplayer.send({ type: 'STATE_UPDATE', state: next });
+      multiplayer.send({ type: 'STATE_UPDATE', state: outboundSession(next) });
     },
 
     leaveActiveGame: () => {
@@ -437,7 +448,7 @@ export const useSessionStore = create<SessionStore>((set, get) => {
         const result = applyAction(session, localPlayerId, action);
         if (result.ok) {
           commitSession(result.state);
-          multiplayer.send({ type: 'STATE_UPDATE', state: result.state });
+          multiplayer.send({ type: 'STATE_UPDATE', state: outboundSession(result.state) });
         } else {
           const rejected = rejectAction(session, localPlayerId, result.reason);
           commitSession(rejected, { toast: result.reason });

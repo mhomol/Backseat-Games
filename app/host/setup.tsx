@@ -30,12 +30,16 @@ const signToGameType: Record<string, GameType> = {
   'license-plates': 'license-plates',
   'sign-game': 'sign-game',
   bingo: 'bingo',
+  hangman: 'hangman',
+  'color-catch': 'color-catch',
 };
 
 const GAME_ROUTES: Record<GameType, string> = {
   'license-plates': '/game/license-plates',
   bingo: '/game/bingo',
   'sign-game': '/game/sign-game',
+  hangman: '/game/hangman',
+  'color-catch': '/game/color-catch',
 };
 
 const FORM_TOP_OFFSET = 188;

@@ -7,6 +7,8 @@ import type {
 } from '../types/game';
 import type { GameRules } from '../types/preferences';
 import { createBingoState, applyBingoAction } from './bingo';
+import { applyColorCatchAction, createColorCatchState, getColorCatchMarkCount } from './colorCatch';
+import { applyHangmanAction, createHangmanState, resolveHangmanWinner } from './hangman';
 import {
   applyLicensePlatesAction,
   createLicensePlatesState,
@@ -59,6 +61,12 @@ export function startGame(session: SessionState): SessionState {
     case 'sign-game':
       gameState = createSignGameState(session.players);
       break;
+    case 'hangman':
+      gameState = createHangmanState(session);
+      break;
+    case 'color-catch':
+      gameState = createColorCatchState(session);
+      break;
     default:
       break;
   }
@@ -88,6 +96,10 @@ export function applyAction(
       return applyBingoAction(session, playerId, action);
     case 'sign-game':
       return applySignGameAction(session, playerId, action);
+    case 'hangman':
+      return applyHangmanAction(session, playerId, action);
+    case 'color-catch':
+      return applyColorCatchAction(session, playerId, action);
     default:
       return { ok: false, reason: 'Unknown game type.' };
   }
@@ -149,6 +161,33 @@ export function finishGame(session: SessionState): SessionState {
         ...session,
         phase: 'finished',
         winnerId: maxLetters > 0 && leaders.length === 1 ? leaders[0].playerId : null,
+      };
+    }
+    case 'hangman':
+      return {
+        ...session,
+        phase: 'finished',
+        winnerId: resolveHangmanWinner(session),
+      };
+    case 'color-catch': {
+      const colorState = session.gameState;
+      if (colorState.winnerId) {
+        return {
+          ...session,
+          phase: 'finished',
+          winnerId: colorState.winnerId,
+        };
+      }
+      const markCounts = session.players.map((player) => ({
+        playerId: player.id,
+        count: getColorCatchMarkCount(colorState, player.id),
+      }));
+      const maxMarks = Math.max(...markCounts.map((entry) => entry.count));
+      const leaders = markCounts.filter((entry) => entry.count === maxMarks);
+      return {
+        ...session,
+        phase: 'finished',
+        winnerId: maxMarks > 0 && leaders.length === 1 ? leaders[0].playerId : null,
       };
     }
     default:

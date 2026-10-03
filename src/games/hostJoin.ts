@@ -1,9 +1,11 @@
 import type { Player, SessionState } from '../types/game';
+import { HANGMAN_MAX_PLAYERS } from './hangman';
 import { addPlayer } from './ruleEngine';
 
 export type HostJoinResolution =
   | { kind: 'rewelcome'; playerId: string }
-  | { kind: 'new'; player: Player; nextSession: SessionState };
+  | { kind: 'new'; player: Player; nextSession: SessionState }
+  | { kind: 'rejected'; reason: string };
 
 export function resolveIncomingJoin(
   session: SessionState,
@@ -17,6 +19,12 @@ export function resolveIncomingJoin(
   );
   if (existingPlayer) {
     return { kind: 'rewelcome', playerId: existingPlayer.id };
+  }
+  if (session.gameType === 'hangman' && session.players.length >= HANGMAN_MAX_PLAYERS) {
+    return {
+      kind: 'rejected',
+      reason: 'Hangman is two players only — this game is already full.',
+    };
   }
   const joiner = createPlayer(joinerId, joinerName);
   return {

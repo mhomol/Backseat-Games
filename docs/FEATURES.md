@@ -23,7 +23,7 @@ Typically the front-seat parent on their phone. The host picks the game. For alo
 - Host sees a large **join code** to share with passengers, plus all joined players and the selected game type.
 - Joiners see a spinner: "Waiting for host to start…"
 - Host taps **Start Game!** when everyone is ready.
-- Competitive games in a shared waiting room (License Plates, Sign Game) need **at least one other player**. With **Play online** off on the host setup screen, anyone can play all three games alone on this phone for free — no internet, unlock, or waiting room.
+- Competitive games in a shared waiting room (License Plates, Sign Game, Hangman) need **at least one other player**. Hangman online is **exactly two phones**. With **Play online** off on the host setup screen, anyone can play all five games alone on this phone for free — Hangman Solo needs internet to fetch a random word; the others work offline.
 
 ---
 
@@ -39,7 +39,7 @@ Default rules live in **Settings**. When you host, the waiting room copies those
 
 ### Scoreboards
 
-License Plates and Sign Game show live scores at the top. Travel Bingo announces a winner with a celebration animation.
+License Plates, Sign Game, Hangman, and Color Catch show live scores or marks at the top. Travel Bingo and Color Catch announce a winner with a celebration animation.
 
 ### Error messages
 
@@ -142,6 +142,39 @@ When enabled in car rules, tap **Say the word** in the submit dialog. Your phone
 
 ---
 
+## Hangman
+
+Guess letters to complete a word or short phrase before the hangman drawing is finished.
+
+### Solo
+
+1. Start Hangman with **Play online** off.
+2. This phone asks a **public random-word website** for a word or two-word phrase. That needs internet. No name or join code is sent.
+3. You are always the guesser. Complete the word before six misses to win; fill the drawing and you lose. That is the whole match.
+
+### Two phones
+
+1. Host **Play online**, wait for **exactly one** passenger, then start. A third joiner is turned away.
+2. The host types the first secret word. The guest guesses. Then they **swap** every round.
+3. Completing the word scores the guesser. Completing the drawing scores the supplier.
+4. **First to 5** round points wins. Host **End Game** uses the higher score (tie = T).
+5. The guesser never receives the secret word — only dashes, guessed letters, and scores.
+
+---
+
+## Color Catch
+
+Each player gets a **unique 5×5 card of vehicle colors**. Same win rules as Travel Bingo.
+
+### Rules
+
+1. Cards are generated when the host starts — no two cards are alike.
+2. The center square is a free space (always marked).
+3. When you spot that color on a vehicle, **tap** the square. Tap again to unmark (except the free center).
+4. First player to complete a **line** (or **blackout**, if that car rule is on) wins.
+
+---
+
 ## FAQ / Troubleshooting
 
 ### Players can't find the host
@@ -158,7 +191,7 @@ When enabled in car rules, tap **Say the word** in the submit dialog. Your phone
 
 ### How many players?
 
-Designed for **2–6** family members. More may work but isn't tested.
+Designed for **2–6** family members (Hangman online is **exactly two**). More may work on the other games but isn't tested.
 
 ### Minimum iOS version
 
@@ -192,4 +225,5 @@ These differ slightly from how some families played growing up:
 - Voice input requires a TestFlight/dev build (not Expo Go)
 - Host handoff is not supported if the host phone dies — passengers see a banner; host should reopen, or start a new join code
 - App must stay in foreground for reliable multiplayer sync
+- Hangman Solo needs internet to fetch a word from a public API (no offline word list)
 - **Push notifications:** entitlement is included in native builds, but no alerts are sent yet (see [PUSH_SETUP.md](./PUSH_SETUP.md))

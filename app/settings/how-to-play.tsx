@@ -24,6 +24,16 @@ const SECTIONS = [
     body:
       'Each player gets a unique 5×5 card. Mark squares when you spot items. Win on a line or a full-card blackout, depending on car rules.',
   },
+  {
+    title: 'Hangman',
+    body:
+      'Solo picks a random word from the internet (needs a connection). Online Hangman is exactly two phones: one player types a word, the other guesses letters. Roles swap each round. First to 5 points wins.',
+  },
+  {
+    title: 'Color Catch',
+    body:
+      'Each player gets a unique 5×5 card of vehicle colors. The center is always marked. Tap when you spot that color on a vehicle. Win on a line or blackout, same as Travel Bingo.',
+  },
 ];
 
 export default function HowToPlayScreen() {

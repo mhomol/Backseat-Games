@@ -5,15 +5,13 @@ import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
+import { isGameType } from '@/types/game';
 import type { GameType } from '@/types/game';
 import { colors, fonts } from '@/theme';
 
 function parseGameType(value: string | string[] | undefined): GameType | null {
   const raw = Array.isArray(value) ? value[0] : value;
-  if (raw === 'license-plates' || raw === 'sign-game' || raw === 'bingo') {
-    return raw;
-  }
-  return null;
+  return isGameType(raw) ? raw : null;
 }
 
 export default function GameRulesSettingsScreen() {

@@ -26,7 +26,7 @@ How hosting is priced, how purchases work, and how to test them before App Store
 - Solo play stays free — unlock only when you host online.
 - Passengers join for free — only the online host pays once.
 - Works offline after you unlock for online hosting. No subscription.
-- All three games included.
+- All five games included.
 
 **FAQ**
 

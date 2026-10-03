@@ -1,4 +1,5 @@
 import type { GameType, NetworkMessage } from '../types/game';
+import { isGameType } from '../types/game';
 import type {
   ConnectionChangeHandler,
   HostPresenceHandler,
@@ -23,10 +24,7 @@ type RoomInfo = {
 };
 
 function parseGameType(value: string | null | undefined): GameType | null {
-  if (value === 'license-plates' || value === 'bingo' || value === 'sign-game') {
-    return value;
-  }
-  return null;
+  return isGameType(value) ? value : null;
 }
 
 export class RelayMultiplayerService implements MultiplayerService {

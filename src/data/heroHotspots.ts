@@ -9,6 +9,7 @@ export type HeroHotspot = {
   top: number;
   width: number;
   height: number;
+  overlay?: number;
 };
 
 export const homeHeroHotspots: HeroHotspot[] = [
@@ -62,5 +63,23 @@ export const hostHeroHotspots: HeroHotspot[] = [
     top: 0.742,
     width: 0.58,
     height: 0.045,
+  },
+  {
+    id: 'hangman',
+    label: 'Hangman',
+    left: 0.50,
+    top: 0.607,
+    width: 0.48,
+    height: 0.048,
+    overlay: require('../../assets/branding/host-sign-hangman.webp'),
+  },
+  {
+    id: 'color-catch',
+    label: 'Color Catch',
+    left: 0.50,
+    top: 0.671,
+    width: 0.48,
+    height: 0.049,
+    overlay: require('../../assets/branding/host-sign-color-catch.webp'),
   },
 ];

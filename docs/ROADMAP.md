@@ -47,7 +47,7 @@ Goal: make the app more useful across repeat road trips.
 
 - Local achievements tied to wins, plate discoveries, and bingo streaks
 - Optional push notifications for host started game or join reminders
-- Additional family-friendly games that fit short attention spans (Hangman, vehicle color hunt — separate plan)
+- Additional family-friendly games that fit short attention spans (beyond Hangman and Color Catch)
 
 ## Longer-Term Options
 
@@ -59,7 +59,7 @@ Goal: make the app more useful across repeat road trips.
 
 ## Planning Notes
 
-- Prefer polish on the existing three games before adding new games.
+- Prefer polish on shipped games before adding more.
 - Keep App Store review risk low: no background audio, no local-network permission, no analytics unless there is a clear reason.
 - Treat the brand art as the north star for UI, icons, and sounds.
 - Android / Google Play is on hold until tester recruitment is realistic.

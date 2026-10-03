@@ -5,6 +5,8 @@ export const GAME_RULES_TITLE: Record<GameType, string> = {
   'license-plates': 'License Plates',
   'sign-game': 'Sign Game',
   bingo: 'Travel Bingo',
+  hangman: 'Hangman',
+  'color-catch': 'Color Catch',
 };
 
 export function summarizeGameRules(gameType: GameType, rules: GameRules): string[] {
@@ -28,6 +30,18 @@ export function summarizeGameRules(gameType: GameType, rules: GameRules): string
     case 'bingo':
       return [
         rules.bingo.winMode === 'line'
+          ? 'Win on any row, column, or diagonal'
+          : 'Win by marking the full card',
+      ];
+    case 'hangman':
+      return [
+        `Classic hangman drawing (${rules.hangman.maxMisses} misses)`,
+        `First to ${rules.hangman.pointsToWin} round points wins (two-player)`,
+        'Solo needs internet to pick a random word',
+      ];
+    case 'color-catch':
+      return [
+        rules['color-catch'].winMode === 'line'
           ? 'Win on any row, column, or diagonal'
           : 'Win by marking the full card',
       ];

@@ -3,6 +3,7 @@ import {
   cloneGameRules,
   clonePreferences,
   DEFAULT_PREFERENCES,
+  mergeGameRules,
 } from '../data/defaultPreferences';
 import { loadPreferences, savePreferences } from '../services/preferencesStorage';
 import type { AppPreferences, GameRules } from '../types/preferences';
@@ -30,22 +31,7 @@ export const usePreferencesStore = create<PreferencesStore>((set, get) => ({
       ...get().preferences,
       ...partial,
       gameRules: partial.gameRules
-        ? {
-            ...get().preferences.gameRules,
-            ...partial.gameRules,
-            'sign-game': {
-              ...get().preferences.gameRules['sign-game'],
-              ...partial.gameRules['sign-game'],
-            },
-            'license-plates': {
-              ...get().preferences.gameRules['license-plates'],
-              ...partial.gameRules['license-plates'],
-            },
-            bingo: {
-              ...get().preferences.gameRules.bingo,
-              ...partial.gameRules.bingo,
-            },
-          }
+        ? mergeGameRules(get().preferences.gameRules, partial.gameRules)
         : get().preferences.gameRules,
     });
     set({ preferences: next });

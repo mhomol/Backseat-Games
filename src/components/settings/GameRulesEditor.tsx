@@ -95,6 +95,32 @@ export function GameRulesEditor({
           }
         />
       );
+    case 'color-catch':
+      return (
+        <SettingsToggle
+          label="Blackout wins"
+          description="Off means any row, column, or diagonal wins."
+          value={rules['color-catch'].winMode === 'blackout'}
+          onValueChange={(value) =>
+            onChange({
+              'color-catch': {
+                ...rules['color-catch'],
+                winMode: value ? 'blackout' : 'line',
+              },
+            })
+          }
+        />
+      );
+    case 'hangman':
+      return (
+        <View style={styles.readOnly}>
+          {summarizeGameRules('hangman', rules).map((line) => (
+            <Text key={line} style={styles.summaryLine}>
+              • {line}
+            </Text>
+          ))}
+        </View>
+      );
     default:
       return null;
   }

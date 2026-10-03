@@ -17,7 +17,7 @@ const BULLETS = [
   'One-time, for-life unlock — not a subscription.',
   'Solo play stays free — unlock only when you host online.',
   'Passengers join free forever — riders never pay.',
-  'All three games included — license plates, sign game, and bingo.',
+  'All five games included for online hosting.',
 ];
 
 export function HostUnlockSheet({

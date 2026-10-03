@@ -33,4 +33,17 @@ describe('resolveIncomingJoin', () => {
       assert.equal(result.nextSession.players.length, 2);
     }
   });
+
+  it('rejects a third Hangman joiner', () => {
+    const host = playerFromLocal('host', 'Dad', true);
+    let session = testSession('trip', host, 'hangman');
+    session = addPlayer(session, playerFromLocal('guest-1', 'Emma', false));
+    const result = resolveIncomingJoin(session, 'Sam', 'sam-id', (id, name) =>
+      playerFromLocal(id, name, false),
+    );
+    assert.equal(result.kind, 'rejected');
+    if (result.kind === 'rejected') {
+      assert.match(result.reason, /two players/i);
+    }
+  });
 });

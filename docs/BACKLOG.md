@@ -26,15 +26,9 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 - Done in v1.1: First-run teaching (host vs join, free join, one-time for-life host unlock)
 - Done in v1.1: Claim / bingo stamp / letter-advance micro-animations
-- Done in v1.1: Solo Mode (offline) on host setup for all three games
-- Later (separate plan): Hangman
-  - Standard letter-guessing game where incorrect guesses progressively draw the hangman.
-  - Define the word source, age-appropriate categories, turn rules, and win conditions.
-  - Explore whether online multiplayer adds value and how guesses, turns, and the secret word should synchronize.
-- Later (separate plan): Vehicle color hunt (working title)
-  - Find vehicles of different colors while traveling.
-  - Explore variants such as a shared checklist, individual randomized cards, color rarity, timed rounds, and vehicle-type combinations.
-  - Choose a more distinctive, kid-friendly name before implementation.
+- Done: Solo Mode (offline) on host setup for launch games; Hangman Solo needs internet for a public word API
+- Done: Hangman (solo or exactly two phones; classic drawing; first to 5)
+- Done: Color Catch (Travel Bingo-style 5×5 of vehicle colors, free center)
 - Done: License Plates collection progress (lifetime spotted codes on this device)
 - Done: Sign Game quality-of-life (invalid stays in the word dialog + invalid sound; skip low STT confidence when reported)
 - P3: New game concepts

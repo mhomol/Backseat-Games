@@ -1,4 +1,6 @@
 import type { SessionState } from '../types/game';
+import { getColorCatchMarkCount } from '../games/colorCatch';
+import { HANGMAN_SOLO_PUZZLE_ID } from '../games/hangman';
 import { getLicensePlateScores } from '../games/licensePlates';
 import { getSignGameLeaderboard } from '../games/signGame';
 
@@ -8,6 +10,13 @@ function bingoMarkCount(session: SessionState, playerId: string): number {
   }
   const marked = session.gameState.marked[playerId];
   return marked?.filter(Boolean).length ?? 0;
+}
+
+function colorCatchMarkCount(session: SessionState, playerId: string): number {
+  if (session.gameState?.type !== 'color-catch') {
+    return 0;
+  }
+  return getColorCatchMarkCount(session.gameState, playerId);
 }
 
 function tiedLeaderNames(session: SessionState, leaderIds: string[]): string {
@@ -35,6 +44,9 @@ export function getSessionWinnerDisplay(
   }
 
   if (session.winnerId) {
+    if (session.winnerId === HANGMAN_SOLO_PUZZLE_ID) {
+      return { headline: 'The puzzle', isYou: false };
+    }
     const isYou = session.winnerId === localPlayerId;
     const name = session.players.find((p) => p.id === session.winnerId)?.name ?? 'Someone';
     return { headline: isYou ? 'You' : name, isYou };
@@ -61,6 +73,20 @@ export function getSessionWinnerDisplay(
       return { headline: 'Nobody scored', isYou: false };
     }
     leaders = session.players.filter((p) => bingoMarkCount(session, p.id) === max).map((p) => p.id);
+  } else if (session.gameState?.type === 'color-catch') {
+    const max = Math.max(...session.players.map((p) => colorCatchMarkCount(session, p.id)));
+    if (max <= 0) {
+      return { headline: 'Nobody scored', isYou: false };
+    }
+    leaders = session.players
+      .filter((p) => colorCatchMarkCount(session, p.id) === max)
+      .map((p) => p.id);
+  } else if (session.gameState?.type === 'hangman') {
+    const max = Math.max(...session.players.map((p) => session.gameState?.type === 'hangman' ? session.gameState.scores[p.id] ?? 0 : 0));
+    if (max <= 0) {
+      return { headline: 'Nobody scored', isYou: false };
+    }
+    leaders = session.players.filter((p) => (session.gameState?.type === 'hangman' ? session.gameState.scores[p.id] ?? 0 : 0) === max).map((p) => p.id);
   }
 
   if (leaders.length === 1) {

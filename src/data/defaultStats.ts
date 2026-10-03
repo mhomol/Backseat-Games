@@ -6,6 +6,8 @@ export const DEFAULT_PLAYER_GAME_STATS: PlayerGameStats = {
   'license-plates': { ...ZERO_OUTCOME },
   'sign-game': { ...ZERO_OUTCOME },
   bingo: { ...ZERO_OUTCOME },
+  hangman: { ...ZERO_OUTCOME },
+  'color-catch': { ...ZERO_OUTCOME },
 };
 
 export const DEFAULT_PLAYER_STATS: PlayerStats = {
@@ -22,6 +24,8 @@ export function clonePlayerGameStats(stats: PlayerGameStats): PlayerGameStats {
     'license-plates': cloneGameOutcome(stats['license-plates']),
     'sign-game': cloneGameOutcome(stats['sign-game']),
     bingo: cloneGameOutcome(stats.bingo),
+    hangman: cloneGameOutcome(stats.hangman),
+    'color-catch': cloneGameOutcome(stats['color-catch']),
   };
 }
 

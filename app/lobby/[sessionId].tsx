@@ -27,6 +27,8 @@ const GAME_ROUTES: Record<GameType, string> = {
   'license-plates': '/game/license-plates',
   bingo: '/game/bingo',
   'sign-game': '/game/sign-game',
+  hangman: '/game/hangman',
+  'color-catch': '/game/color-catch',
 };
 
 export default function LobbyScreen() {
@@ -49,6 +51,12 @@ export default function LobbyScreen() {
   }, [session?.phase, session?.gameType]);
 
   useEffect(() => {
+    if (!session && connectionStatus === 'error') {
+      router.replace('/join');
+    }
+  }, [session, connectionStatus]);
+
+  useEffect(() => {
     if (isHost && sessionId && session?.gameType) {
       getMultiplayerService().registerHostedSessionGameType(
         sessionId,
@@ -66,10 +74,15 @@ export default function LobbyScreen() {
   }
 
   const otherPlayers = session.players.filter((player) => player.id !== session.hostId);
+  const hangmanReady = session.gameType === 'hangman' && session.players.length === 2;
+  const soloOkInLobby =
+    session.gameType === 'bingo' || session.gameType === 'color-catch'
+      ? session.players.length >= 1
+      : otherPlayers.length >= 1;
   const canStart =
     isHost &&
     session.phase === 'lobby' &&
-    (session.gameType === 'bingo' ? session.players.length >= 1 : otherPlayers.length >= 1);
+    (session.gameType === 'hangman' ? hangmanReady : soloOkInLobby);
 
   return (
     <SceneryScrollShell scenerySource={scenerySource} contentContainerStyle={styles.container}>
@@ -159,7 +172,9 @@ export default function LobbyScreen() {
           {!canStart ? (
             <ContentCapsule>
               <Text style={styles.helper}>
-                Need at least one other player for competitive games.
+                {session.gameType === 'hangman'
+                  ? 'Hangman online is two players — wait for one passenger.'
+                  : 'Need at least one other player for competitive games.'}
               </Text>
             </ContentCapsule>
           ) : null}

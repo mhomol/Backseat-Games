@@ -5,12 +5,10 @@ import {
   DEFAULT_PLAYER_GAME_STATS,
   DEFAULT_PLAYER_STATS,
 } from '../data/defaultStats';
-import type { GameType } from '../types/game';
+import { ALL_GAME_TYPES } from '../types/game';
 import type { PlayerStats } from '../types/stats';
 
 const STORAGE_KEY = 'backseat-games.player-stats';
-
-const GAME_TYPES: GameType[] = ['license-plates', 'sign-game', 'bingo'];
 
 function mergeWithDefaults(partial: Partial<PlayerStats> | null): PlayerStats {
   if (!partial) {
@@ -18,7 +16,7 @@ function mergeWithDefaults(partial: Partial<PlayerStats> | null): PlayerStats {
   }
 
   const byGame = clonePlayerGameStats(DEFAULT_PLAYER_GAME_STATS);
-  for (const gameType of GAME_TYPES) {
+  for (const gameType of ALL_GAME_TYPES) {
     const saved = partial.byGame?.[gameType];
     if (saved) {
       byGame[gameType] = {

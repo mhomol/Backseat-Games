@@ -15,6 +15,8 @@ export default function GameLayout() {
       <Stack.Screen name="license-plates" options={{ title: 'License Plate Game' }} />
       <Stack.Screen name="bingo" options={{ title: 'Travel Bingo' }} />
       <Stack.Screen name="sign-game" options={{ title: 'Sign Game' }} />
+      <Stack.Screen name="hangman" options={{ title: 'Hangman' }} />
+      <Stack.Screen name="color-catch" options={{ title: 'Color Catch' }} />
     </Stack>
   );
 }

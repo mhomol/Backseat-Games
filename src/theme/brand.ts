@@ -41,6 +41,16 @@ export const gameBrandColors: Record<
     dark: brand.blueDark,
     label: 'Travel Bingo',
   },
+  hangman: {
+    primary: brand.green,
+    dark: brand.greenDark,
+    label: 'Hangman',
+  },
+  'color-catch': {
+    primary: brand.pink,
+    dark: brand.pinkDark,
+    label: 'Color Catch',
+  },
 };
 
 export type SignPostColor = 'pink' | 'green' | 'blue';

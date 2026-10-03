@@ -15,10 +15,11 @@ import { useStatsStore } from '@/store/statsStore';
 import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
+import { ALL_GAME_TYPES } from '@/types/game';
 import { colors, fonts, spacing } from '@/theme';
 import { isOnlineMultiplayerAvailable } from '@/utils/platformFeatures';
 
-const GAME_TYPES: GameType[] = ['license-plates', 'sign-game', 'bingo'];
+const GAME_TYPES: GameType[] = ALL_GAME_TYPES;
 
 export default function SettingsScreen() {
   const [paywallOpen, setPaywallOpen] = useState(false);
