@@ -17,7 +17,7 @@
     },
     "host": {
       "aspect_ratio": "9:16",
-      "prompt": "Tall portrait mobile game screen background. NO logo, NO title text, NO BACKSEAT GAMES lettering anywhere. Generous extra blue sky at top and extra road at bottom. Wooden signpost on the left with three horizontally level arrow signs pointing left (straight, not tilted): LICENSE PLATES (pink sign), SIGN GAME (green sign), TRAVEL BINGO (blue sign). Pink car on coastal highway. {{styleBlock}}. Open cream-toned lower third for name form overlay."
+      "prompt": "Tall portrait mobile game screen background. NO logo, NO title text, NO BACKSEAT GAMES lettering anywhere. Generous extra blue sky at top and extra road at bottom. Wooden signpost on the left with five horizontally level arrow signs pointing toward the road (straight, not tilted): LICENSE PLATES (pink sign), SIGN GAME (green sign), TRAVEL BINGO (blue sign), HANGMAN (orange sign), COLOR CATCH (purple sign), white text on all signs. Pink car on coastal highway. {{styleBlock}}."
     },
     "join": {
       "aspect_ratio": "9:16",

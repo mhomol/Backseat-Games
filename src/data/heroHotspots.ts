@@ -1,6 +1,7 @@
 /**
  * Normalized tap targets on illustrated signs (measured from hero WebP art).
- * Home/host signs sit at ~60.7%, 67.1%, and 74.2% from the top (~75px tall each).
+ * Home signs sit at ~60.7%, 67.1%, and 74.2% from the top (~75px tall each).
+ * Host five-sign stack: ~60.6%, 67.1%, 74.0%, 79.9%, 86.0%.
  */
 export type HeroHotspot = {
   id: string;
@@ -9,7 +10,6 @@ export type HeroHotspot = {
   top: number;
   width: number;
   height: number;
-  overlay?: number;
 };
 
 export const homeHeroHotspots: HeroHotspot[] = [
@@ -43,43 +43,41 @@ export const hostHeroHotspots: HeroHotspot[] = [
   {
     id: 'license-plates',
     label: 'License Plates',
-    left: 0.01,
-    top: 0.607,
-    width: 0.58,
-    height: 0.048,
+    left: 0.0,
+    top: 0.606,
+    width: 0.5,
+    height: 0.05,
   },
   {
     id: 'sign-game',
     label: 'Sign Game',
-    left: 0.01,
+    left: 0.0,
     top: 0.671,
-    width: 0.55,
-    height: 0.049,
+    width: 0.5,
+    height: 0.05,
   },
   {
     id: 'bingo',
     label: 'Travel Bingo',
-    left: 0.01,
-    top: 0.742,
-    width: 0.58,
-    height: 0.045,
+    left: 0.0,
+    top: 0.74,
+    width: 0.5,
+    height: 0.05,
   },
   {
     id: 'hangman',
     label: 'Hangman',
-    left: 0.50,
-    top: 0.607,
-    width: 0.48,
-    height: 0.048,
-    overlay: require('../../assets/branding/host-sign-hangman.webp'),
+    left: 0.0,
+    top: 0.799,
+    width: 0.5,
+    height: 0.046,
   },
   {
     id: 'color-catch',
     label: 'Color Catch',
-    left: 0.50,
-    top: 0.671,
-    width: 0.48,
-    height: 0.049,
-    overlay: require('../../assets/branding/host-sign-color-catch.webp'),
+    left: 0.0,
+    top: 0.86,
+    width: 0.5,
+    height: 0.044,
   },
 ];

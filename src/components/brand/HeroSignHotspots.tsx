@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { homeHeroHotspots, hostHeroHotspots, type HeroHotspot } from '@/data/heroHotspots';
 
 type HeroSignHotspotsProps = {
@@ -32,11 +32,7 @@ export function HeroSignHotspots({ variant, onPress, disabled = false }: HeroSig
             },
             pressed && !disabled && styles.pressed,
           ]}
-        >
-          {spot.overlay ? (
-            <Image source={spot.overlay} style={styles.overlay} resizeMode="contain" />
-          ) : null}
-        </Pressable>
+        />
       ))}
     </>
   );
@@ -45,10 +41,6 @@ export function HeroSignHotspots({ variant, onPress, disabled = false }: HeroSig
 const styles = StyleSheet.create({
   hit: {
     position: 'absolute',
-  },
-  overlay: {
-    width: '100%',
-    height: '100%',
   },
   pressed: {
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
