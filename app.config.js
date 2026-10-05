@@ -7,7 +7,7 @@ module.exports = () => {
     expo: {
       name: 'Backseat Games',
       slug: 'backseat-games',
-      version: '1.3.0',
+      version: '1.4.0',
       orientation: 'portrait',
       icon: './assets/icon.png',
       userInterfaceStyle: 'light',

@@ -10,7 +10,7 @@ Related: [APP_STORE_RELEASE.md](./APP_STORE_RELEASE.md), [ARCHITECTURE.md](./ARC
 | Item                   | Location                                                                                      |
 | ---------------------- | --------------------------------------------------------------------------------------------- |
 | Package name           | `com.homolworks.backseatgames` — [app.config.js](../app.config.js)                            |
-| Marketing version      | `1.3.0` (`version` / Play `versionName`)                                                      |
+| Marketing version      | `1.4.0` (`version` / Play `versionName`)                                                      |
 | Android `versionCode`  | `ANDROID_VERSION_CODE` env (CI `run_number`) → [app.config.js](../app.config.js)              |
 | Adaptive icons         | `assets/android-icon-*.png`                                                                   |
 | Coming soon gates      | Join + Play online toast on Android — [platformFeatures.ts](../src/utils/platformFeatures.ts) |

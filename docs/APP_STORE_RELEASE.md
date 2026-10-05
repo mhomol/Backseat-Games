@@ -303,8 +303,29 @@ What’s new in 1.3
 
 ### Ship checklist
 
+- [x] Run **Actions → iOS TestFlight** on `master` after this version bump is pushed
+- [x] Create App Store Connect version **1.3.0** and attach the new build
+- [x] Paste **What’s New** above; submit for review when ready
+
+---
+
+## Version 1.4.0 — Hangman + Color Catch
+
+Marketing version: **1.4.0**. Apple approved **1.3.0**, so that train is closed for new builds.
+
+### What’s New (App Store Connect — paste into version 1.4)
+
+```
+What’s new in 1.4
+
+• Hangman — guess letters before the drawing is done. Play Solo (needs internet to pick a word) or with exactly one other phone; first to 5 wins
+• Color Catch — a Travel Bingo-style card of vehicle colors. Tap when you spot that color on the road
+```
+
+### Ship checklist
+
 - [ ] Run **Actions → iOS TestFlight** on `master` after this version bump is pushed
-- [ ] Create App Store Connect version **1.3.0** and attach the new build
+- [ ] Create App Store Connect version **1.4.0** and attach the new build
 - [ ] Paste **What’s New** above; submit for review when ready
 
 ---
