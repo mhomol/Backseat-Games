@@ -11,6 +11,7 @@ import {
   HANGMAN_SOLO_PUZZLE_ID,
   stripHangmanSecret,
 } from './hangman';
+import { getSessionWinnerDisplay } from '../utils/winnerLabel';
 import { playerFromLocal, testSession } from './testUtils';
 
 function guessWord(session: ReturnType<typeof startGame>, playerId: string, word: string) {
@@ -83,6 +84,9 @@ describe('hangman', () => {
     }
     assert.equal(session.winnerId, HANGMAN_SOLO_PUZZLE_ID);
     assert.equal(session.phase, 'finished');
+    const display = getSessionWinnerDisplay(session, 'host');
+    assert.equal(display?.outcome, 'loss');
+    assert.equal(display?.headline, 'Hit the road, Jack!');
   });
 
   it('awards the guesser, swaps roles, and wins first to 5', () => {

@@ -12,13 +12,14 @@ import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
+import { HangmanDrawing } from '@/components/HangmanDrawing';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { fetchHangmanPhrase } from '@/services/hangmanWordApi';
 import { playClaimFeedback, playInvalidFeedback } from '@/services/feedback';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
-import { borders, colors, fonts, radii, spacing } from '@/theme';
+import { brand, borders, colors, fonts, radii, spacing } from '@/theme';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -99,6 +100,7 @@ export default function HangmanScreen() {
         guard={guard}
         winnerHeadline={winnerDisplay?.headline}
         isWinnerYou={winnerDisplay?.isYou}
+        outcome={winnerDisplay?.outcome}
       />
       <View style={styles.playArea}>
         <ContentCapsule style={styles.statusCapsule}>
@@ -177,7 +179,7 @@ export default function HangmanScreen() {
           <>
             <View style={styles.boardRow}>
               <View style={styles.maskColumn}>
-                <Text style={styles.mask}>{gameState.displayMask || '—'}</Text>
+                <HangmanMask mask={gameState.displayMask} />
                 {canSeeSecret && secretForSupplier ? (
                   <Text style={styles.secretHint}>Answer: {secretForSupplier}</Text>
                 ) : null}
@@ -209,7 +211,9 @@ export default function HangmanScreen() {
                       (!isGuesser || gameState.roundPhase !== 'guessing') && styles.letterInert,
                     ]}
                   >
-                    <Text style={styles.letterText}>{letter}</Text>
+                    <Text style={styles.letterText} allowFontScaling={false}>
+                      {letter}
+                    </Text>
                   </Pressable>
                 );
               })}
@@ -224,20 +228,32 @@ export default function HangmanScreen() {
   );
 }
 
-function HangmanDrawing({ missCount, maxMisses }: { missCount: number; maxMisses: number }) {
-  const stage = Math.min(missCount, maxMisses);
+function HangmanMask({ mask }: { mask: string }) {
+  const tokens = mask.length > 0 ? mask.split(' ') : ['_'];
   return (
-    <View style={styles.gallows} accessibilityLabel={`Hangman drawing, ${stage} of ${maxMisses} misses`}>
-      <View style={styles.gallowsBase} />
-      <View style={styles.gallowsPost} />
-      <View style={styles.gallowsBeam} />
-      <View style={styles.gallowsRope} />
-      {stage >= 1 ? <View style={styles.head} /> : null}
-      {stage >= 2 ? <View style={styles.body} /> : null}
-      {stage >= 3 ? <View style={[styles.arm, styles.armLeft]} /> : null}
-      {stage >= 4 ? <View style={[styles.arm, styles.armRight]} /> : null}
-      {stage >= 5 ? <View style={[styles.leg, styles.legLeft]} /> : null}
-      {stage >= 6 ? <View style={[styles.leg, styles.legRight]} /> : null}
+    <View style={styles.maskRow}>
+      {tokens.map((token, index) => {
+        if (token === '') {
+          if (tokens[index - 1] === '') {
+            return null;
+          }
+          return <View key={`gap-${index}`} style={styles.wordGap} />;
+        }
+        if (token === '_') {
+          return (
+            <View key={`dash-${index}`} style={styles.dashTile}>
+              <View style={styles.dashBar} />
+            </View>
+          );
+        }
+        return (
+          <View key={`letter-${index}`} style={styles.maskTile}>
+            <Text style={styles.maskLetter} allowFontScaling={false}>
+              {token}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -304,107 +320,61 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
   },
-  mask: {
+  maskRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+  },
+  wordGap: {
+    width: 12,
+  },
+  dashTile: {
+    width: 28,
+    height: 36,
+    borderRadius: radii.sm,
+    backgroundColor: colors.cream,
+    borderWidth: borders.thick,
+    borderColor: brand.wood,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dashBar: {
+    width: 16,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.sunnyYellow,
+    borderWidth: 1,
+    borderColor: colors.sunnyYellowDark,
+  },
+  maskTile: {
+    width: 28,
+    height: 36,
+    borderRadius: radii.sm,
+    backgroundColor: colors.cream,
+    borderWidth: borders.thick,
+    borderColor: brand.wood,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  maskLetter: {
     fontFamily: fonts.displayBold,
-    fontSize: 28,
-    letterSpacing: 2,
-    color: colors.roadGray,
+    fontSize: 18,
+    lineHeight: 22,
+    color: colors.coral,
     textAlign: 'center',
+    includeFontPadding: false,
   },
   secretHint: {
     fontFamily: fonts.body,
     fontSize: 13,
-    color: colors.roadGrayLight,
+    color: colors.cream,
     textAlign: 'center',
     marginTop: spacing.sm,
-  },
-  gallows: {
-    flex: 1,
-    minWidth: 90,
-    maxWidth: 130,
-    height: 180,
-    alignSelf: 'center',
-  },
-  gallowsBase: {
-    position: 'absolute',
-    bottom: 8,
-    left: 8,
-    width: 72,
-    height: 6,
-    backgroundColor: colors.roadGray,
-    borderRadius: 2,
-  },
-  gallowsPost: {
-    position: 'absolute',
-    bottom: 14,
-    left: 20,
-    width: 6,
-    height: 150,
-    backgroundColor: colors.roadGray,
-  },
-  gallowsBeam: {
-    position: 'absolute',
-    top: 16,
-    left: 20,
-    width: 70,
-    height: 6,
-    backgroundColor: colors.roadGray,
-  },
-  gallowsRope: {
-    position: 'absolute',
-    top: 22,
-    left: 80,
-    width: 3,
-    height: 18,
-    backgroundColor: colors.roadGrayLight,
-  },
-  head: {
-    position: 'absolute',
-    top: 38,
-    left: 68,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    borderWidth: 3,
-    borderColor: colors.roadGray,
-  },
-  body: {
-    position: 'absolute',
-    top: 64,
-    left: 79,
-    width: 4,
-    height: 42,
-    backgroundColor: colors.roadGray,
-  },
-  arm: {
-    position: 'absolute',
-    top: 72,
-    width: 28,
-    height: 4,
-    backgroundColor: colors.roadGray,
-  },
-  armLeft: {
-    left: 54,
-    transform: [{ rotate: '-22deg' }],
-  },
-  armRight: {
-    left: 80,
-    transform: [{ rotate: '22deg' }],
-  },
-  leg: {
-    position: 'absolute',
-    top: 102,
-    width: 30,
-    height: 4,
-    backgroundColor: colors.roadGray,
-  },
-  legLeft: {
-    left: 54,
-    transform: [{ rotate: '28deg' }],
-  },
-  legRight: {
-    left: 78,
-    transform: [{ rotate: '-28deg' }],
+    textShadowColor: colors.roadGray,
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   pad: {
     flexDirection: 'row',
@@ -422,6 +392,7 @@ const styles = StyleSheet.create({
     borderWidth: borders.thick,
     borderColor: colors.roadGrayLight,
     borderRadius: radii.sm,
+    overflow: 'hidden',
   },
   letterUsed: {
     opacity: 0.35,
@@ -430,8 +401,12 @@ const styles = StyleSheet.create({
     opacity: 0.55,
   },
   letterText: {
-    fontFamily: fonts.bodyBold,
+    fontFamily: fonts.displayBold,
     fontSize: 16,
+    lineHeight: 18,
     color: colors.roadGray,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    includeFontPadding: false,
   },
 });

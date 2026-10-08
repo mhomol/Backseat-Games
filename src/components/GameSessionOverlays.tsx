@@ -4,17 +4,20 @@ import { ConnectionBanner } from '@/components/ConnectionBanner';
 import { WinCelebration } from '@/components/WinCelebration';
 import type { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionStore } from '@/store/sessionStore';
+import type { WinnerOutcome } from '@/utils/winnerLabel';
 
 type GameSessionOverlaysProps = {
   guard: ReturnType<typeof useGameSessionGuard>;
   winnerHeadline?: string;
   isWinnerYou?: boolean;
+  outcome?: WinnerOutcome;
 };
 
 export function GameSessionOverlays({
   guard,
   winnerHeadline,
   isWinnerYou = false,
+  outcome = 'win',
 }: GameSessionOverlaysProps) {
   const [celebrationDismissed, setCelebrationDismissed] = useState(false);
   const connectionStatus = useSessionStore((state) => state.connectionStatus);
@@ -56,6 +59,7 @@ export function GameSessionOverlays({
           visible={!celebrationDismissed}
           winnerName={winnerHeadline}
           isWinnerYou={isWinnerYou}
+          outcome={outcome}
           isHost={guard.isHost}
           onStartNewGame={guard.isHost ? guard.returnToLobbyAsHost : undefined}
           onDismiss={() => setCelebrationDismissed(true)}

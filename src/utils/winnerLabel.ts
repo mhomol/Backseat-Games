@@ -35,21 +35,29 @@ function tiedLeaderNames(session: SessionState, leaderIds: string[]): string {
   return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
 }
 
+export type WinnerOutcome = 'win' | 'loss';
+
+export type WinnerDisplay = {
+  headline: string;
+  isYou: boolean;
+  outcome: WinnerOutcome;
+};
+
 export function getSessionWinnerDisplay(
   session: SessionState,
   localPlayerId: string,
-): { headline: string; isYou: boolean } | null {
+): WinnerDisplay | null {
   if (session.phase !== 'finished') {
     return null;
   }
 
   if (session.winnerId) {
     if (session.winnerId === HANGMAN_SOLO_PUZZLE_ID) {
-      return { headline: 'The puzzle', isYou: false };
+      return { headline: 'Hit the road, Jack!', isYou: false, outcome: 'loss' };
     }
     const isYou = session.winnerId === localPlayerId;
     const name = session.players.find((p) => p.id === session.winnerId)?.name ?? 'Someone';
-    return { headline: isYou ? 'You' : name, isYou };
+    return { headline: isYou ? 'You' : name, isYou, outcome: 'win' };
   }
 
   let leaders: string[] = [];
@@ -57,26 +65,26 @@ export function getSessionWinnerDisplay(
     const scores = getLicensePlateScores(session.gameState, session.players);
     const max = Math.max(...session.players.map((p) => scores[p.id] ?? 0));
     if (max <= 0) {
-      return { headline: 'Nobody scored', isYou: false };
+      return { headline: 'Nobody scored', isYou: false, outcome: 'win' };
     }
     leaders = session.players.filter((p) => (scores[p.id] ?? 0) === max).map((p) => p.id);
   } else if (session.gameState?.type === 'sign-game') {
     const board = getSignGameLeaderboard(session.gameState, session.players);
     const max = board[0]?.lettersDone ?? 0;
     if (max <= 0) {
-      return { headline: 'Nobody scored', isYou: false };
+      return { headline: 'Nobody scored', isYou: false, outcome: 'win' };
     }
     leaders = board.filter((e) => e.lettersDone === max).map((e) => e.playerId);
   } else if (session.gameState?.type === 'bingo') {
     const max = Math.max(...session.players.map((p) => bingoMarkCount(session, p.id)));
     if (max <= 0) {
-      return { headline: 'Nobody scored', isYou: false };
+      return { headline: 'Nobody scored', isYou: false, outcome: 'win' };
     }
     leaders = session.players.filter((p) => bingoMarkCount(session, p.id) === max).map((p) => p.id);
   } else if (session.gameState?.type === 'color-catch') {
     const max = Math.max(...session.players.map((p) => colorCatchMarkCount(session, p.id)));
     if (max <= 0) {
-      return { headline: 'Nobody scored', isYou: false };
+      return { headline: 'Nobody scored', isYou: false, outcome: 'win' };
     }
     leaders = session.players
       .filter((p) => colorCatchMarkCount(session, p.id) === max)
@@ -84,7 +92,7 @@ export function getSessionWinnerDisplay(
   } else if (session.gameState?.type === 'hangman') {
     const max = Math.max(...session.players.map((p) => session.gameState?.type === 'hangman' ? session.gameState.scores[p.id] ?? 0 : 0));
     if (max <= 0) {
-      return { headline: 'Nobody scored', isYou: false };
+      return { headline: 'Nobody scored', isYou: false, outcome: 'win' };
     }
     leaders = session.players.filter((p) => (session.gameState?.type === 'hangman' ? session.gameState.scores[p.id] ?? 0 : 0) === max).map((p) => p.id);
   }
@@ -92,11 +100,12 @@ export function getSessionWinnerDisplay(
   if (leaders.length === 1) {
     const isYou = leaders[0] === localPlayerId;
     const name = session.players.find((p) => p.id === leaders[0])?.name ?? 'Someone';
-    return { headline: isYou ? 'You' : name, isYou };
+    return { headline: isYou ? 'You' : name, isYou, outcome: 'win' };
   }
 
   return {
     headline: tiedLeaderNames(session, leaders),
     isYou: false,
+    outcome: 'win',
   };
 }
