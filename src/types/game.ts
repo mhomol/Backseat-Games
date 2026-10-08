@@ -1,4 +1,4 @@
-import type { GameRules } from './preferences';
+import type { GameRules, HangmanDifficulty } from './preferences';
 
 export type GameType =
   | 'license-plates'
@@ -102,6 +102,7 @@ export interface HangmanState {
   scores: Record<string, number>;
   roundPhase: HangmanRoundPhase;
   winnerId: string | null;
+  soloDifficulty: HangmanDifficulty | null;
 }
 
 export interface ColorCatchState {

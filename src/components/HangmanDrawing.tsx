@@ -7,8 +7,6 @@ const WOOD_LIGHT = '#C4895A';
 const CREAM = brand.cream;
 const STRAP = brand.roadYellow;
 const SHIRT = brand.pink;
-const HALO = 3;
-
 type SketchProps = {
   left: number;
   top: number;
@@ -18,6 +16,7 @@ type SketchProps = {
   radius?: number;
   rotate?: string;
   circle?: boolean;
+  halo?: number;
 };
 
 function Sketch({
@@ -29,15 +28,16 @@ function Sketch({
   radius = 3,
   rotate,
   circle = false,
+  halo = 0,
 }: SketchProps) {
   const wrap: ViewStyle = {
     position: 'absolute',
-    left: left - HALO,
-    top: top - HALO,
-    width: width + HALO * 2,
-    height: height + HALO * 2,
-    backgroundColor: CREAM,
-    borderRadius: circle ? (width + HALO * 2) / 2 : radius + 2,
+    left: left - halo,
+    top: top - halo,
+    width: width + halo * 2,
+    height: height + halo * 2,
+    backgroundColor: halo > 0 ? CREAM : 'transparent',
+    borderRadius: circle ? (width + halo * 2) / 2 : radius + (halo > 0 ? 2 : 0),
     alignItems: 'center',
     justifyContent: 'center',
     transform: rotate ? [{ rotate }] : undefined,
@@ -78,21 +78,29 @@ export function HangmanDrawing({
       <Sketch left={82} top={30} width={5} height={24} fill={STRAP} radius={2} />
       {stage >= 1 ? (
         <>
-          <Sketch left={70} top={50} width={30} height={30} fill={CREAM} circle />
+          <Sketch left={70} top={50} width={30} height={30} fill={CREAM} circle halo={1} />
           <View style={styles.eyeLeft} />
           <View style={styles.eyeRight} />
         </>
       ) : null}
-      {stage >= 2 ? <Sketch left={80} top={80} width={10} height={40} fill={SHIRT} radius={5} /> : null}
-      {stage >= 3 ? <Sketch left={54} top={88} width={28} height={7} rotate="-26deg" /> : null}
+      {stage >= 2 ? (
+        <Sketch left={80} top={80} width={10} height={40} fill={SHIRT} radius={5} halo={1} />
+      ) : null}
+      {stage >= 3 ? (
+        <Sketch left={54} top={88} width={28} height={7} rotate="-26deg" halo={1} />
+      ) : null}
       {stage >= 4 ? (
         <>
-          <Sketch left={88} top={88} width={28} height={7} rotate="26deg" />
-          <Sketch left={110} top={80} width={8} height={8} fill={SHIRT} radius={2} />
+          <Sketch left={88} top={88} width={28} height={7} rotate="26deg" halo={1} />
+          <Sketch left={110} top={80} width={8} height={8} fill={SHIRT} radius={2} halo={1} />
         </>
       ) : null}
-      {stage >= 5 ? <Sketch left={56} top={116} width={30} height={7} rotate="30deg" /> : null}
-      {stage >= 6 ? <Sketch left={84} top={116} width={30} height={7} rotate="-30deg" /> : null}
+      {stage >= 5 ? (
+        <Sketch left={56} top={116} width={30} height={7} rotate="-30deg" halo={1} />
+      ) : null}
+      {stage >= 6 ? (
+        <Sketch left={84} top={116} width={30} height={7} rotate="30deg" halo={1} />
+      ) : null}
     </View>
   );
 }

@@ -15,7 +15,8 @@ import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { HangmanDrawing } from '@/components/HangmanDrawing';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
-import { fetchHangmanPhrase } from '@/services/hangmanWordApi';
+import { pickHangmanPhrase } from '@/data/hangmanDictionary';
+import { loadHangmanSolved, markHangmanSolved } from '@/services/hangmanSolvedStorage';
 import { playClaimFeedback, playInvalidFeedback } from '@/services/feedback';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
@@ -55,18 +56,19 @@ export default function HangmanScreen() {
     let cancelled = false;
     setFetchingWord(true);
     setWordError(null);
-    void fetchHangmanPhrase()
-      .then((phrase) => {
+    void loadHangmanSolved()
+      .then((solved) => {
         if (cancelled) {
           return;
         }
+        const phrase = pickHangmanPhrase(gameState.soloDifficulty ?? 'medium', solved);
         dispatchAction({ type: 'SUBMIT_HANGMAN_SECRET', phrase });
       })
       .catch((error: unknown) => {
         if (cancelled) {
           return;
         }
-        setWordError(error instanceof Error ? error.message : 'Need internet to pick a word');
+        setWordError(error instanceof Error ? error.message : 'Could not pick a word');
       })
       .finally(() => {
         if (!cancelled) {
@@ -76,7 +78,23 @@ export default function HangmanScreen() {
     return () => {
       cancelled = true;
     };
-  }, [dispatchAction, gameState?.mode, gameState?.round, gameState?.roundPhase]);
+  }, [
+    dispatchAction,
+    gameState?.mode,
+    gameState?.round,
+    gameState?.roundPhase,
+    gameState?.soloDifficulty,
+  ]);
+
+  useEffect(() => {
+    if (!session || !gameState || gameState.mode !== 'solo' || session.phase !== 'finished') {
+      return;
+    }
+    if (session.winnerId !== localPlayerId || !gameState.secretWord) {
+      return;
+    }
+    void markHangmanSolved(gameState.secretWord);
+  }, [session, gameState, localPlayerId]);
 
   useEffect(() => {
     if (gameState?.roundPhase === 'awaiting-secret') {
@@ -126,17 +144,23 @@ export default function HangmanScreen() {
               </View>
             ) : (
               <>
-                <Text style={styles.fetchText}>{wordError ?? 'Need internet to pick a word'}</Text>
+                <Text style={styles.fetchText}>{wordError ?? 'Could not pick a word'}</Text>
                 <BigButton
                   label="Retry"
                   onPress={() => {
                     setWordError(null);
                     setFetchingWord(true);
-                    void fetchHangmanPhrase()
-                      .then((phrase) => dispatchAction({ type: 'SUBMIT_HANGMAN_SECRET', phrase }))
+                    void loadHangmanSolved()
+                      .then((solved) => {
+                        const phrase = pickHangmanPhrase(
+                          gameState.soloDifficulty ?? 'medium',
+                          solved,
+                        );
+                        dispatchAction({ type: 'SUBMIT_HANGMAN_SECRET', phrase });
+                      })
                       .catch((error: unknown) => {
                         setWordError(
-                          error instanceof Error ? error.message : 'Need internet to pick a word',
+                          error instanceof Error ? error.message : 'Could not pick a word',
                         );
                       })
                       .finally(() => setFetchingWord(false));

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Image, Modal, StyleSheet, Text, View } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { playInvalidFeedback, playTruckHornFeedback, playWinFeedback } from '../services/feedback';
 import { borders, colors, fonts, radii, spacing } from '../theme';
@@ -58,10 +58,12 @@ export function WinCelebration({
       <View style={styles.overlay}>
         <View style={styles.card}>
           {isLoss ? (
-            <View style={styles.wrongWay} accessibilityLabel="Wrong way">
-              <Text style={styles.wrongWayText}>WRONG</Text>
-              <Text style={styles.wrongWayText}>WAY</Text>
-            </View>
+            <Image
+              source={require('../../assets/branding/wrong-way-sign.png')}
+              style={styles.wrongWay}
+              resizeMode="contain"
+              accessibilityLabel="Wrong way"
+            />
           ) : (
             <LottieView
               ref={animationRef}
@@ -114,23 +116,9 @@ const styles = StyleSheet.create({
     height: 180,
   },
   wrongWay: {
-    width: 168,
-    height: 112,
-    backgroundColor: colors.coral,
-    borderWidth: borders.extraThick,
-    borderColor: colors.cloudWhite,
-    borderRadius: radii.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 180,
+    height: 180,
     marginBottom: spacing.sm,
-  },
-  wrongWayText: {
-    fontFamily: fonts.displayBold,
-    fontSize: 28,
-    color: colors.cloudWhite,
-    letterSpacing: 2,
-    lineHeight: 32,
-    textAlign: 'center',
   },
   title: {
     fontFamily: fonts.displayBold,

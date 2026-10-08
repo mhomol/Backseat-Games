@@ -37,7 +37,7 @@ export function summarizeGameRules(gameType: GameType, rules: GameRules): string
       return [
         `Classic hangman drawing (${rules.hangman.maxMisses} misses)`,
         `First to ${rules.hangman.pointsToWin} round points wins (two-player)`,
-        'Solo needs internet to pick a random word',
+        'Solo picks Easy, Medium, or Hard from a local word list (offline)',
       ];
     case 'color-catch':
       return [

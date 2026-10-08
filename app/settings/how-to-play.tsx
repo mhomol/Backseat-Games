@@ -27,7 +27,7 @@ const SECTIONS = [
   {
     title: 'Hangman',
     body:
-      'Solo picks a random word from the internet (needs a connection). Online Hangman is exactly two phones: one player types a word, the other guesses letters. Roles swap each round. First to 5 points wins.',
+      'Solo: pick Easy, Medium, or Hard; words come from a local list on this phone. Online Hangman is exactly two phones: one player types a word, the other guesses letters. Roles swap each round. First to 5 points wins.',
   },
   {
     title: 'Color Catch',

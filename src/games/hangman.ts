@@ -67,6 +67,7 @@ export function createHangmanState(session: SessionState): HangmanState {
     scores,
     roundPhase: 'awaiting-secret',
     winnerId: null,
+    soloDifficulty: solo ? session.gameRules.hangman.soloDifficulty ?? 'medium' : null,
   };
 }
 

@@ -32,10 +32,11 @@ import { mergeGameRules } from '../data/defaultPreferences';
 import { collectNewlySpottedPlates } from '../utils/collectSpottedPlates';
 import { canStartHostedSession } from '../utils/hostEntitlement';
 import { usePlateCollectionStore } from './plateCollectionStore';
-import type { GameRules } from '../types/preferences';
+import type { GameRules, HangmanDifficulty } from '../types/preferences';
 
 type HostGameOptions = {
   solo?: boolean;
+  hangmanDifficulty?: HangmanDifficulty;
 };
 
 interface SessionStore {
@@ -295,7 +296,16 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       const sessionId = uuidv4().slice(0, 8);
       const hostId = get().localPlayerId;
       const host = playerFromLocal(hostId, hostName, true);
-      const gameRules = usePreferencesStore.getState().getDefaultGameRules();
+      let gameRules = usePreferencesStore.getState().getDefaultGameRules();
+      if (solo && gameType === 'hangman' && options?.hangmanDifficulty) {
+        gameRules = {
+          ...gameRules,
+          hangman: {
+            ...gameRules.hangman,
+            soloDifficulty: options.hangmanDifficulty,
+          },
+        };
+      }
       let session = createSession(sessionId, host, gameType, gameRules);
       void savePlayerName(hostName);
 

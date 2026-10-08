@@ -318,7 +318,7 @@ Marketing version: **1.4.0**. Apple approved **1.3.0**, so that train is closed 
 ```
 What’s new in 1.4
 
-• Hangman — guess letters before the drawing is done. Play Solo (needs internet to pick a word) or with exactly one other phone; first to 5 wins
+• Hangman — guess letters before the drawing is done. Play Solo (Easy / Medium / Hard, offline) or with exactly one other phone; first to 5 wins
 • Color Catch — a Travel Bingo-style card of vehicle colors. Tap when you spot that color on the road
 ```
 

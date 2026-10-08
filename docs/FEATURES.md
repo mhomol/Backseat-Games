@@ -23,7 +23,7 @@ Typically the front-seat parent on their phone. The host picks the game. For alo
 - Host sees a large **join code** to share with passengers, plus all joined players and the selected game type.
 - Joiners see a spinner: "Waiting for host to start…"
 - Host taps **Start Game!** when everyone is ready.
-- Competitive games in a shared waiting room (License Plates, Sign Game, Hangman) need **at least one other player**. Hangman online is **exactly two phones**. With **Play online** off on the host setup screen, anyone can play all five games alone on this phone for free — Hangman Solo needs internet to fetch a random word; the others work offline.
+- Competitive games in a shared waiting room (License Plates, Sign Game, Hangman) need **at least one other player**. Hangman online is **exactly two phones**. With **Play online** off on the host setup screen, anyone can play all five games alone on this phone for free, including Hangman Solo (Easy / Medium / Hard from a local list).
 
 ---
 
@@ -148,8 +148,8 @@ Guess letters to complete a word or short phrase before the hangman drawing is f
 
 ### Solo
 
-1. Start Hangman with **Play online** off.
-2. This phone asks a **public random-word website** for a word or two-word phrase. That needs internet. No name or join code is sent.
+1. Start Hangman with **Play online** off, then pick **Easy**, **Medium**, or **Hard**.
+2. This phone picks a word or phrase from a **local list** (no internet). Solved puzzles are skipped until that difficulty is used up, then it recycles.
 3. You are always the guesser. Complete the word before six misses to win; fill the drawing and you lose. That is the whole match.
 
 ### Two phones
@@ -225,5 +225,5 @@ These differ slightly from how some families played growing up:
 - Voice input requires a TestFlight/dev build (not Expo Go)
 - Host handoff is not supported if the host phone dies — passengers see a banner; host should reopen, or start a new join code
 - App must stay in foreground for reliable multiplayer sync
-- Hangman Solo needs internet to fetch a word from a public API (no offline word list)
+- Hangman Solo word list is finite per difficulty (grows in later releases); solved phrases recycle after you finish a tier
 - **Push notifications:** entitlement is included in native builds, but no alerts are sent yet (see [PUSH_SETUP.md](./PUSH_SETUP.md))

@@ -9,9 +9,8 @@ Backseat Games ("the app") is a family road-trip game app published by Homol Wor
 - **No accounts** — we do not collect names, emails, or Apple IDs in a user database.
 - **No analytics or ads** in v1.
 - **Multiplayer** — phones connect via a short-lived online relay using a join code.
-- **Hangman Solo words** — the host phone requests a random word from a public third-party API. That request does not include your name, join code, or other game data.
 - **Relay data** — display names and game state pass through our relay only while a room is active (about 4 hours max); we do not store them long-term.
-- **On-device storage** — player name, game preferences, win/loss stats, and purchase entitlement cache stay on your device.
+- **On-device storage** — player name, game preferences, win/loss stats, Hangman Solo solved phrases, and purchase entitlement cache stay on your device.
 - **Microphone** — used only when you use optional voice input in the Sign Game; audio stays on device during the session.
 - **In-app purchase** — Apple processes the one-time host unlock; we do not receive your payment details.
 
@@ -22,6 +21,7 @@ Backseat Games ("the app") is a family road-trip game app published by Homol Wor
 | Display name | Shown to other players in your car |
 | Car rule defaults | Pre-fill lobby settings when you host |
 | W–L–T stats | Personal record per game type |
+| Hangman solved phrases | Skip Solo words already guessed correctly on this phone |
 | Host unlock flag | Remember that you purchased hosting (also verified with Apple) |
 
 You can clear app data by deleting the app.
@@ -30,7 +30,7 @@ You can clear app data by deleting the app.
 
 | Permission | Why |
 |------------|-----|
-| Internet | Join-code multiplayer relay; Hangman Solo random-word API |
+| Internet | Join-code multiplayer relay |
 | Microphone | Optional Sign Game voice input |
 | Notifications | Optional alerts when a host starts a game (when enabled) |
 

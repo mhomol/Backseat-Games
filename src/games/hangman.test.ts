@@ -54,6 +54,10 @@ describe('hangman', () => {
   it('lets the solo guesser win without swapping', () => {
     const host = playerFromLocal('host', 'Host', true);
     let session = startGame(testSession('trip', host, 'hangman'));
+    assert.equal(session.gameState?.type, 'hangman');
+    if (session.gameState?.type === 'hangman') {
+      assert.equal(session.gameState.soloDifficulty, 'medium');
+    }
     session = (
       applyAction(session, 'host', {
         type: 'SUBMIT_HANGMAN_SECRET',

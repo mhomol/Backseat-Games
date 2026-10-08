@@ -15,11 +15,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
 import { hostHeroHotspots } from '@/data/heroHotspots';
+import { HangmanDifficultySheet } from '@/components/HangmanDifficultySheet';
 import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
+import type { HangmanDifficulty } from '@/types/preferences';
 import {
   isOnlineMultiplayerAvailable,
   MULTIPLAYER_COMING_SOON_MESSAGE,
@@ -58,6 +60,7 @@ export default function HostSetupScreen() {
   const [hostName, setHostName] = useState('');
   const [playOnline, setPlayOnline] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [hangmanSheetOpen, setHangmanSheetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { height: windowHeight } = useWindowDimensions();
   const formMaxHeight = Math.max(
@@ -134,9 +137,21 @@ export default function HostSetupScreen() {
       return;
     }
 
+    if (gameType === 'hangman' && !playOnline) {
+      setHangmanSheetOpen(true);
+      return;
+    }
+
+    await startHostedGame(gameType);
+  };
+
+  const startHostedGame = async (gameType: GameType, hangmanDifficulty?: HangmanDifficulty) => {
     setLoading(true);
     try {
-      const sessionId = await hostGame(gameType, hostName.trim(), { solo: !playOnline });
+      const sessionId = await hostGame(gameType, hostName.trim(), {
+        solo: !playOnline,
+        hangmanDifficulty,
+      });
       if (!playOnline) {
         router.replace(GAME_ROUTES[gameType]);
       } else {
@@ -209,6 +224,14 @@ export default function HostSetupScreen() {
           </View>
         </SafeAreaView>
       </KeyboardAvoidingView>
+      <HangmanDifficultySheet
+        visible={hangmanSheetOpen}
+        onPick={(difficulty) => {
+          setHangmanSheetOpen(false);
+          void startHostedGame('hangman', difficulty);
+        }}
+        onCancel={() => setHangmanSheetOpen(false)}
+      />
       <HostUnlockSheet
         visible={paywallOpen}
         priceLabel={productPrice}

@@ -6,7 +6,7 @@ import { borders, colors, fonts, radii, spacing } from '@/theme';
 const IOS_CARDS = [
   {
     title: 'Solo is always free',
-    body: 'Start a Game anytime. License Plates, Sign Game, Travel Bingo, and Color Catch work offline. Hangman Solo needs internet to pick a word.',
+    body: 'Start a Game anytime. All five games work offline, including Hangman Solo (Easy, Medium, or Hard from a local list).'
   },
   {
     title: 'Play online when the car joins',
@@ -21,11 +21,11 @@ const IOS_CARDS = [
 const ANDROID_CARDS = [
   {
     title: 'Solo is always free',
-    body: 'Start a Game anytime. License Plates, Sign Game, Travel Bingo, and Color Catch work offline. Hangman Solo needs internet to pick a word.',
+    body: 'Start a Game anytime. All five games work offline, including Hangman Solo (Easy, Medium, or Hard from a local list).'
   },
   {
     title: 'Games for the road',
-    body: 'Spot plates, race A to Z, fill Travel Bingo, catch vehicle colors, or play Hangman. Hangman Solo needs internet; the others work offline.',
+    body: 'Spot plates, race A to Z, fill Travel Bingo, catch vehicle colors, or play Hangman. Solo Hangman picks Easy, Medium, or Hard from a local list — no internet.',
   },
   {
     title: 'Multiplayer coming soon',

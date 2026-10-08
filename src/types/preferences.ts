@@ -18,9 +18,13 @@ export interface BingoRules {
   winMode: BingoWinMode;
 }
 
+export type HangmanDifficulty = 'easy' | 'medium' | 'hard';
+
 export interface HangmanRules {
   maxMisses: number;
   pointsToWin: number;
+  /** Solo only; set per trip from the host-setup sheet. */
+  soloDifficulty?: HangmanDifficulty;
 }
 
 export interface ColorCatchRules {
