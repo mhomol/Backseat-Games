@@ -165,7 +165,9 @@ function ColorCell({
         ]}
       >
         {isFree ? (
-          <Image source={FREE_CENTER_SIGN} style={styles.freeSign} resizeMode="cover" />
+          <View style={styles.freeSignWrap} pointerEvents="none">
+            <Image source={FREE_CENTER_SIGN} style={styles.freeSign} resizeMode="contain" />
+          </View>
         ) : (
           <View style={styles.labelBar} pointerEvents="none">
             <Text style={[styles.label, { color: ink }]} numberOfLines={2}>
@@ -219,12 +221,15 @@ const styles = StyleSheet.create({
     borderColor: colors.grassGreenDark,
     backgroundColor: colors.cream,
   },
+  freeSignWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 4,
+  },
   freeSign: {
-    ...StyleSheet.absoluteFill,
-    top: 3,
-    right: 3,
-    bottom: 3,
-    left: 3,
+    width: '88%',
+    height: '88%',
   },
   markedWash: {
     ...StyleSheet.absoluteFill,
