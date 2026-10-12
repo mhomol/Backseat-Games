@@ -20,6 +20,8 @@ export interface BingoRules {
 
 export type HangmanDifficulty = 'easy' | 'medium' | 'hard';
 
+export type ColorCatchDifficulty = 'easy' | 'hard';
+
 export interface HangmanRules {
   maxMisses: number;
   pointsToWin: number;
@@ -29,6 +31,8 @@ export interface HangmanRules {
 
 export interface ColorCatchRules {
   winMode: BingoWinMode;
+  /** 3×3 easy or 5×5 hard; set per trip from the host-setup sheet. */
+  difficulty?: ColorCatchDifficulty;
 }
 
 export interface GameRules {

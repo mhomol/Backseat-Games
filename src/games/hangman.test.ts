@@ -171,6 +171,22 @@ describe('hangman', () => {
     }
   });
 
+  it('treats a solo quit before solving as a puzzle loss', () => {
+    const host = playerFromLocal('host', 'Host', true);
+    let session = startGame(testSession('trip', host, 'hangman'));
+    session = (
+      applyAction(session, 'host', {
+        type: 'SUBMIT_HANGMAN_SECRET',
+        phrase: 'CAT',
+      }) as { ok: true; state: typeof session }
+    ).state;
+    session = finishGame(session);
+    assert.equal(session.winnerId, HANGMAN_SOLO_PUZZLE_ID);
+    assert.equal(session.phase, 'finished');
+    const display = getSessionWinnerDisplay(session, 'host');
+    assert.equal(display?.outcome, 'loss');
+  });
+
   it('uses scores when the host ends early', () => {
     const host = playerFromLocal('host', 'Host', true);
     const guest = playerFromLocal('guest', 'Guest', false);

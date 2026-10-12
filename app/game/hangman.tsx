@@ -19,8 +19,12 @@ import { pickHangmanPhrase } from '@/data/hangmanDictionary';
 import { loadHangmanSolved, markHangmanSolved } from '@/services/hangmanSolvedStorage';
 import { playClaimFeedback, playInvalidFeedback } from '@/services/feedback';
 import { useSessionStore } from '@/store/sessionStore';
+import { layoutHangmanMaskRows } from '@/utils/hangmanMaskLayout';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { brand, borders, colors, fonts, radii, spacing } from '@/theme';
+
+const MASK_TILE = 28;
+const MASK_GAP = 6;
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -253,31 +257,54 @@ export default function HangmanScreen() {
 }
 
 function HangmanMask({ mask }: { mask: string }) {
-  const tokens = mask.length > 0 ? mask.split(' ') : ['_'];
+  const [rowWidth, setRowWidth] = useState(0);
+  const maxPerRow =
+    rowWidth > 0 ? Math.max(1, Math.floor((rowWidth + MASK_GAP) / (MASK_TILE + MASK_GAP))) : 8;
+  const rows = layoutHangmanMaskRows(mask, maxPerRow);
+
   return (
-    <View style={styles.maskRow}>
-      {tokens.map((token, index) => {
-        if (token === '') {
-          if (tokens[index - 1] === '') {
-            return null;
-          }
-          return <View key={`gap-${index}`} style={styles.wordGap} />;
+    <View
+      style={styles.maskStack}
+      onLayout={(event) => {
+        const nextWidth = Math.floor(event.nativeEvent.layout.width);
+        if (nextWidth !== rowWidth) {
+          setRowWidth(nextWidth);
         }
-        if (token === '_') {
-          return (
-            <View key={`dash-${index}`} style={styles.dashTile}>
-              <View style={styles.dashBar} />
+      }}
+    >
+      {rows.map((row, rowIndex) => (
+        <View key={`row-${rowIndex}`} style={styles.maskRow}>
+          {row.map((word, wordIndex) => (
+            <View key={`word-${rowIndex}-${wordIndex}`} style={styles.maskWord}>
+              {word.map((token, tokenIndex) => {
+                if (token.kind === 'hyphen') {
+                  return (
+                    <View key={`hyphen-${tokenIndex}`} style={styles.maskTile}>
+                      <Text style={styles.maskLetter} allowFontScaling={false}>
+                        -
+                      </Text>
+                    </View>
+                  );
+                }
+                if (token.kind === 'blank') {
+                  return (
+                    <View key={`dash-${tokenIndex}`} style={styles.dashTile}>
+                      <View style={styles.dashBar} />
+                    </View>
+                  );
+                }
+                return (
+                  <View key={`letter-${tokenIndex}`} style={styles.maskTile}>
+                    <Text style={styles.maskLetter} allowFontScaling={false}>
+                      {token.char}
+                    </Text>
+                  </View>
+                );
+              })}
             </View>
-          );
-        }
-        return (
-          <View key={`letter-${index}`} style={styles.maskTile}>
-            <Text style={styles.maskLetter} allowFontScaling={false}>
-              {token}
-            </Text>
-          </View>
-        );
-      })}
+          ))}
+        </View>
+      ))}
     </View>
   );
 }
@@ -344,15 +371,22 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
   },
+  maskStack: {
+    width: '100%',
+    gap: 8,
+  },
   maskRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
+    gap: 12,
   },
-  wordGap: {
-    width: 12,
+  maskWord: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    alignItems: 'center',
+    gap: MASK_GAP,
   },
   dashTile: {
     width: 28,

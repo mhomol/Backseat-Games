@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,18 +7,25 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { bingoItemImages } from '@/data/bingoItemImages';
 import { playBingoFeedback, playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
-import { FREE_CENTER_INDEX, BINGO_SIZE } from '@/games/bingo';
-import { getColorCatchSquare, wouldCompleteColorCatch } from '@/games/colorCatch';
+import {
+  colorCatchCellCount,
+  colorCatchFreeCenterIndex,
+  getColorCatchSquare,
+  wouldCompleteColorCatch,
+} from '@/games/colorCatch';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
 import { useSessionStore } from '@/store/sessionStore';
 import { getSessionWinnerDisplay } from '@/utils/winnerLabel';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
+
+const FREE_CENTER_SIGN = bingoItemImages['road-work-ahead'];
 
 function contrastInk(hex: string): string {
   const value = hex.replace('#', '');
@@ -65,23 +72,25 @@ export default function ColorCatchScreen() {
           <Text style={styles.instructions}>Tap a square when you spot that vehicle color!</Text>
         </ContentCapsule>
         <View style={styles.grid}>
-          {Array.from({ length: BINGO_SIZE }).map((_, index) => {
-            const square = getColorCatchSquare(card, index);
+          {Array.from({ length: colorCatchCellCount(gameState.gridSize) }).map((_, index) => {
+            const square = getColorCatchSquare(card, index, gameState.gridSize);
             const isMarked = marked[index];
+            const freeCenter = colorCatchFreeCenterIndex(gameState.gridSize);
             return (
               <ColorCell
                 key={index}
                 label={square.label}
                 hex={square.hex}
                 isMarked={isMarked}
-                isFree={index === FREE_CENTER_INDEX}
+                isFree={index === freeCenter}
+                cellWidth={gameState.gridSize === 3 ? '32%' : '19%'}
                 onPress={() => {
-                  if (isMarked && index !== FREE_CENTER_INDEX) {
+                  if (isMarked && index !== freeCenter) {
                     void playClaimFeedback();
                     dispatchAction({ type: 'UNMARK_COLOR_CATCH', index });
                   } else if (!isMarked) {
                     const winMode = session.gameRules['color-catch'].winMode;
-                    if (wouldCompleteColorCatch(marked, index, winMode)) {
+                    if (wouldCompleteColorCatch(marked, index, winMode, gameState.gridSize)) {
                       void playBingoFeedback();
                       void playTruckHornFeedback();
                     } else {
@@ -107,12 +116,14 @@ function ColorCell({
   hex,
   isMarked,
   isFree,
+  cellWidth,
   onPress,
 }: {
   label: string;
   hex: string;
   isMarked: boolean;
   isFree: boolean;
+  cellWidth: `${number}%`;
   onPress: () => void;
 }) {
   const scale = useSharedValue(1);
@@ -129,7 +140,7 @@ function ColorCell({
   }));
 
   return (
-    <Animated.View style={[styles.cellWrap, animatedStyle]}>
+    <Animated.View style={[styles.cellWrap, { width: cellWidth }, animatedStyle]}>
       <Pressable
         onPress={() => {
           if (!isMarked) {
@@ -148,17 +159,21 @@ function ColorCell({
         }}
         style={[
           styles.cell,
-          { backgroundColor: hex },
+          { backgroundColor: isFree ? colors.cream : hex },
           isFree && styles.cellFree,
           isMarked && styles.cellMarked,
         ]}
       >
-        {isMarked ? <View style={styles.markedWash} pointerEvents="none" /> : null}
-        <View style={styles.labelBar} pointerEvents="none">
-          <Text style={[styles.label, { color: ink }]} numberOfLines={2}>
-            {label}
-          </Text>
-        </View>
+        {isFree ? (
+          <Image source={FREE_CENTER_SIGN} style={styles.freeSign} resizeMode="cover" />
+        ) : (
+          <View style={styles.labelBar} pointerEvents="none">
+            <Text style={[styles.label, { color: ink }]} numberOfLines={2}>
+              {label}
+            </Text>
+          </View>
+        )}
+        {isMarked && !isFree ? <View style={styles.markedWash} pointerEvents="none" /> : null}
         {isMarked ? (
           <Animated.Text style={[styles.stamp, stampStyle]}>✓</Animated.Text>
         ) : null}
@@ -202,6 +217,14 @@ const styles = StyleSheet.create({
   },
   cellFree: {
     borderColor: colors.grassGreenDark,
+    backgroundColor: colors.cream,
+  },
+  freeSign: {
+    ...StyleSheet.absoluteFill,
+    top: 3,
+    right: 3,
+    bottom: 3,
+    left: 3,
   },
   markedWash: {
     ...StyleSheet.absoluteFill,

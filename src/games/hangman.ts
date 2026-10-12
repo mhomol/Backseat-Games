@@ -283,7 +283,7 @@ export function resolveHangmanWinner(session: SessionState): string | null {
     return state.winnerId;
   }
   if (state.mode === 'solo') {
-    return null;
+    return HANGMAN_SOLO_PUZZLE_ID;
   }
   const entries = session.players.map((player) => ({
     playerId: player.id,

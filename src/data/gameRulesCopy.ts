@@ -41,6 +41,10 @@ export function summarizeGameRules(gameType: GameType, rules: GameRules): string
       ];
     case 'color-catch':
       return [
+        rules['color-catch'].difficulty === 'easy'
+          ? 'Easy: 9 squares with the middle already marked'
+          : 'Hard: unique 5×5 card with a free center',
+        'Colors are shuffled for every player and every new game',
         rules['color-catch'].winMode === 'line'
           ? 'Win on any row, column, or diagonal'
           : 'Win by marking the full card',

@@ -6,12 +6,11 @@ import type {
   GameAction,
   SessionState,
 } from '../types/game';
-import {
-  BINGO_SIZE,
-  FREE_CENTER_INDEX,
-  hasBlackout,
-  hasLineBingo,
-} from './bingo';
+import type { ColorCatchDifficulty } from '../types/preferences';
+import { hasBlackout } from './bingo';
+
+export const COLOR_CATCH_EASY_SIZE = 3;
+export const COLOR_CATCH_HARD_SIZE = 5;
 
 function hashSeed(input: string): number {
   let hash = 0;
@@ -33,45 +32,100 @@ function seededShuffle<T>(items: T[], seed: string): T[] {
   return copy;
 }
 
-export function generateColorCatchCard(sessionId: string, playerId: string): BingoCard {
+export function colorCatchGridSize(difficulty: ColorCatchDifficulty | undefined): 3 | 5 {
+  return difficulty === 'easy' ? COLOR_CATCH_EASY_SIZE : COLOR_CATCH_HARD_SIZE;
+}
+
+export function colorCatchCellCount(gridSize: number): number {
+  return gridSize * gridSize;
+}
+
+export function colorCatchFreeCenterIndex(gridSize: number): number {
+  return Math.floor((gridSize * gridSize) / 2);
+}
+
+export function colorCatchFilledCount(gridSize: number): number {
+  return colorCatchCellCount(gridSize) - 1;
+}
+
+function hasColorCatchLine(marked: boolean[], gridSize: number): boolean {
+  for (let row = 0; row < gridSize; row += 1) {
+    if ([...Array(gridSize)].every((_, col) => marked[row * gridSize + col])) {
+      return true;
+    }
+  }
+  for (let col = 0; col < gridSize; col += 1) {
+    if ([...Array(gridSize)].every((_, row) => marked[row * gridSize + col])) {
+      return true;
+    }
+  }
+  if ([...Array(gridSize)].every((_, index) => marked[index * gridSize + index])) {
+    return true;
+  }
+  if (
+    [...Array(gridSize)].every((_, index) => marked[index * gridSize + (gridSize - 1 - index)])
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function generateColorCatchCard(
+  sessionId: string,
+  playerId: string,
+  gridSize: number,
+  shuffleSalt: string,
+): BingoCard {
   const shuffled = seededShuffle(
     vehicleColors.map((color) => color.id),
-    `${sessionId}:color-catch:${playerId}`,
+    `${sessionId}:color-catch:${playerId}:${shuffleSalt}`,
   );
-  return { itemIds: shuffled.slice(0, 24), freeCenter: true };
+  return { itemIds: shuffled.slice(0, colorCatchFilledCount(gridSize)), freeCenter: true };
 }
 
 export function createColorCatchState(session: SessionState): ColorCatchState {
+  const difficulty: ColorCatchDifficulty = session.gameRules['color-catch'].difficulty ?? 'hard';
+  const gridSize = colorCatchGridSize(difficulty);
+  const cellCount = colorCatchCellCount(gridSize);
+  const freeCenter = colorCatchFreeCenterIndex(gridSize);
+  const shuffleSalt = Math.random().toString(36).slice(2);
   const cards: Record<string, BingoCard> = {};
   const marked: Record<string, boolean[]> = {};
 
   for (const player of session.players) {
-    cards[player.id] = generateColorCatchCard(session.sessionId, player.id);
-    marked[player.id] = Array(BINGO_SIZE).fill(false);
-    marked[player.id][FREE_CENTER_INDEX] = true;
+    cards[player.id] = generateColorCatchCard(
+      session.sessionId,
+      player.id,
+      gridSize,
+      shuffleSalt,
+    );
+    marked[player.id] = Array(cellCount).fill(false);
+    marked[player.id][freeCenter] = true;
   }
 
-  return { type: 'color-catch', cards, marked, winnerId: null };
+  return { type: 'color-catch', gridSize, difficulty, cards, marked, winnerId: null };
 }
 
-function hasColorCatchWin(marked: boolean[], winMode: 'line' | 'blackout'): boolean {
+function hasColorCatchWin(marked: boolean[], winMode: 'line' | 'blackout', gridSize: number): boolean {
   if (winMode === 'blackout') {
     return hasBlackout(marked);
   }
-  return hasLineBingo(marked);
+  return hasColorCatchLine(marked, gridSize);
 }
 
 export function wouldCompleteColorCatch(
   marked: boolean[],
   index: number,
   winMode: 'line' | 'blackout',
+  gridSize: number,
 ): boolean {
-  if (index < 0 || index >= BINGO_SIZE || marked[index]) {
+  const cellCount = colorCatchCellCount(gridSize);
+  if (index < 0 || index >= cellCount || marked[index]) {
     return false;
   }
   const next = [...marked];
   next[index] = true;
-  return hasColorCatchWin(next, winMode);
+  return hasColorCatchWin(next, winMode, gridSize);
 }
 
 export function applyColorCatchAction(
@@ -93,11 +147,15 @@ export function applyColorCatchAction(
     return { ok: false, reason: 'No color card found.' };
   }
 
+  const gridSize = state.gridSize;
+  const cellCount = colorCatchCellCount(gridSize);
+  const freeCenter = colorCatchFreeCenterIndex(gridSize);
+
   if (action.type === 'MARK_COLOR_CATCH') {
-    if (action.index < 0 || action.index >= BINGO_SIZE) {
+    if (action.index < 0 || action.index >= cellCount) {
       return { ok: false, reason: 'Invalid square.' };
     }
-    if (action.index === FREE_CENTER_INDEX) {
+    if (action.index === freeCenter) {
       return { ok: false, reason: 'Free space is always marked.' };
     }
     if (playerMarked[action.index]) {
@@ -105,7 +163,11 @@ export function applyColorCatchAction(
     }
     const nextMarked = [...playerMarked];
     nextMarked[action.index] = true;
-    const winnerId = hasColorCatchWin(nextMarked, session.gameRules['color-catch'].winMode)
+    const winnerId = hasColorCatchWin(
+      nextMarked,
+      session.gameRules['color-catch'].winMode,
+      gridSize,
+    )
       ? playerId
       : null;
     return {
@@ -125,7 +187,7 @@ export function applyColorCatchAction(
   }
 
   if (action.type === 'UNMARK_COLOR_CATCH') {
-    if (action.index === FREE_CENTER_INDEX) {
+    if (action.index === freeCenter) {
       return { ok: false, reason: 'Free space cannot be unmarked.' };
     }
     if (!playerMarked[action.index]) {
@@ -153,11 +215,13 @@ export function applyColorCatchAction(
 export function getColorCatchSquare(
   card: BingoCard,
   index: number,
+  gridSize: number,
 ): { id?: string; label: string; hex: string } {
-  if (index === FREE_CENTER_INDEX) {
-    return { label: 'Free!', hex: '#7CB342' };
+  const freeCenter = colorCatchFreeCenterIndex(gridSize);
+  if (index === freeCenter) {
+    return { label: 'Free', hex: '#FFF8E8' };
   }
-  const itemIndex = index < FREE_CENTER_INDEX ? index : index - 1;
+  const itemIndex = index < freeCenter ? index : index - 1;
   const colorId = card.itemIds[itemIndex];
   const color = vehicleColorById[colorId];
   return {

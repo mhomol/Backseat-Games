@@ -15,13 +15,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
 import { hostHeroHotspots } from '@/data/heroHotspots';
+import { ColorCatchDifficultySheet } from '@/components/ColorCatchDifficultySheet';
 import { HangmanDifficultySheet } from '@/components/HangmanDifficultySheet';
 import { HostUnlockSheet } from '@/components/purchases/HostUnlockSheet';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
-import type { HangmanDifficulty } from '@/types/preferences';
+import type { ColorCatchDifficulty, HangmanDifficulty } from '@/types/preferences';
 import {
   isOnlineMultiplayerAvailable,
   MULTIPLAYER_COMING_SOON_MESSAGE,
@@ -61,6 +62,7 @@ export default function HostSetupScreen() {
   const [playOnline, setPlayOnline] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [hangmanSheetOpen, setHangmanSheetOpen] = useState(false);
+  const [colorCatchSheetOpen, setColorCatchSheetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { height: windowHeight } = useWindowDimensions();
   const formMaxHeight = Math.max(
@@ -142,15 +144,25 @@ export default function HostSetupScreen() {
       return;
     }
 
+    if (gameType === 'color-catch') {
+      setColorCatchSheetOpen(true);
+      return;
+    }
+
     await startHostedGame(gameType);
   };
 
-  const startHostedGame = async (gameType: GameType, hangmanDifficulty?: HangmanDifficulty) => {
+  const startHostedGame = async (
+    gameType: GameType,
+    hangmanDifficulty?: HangmanDifficulty,
+    colorCatchDifficulty?: ColorCatchDifficulty,
+  ) => {
     setLoading(true);
     try {
       const sessionId = await hostGame(gameType, hostName.trim(), {
         solo: !playOnline,
         hangmanDifficulty,
+        colorCatchDifficulty,
       });
       if (!playOnline) {
         router.replace(GAME_ROUTES[gameType]);
@@ -231,6 +243,14 @@ export default function HostSetupScreen() {
           void startHostedGame('hangman', difficulty);
         }}
         onCancel={() => setHangmanSheetOpen(false)}
+      />
+      <ColorCatchDifficultySheet
+        visible={colorCatchSheetOpen}
+        onPick={(difficulty) => {
+          setColorCatchSheetOpen(false);
+          void startHostedGame('color-catch', undefined, difficulty);
+        }}
+        onCancel={() => setColorCatchSheetOpen(false)}
       />
       <HostUnlockSheet
         visible={paywallOpen}

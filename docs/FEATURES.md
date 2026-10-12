@@ -164,11 +164,11 @@ Guess letters to complete a word or short phrase before the hangman drawing is f
 
 ## Color Catch
 
-Each player gets a **unique 5×5 card of vehicle colors**. Same win rules as Travel Bingo.
+Each player gets a **shuffled unique card of vehicle colors** — Easy is 3×3 with the middle marked, Hard is the original 5×5. Same win rules as Travel Bingo.
 
 ### Rules
 
-1. Cards are generated when the host starts — no two cards are alike.
+1. Pick Easy or Hard when you tap the Color Catch sign. Colors are shuffled for every player and every new game — no two cards are alike.
 2. The center square is a free space (always marked).
 3. When you spot that color on a vehicle, **tap** the square. Tap again to unmark (except the free center).
 4. First player to complete a **line** (or **blackout**, if that car rule is on) wins.

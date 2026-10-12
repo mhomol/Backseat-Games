@@ -4,7 +4,7 @@ export type VehicleColor = {
   hex: string;
 };
 
-/** Named vehicle colors/shades for Color Catch (24 unique cells + free center). */
+/** Named vehicle colors/shades for Color Catch (shuffled onto Easy 8 or Hard 24 cells + free center). */
 export const vehicleColors: VehicleColor[] = [
   { id: 'white', label: 'White', hex: '#F4F1EA' },
   { id: 'black', label: 'Black', hex: '#1C1C1C' },

@@ -32,7 +32,7 @@ const SECTIONS = [
   {
     title: 'Color Catch',
     body:
-      'Each player gets a unique 5×5 card of vehicle colors. The center is always marked. Tap when you spot that color on a vehicle. Win on a line or blackout, same as Travel Bingo.',
+      'Pick Easy (9 squares, middle marked) or Hard (unique 5×5). Colors are shuffled for every player and every new game. Tap when you spot that color on a vehicle. Win on a line or blackout, same as Travel Bingo.',
   },
 ];
 

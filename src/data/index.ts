@@ -26,7 +26,7 @@ export const GAME_DESCRIPTIONS: Record<GameType, string> = {
   bingo: 'Mark things you see on your unique bingo card. First bingo wins!',
   'sign-game': 'Race from A to Z using road signs. Type or say your words!',
   hangman: 'Guess the word or phrase before the hangman is complete.',
-  'color-catch': 'Mark vehicle colors on your unique card. First bingo wins!',
+  'color-catch': 'Spot vehicle colors on a shuffled Easy or Hard card. First bingo wins!',
 };
 
 export const GAME_EMOJI: Record<GameType, string> = {

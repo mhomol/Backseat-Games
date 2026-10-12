@@ -32,11 +32,12 @@ import { mergeGameRules } from '../data/defaultPreferences';
 import { collectNewlySpottedPlates } from '../utils/collectSpottedPlates';
 import { canStartHostedSession } from '../utils/hostEntitlement';
 import { usePlateCollectionStore } from './plateCollectionStore';
-import type { GameRules, HangmanDifficulty } from '../types/preferences';
+import type { ColorCatchDifficulty, GameRules, HangmanDifficulty } from '../types/preferences';
 
 type HostGameOptions = {
   solo?: boolean;
   hangmanDifficulty?: HangmanDifficulty;
+  colorCatchDifficulty?: ColorCatchDifficulty;
 };
 
 interface SessionStore {
@@ -303,6 +304,15 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           hangman: {
             ...gameRules.hangman,
             soloDifficulty: options.hangmanDifficulty,
+          },
+        };
+      }
+      if (gameType === 'color-catch' && options?.colorCatchDifficulty) {
+        gameRules = {
+          ...gameRules,
+          'color-catch': {
+            ...gameRules['color-catch'],
+            difficulty: options.colorCatchDifficulty,
           },
         };
       }

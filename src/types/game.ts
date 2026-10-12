@@ -1,4 +1,4 @@
-import type { GameRules, HangmanDifficulty } from './preferences';
+import type { ColorCatchDifficulty, GameRules, HangmanDifficulty } from './preferences';
 
 export type GameType =
   | 'license-plates'
@@ -107,6 +107,8 @@ export interface HangmanState {
 
 export interface ColorCatchState {
   type: 'color-catch';
+  gridSize: 3 | 5;
+  difficulty: ColorCatchDifficulty;
   cards: Record<string, BingoCard>;
   marked: Record<string, boolean[]>;
   winnerId: string | null;
