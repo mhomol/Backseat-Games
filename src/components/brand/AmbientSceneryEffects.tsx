@@ -120,11 +120,9 @@ export function AmbientSceneryEffects({
       translateX.value = width + 160;
       translateY.value = skyY;
       opacity.value = 1;
-      if (kind === 'plane') {
-        flapId = setInterval(() => {
-          setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
-        }, 90);
-      }
+      flapId = setInterval(() => {
+        setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
+      }, 90);
       translateX.value = withTiming(-180, {
         duration: 8000 + Math.floor(Math.random() * 3000),
         easing: Easing.linear,
@@ -253,7 +251,14 @@ export function AmbientSceneryEffects({
     );
   } else if (active === 'sleigh') {
     critter = (
-      <Image source={sleighSprite} style={styles.sleigh} resizeMode="contain" />
+      <View style={styles.sleigh}>
+        <Image source={sleighSprite} style={styles.sleighBody} resizeMode="contain" />
+        <Image
+          source={planePropFrames[planeFrame]}
+          style={styles.sleighProp}
+          resizeMode="contain"
+        />
+      </View>
     );
   } else if (active === 'bird') {
     critter = (
@@ -316,6 +321,18 @@ const styles = StyleSheet.create({
   sleigh: {
     width: 128,
     height: 72,
+  },
+  sleighBody: {
+    width: 128,
+    height: 72,
+  },
+  /** Pink nose hub — same 2-frame prop overlay as the plane. */
+  sleighProp: {
+    position: 'absolute',
+    left: 2,
+    top: 24,
+    width: 38,
+    height: 38,
   },
   bird: {
     width: 56,
