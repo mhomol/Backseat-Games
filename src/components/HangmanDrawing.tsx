@@ -7,6 +7,11 @@ const WOOD_LIGHT = '#C4895A';
 const CREAM = brand.cream;
 const STRAP = brand.roadYellow;
 const SHIRT = brand.pink;
+const PILGRIM = '#4A3728';
+const PILGRIM_BUCKLE = '#F0C060';
+const SANTA_RED = '#C0392B';
+const SANTA_WHITE = '#FFF8EE';
+const SANTA_BEARD = '#F5F5F5';
 type SketchProps = {
   left: number;
   top: number;
@@ -61,15 +66,20 @@ function Sketch({
 export function HangmanDrawing({
   missCount,
   maxMisses,
+  character = 'hitchhiker',
 }: {
   missCount: number;
   maxMisses: number;
+  character?: 'hitchhiker' | 'pilgrim' | 'santa';
 }) {
   const stage = Math.min(missCount, maxMisses);
+  const coat = character === 'santa' ? SANTA_RED : character === 'pilgrim' ? PILGRIM : SHIRT;
+  const who =
+    character === 'santa' ? 'Santa' : character === 'pilgrim' ? 'Pilgrim' : 'Roadside traveler';
   return (
     <View
       style={styles.frame}
-      accessibilityLabel={`Roadside traveler drawing, ${stage} of ${maxMisses} misses`}
+      accessibilityLabel={`${who} drawing, ${stage} of ${maxMisses} misses`}
     >
       <Sketch left={10} top={168} width={88} height={10} radius={4} />
       <Sketch left={20} top={18} width={12} height={152} radius={4} />
@@ -81,10 +91,29 @@ export function HangmanDrawing({
           <Sketch left={70} top={50} width={30} height={30} fill={CREAM} circle halo={1} />
           <View style={styles.eyeLeft} />
           <View style={styles.eyeRight} />
+          {character === 'pilgrim' ? (
+            <>
+              <Sketch left={66} top={42} width={38} height={10} fill={PILGRIM} radius={2} />
+              <Sketch left={74} top={34} width={22} height={12} fill={PILGRIM} radius={2} />
+              <Sketch left={82} top={36} width={6} height={6} fill={PILGRIM_BUCKLE} radius={1} />
+            </>
+          ) : null}
+          {character === 'santa' ? (
+            <>
+              <Sketch left={68} top={36} width={34} height={16} fill={SANTA_RED} radius={6} />
+              <Sketch left={92} top={30} width={10} height={10} fill={SANTA_WHITE} circle />
+              <Sketch left={72} top={70} width={26} height={12} fill={SANTA_BEARD} radius={6} />
+            </>
+          ) : null}
         </>
       ) : null}
       {stage >= 2 ? (
-        <Sketch left={80} top={80} width={10} height={40} fill={SHIRT} radius={5} halo={1} />
+        <>
+          <Sketch left={80} top={80} width={10} height={40} fill={coat} radius={5} halo={1} />
+          {character === 'pilgrim' ? (
+            <Sketch left={76} top={78} width={18} height={6} fill={CREAM} radius={2} />
+          ) : null}
+        </>
       ) : null}
       {stage >= 3 ? (
         <Sketch left={54} top={88} width={28} height={7} rotate="-26deg" halo={1} />
@@ -92,7 +121,7 @@ export function HangmanDrawing({
       {stage >= 4 ? (
         <>
           <Sketch left={88} top={88} width={28} height={7} rotate="26deg" halo={1} />
-          <Sketch left={110} top={80} width={8} height={8} fill={SHIRT} radius={2} halo={1} />
+          <Sketch left={110} top={80} width={8} height={8} fill={coat} radius={2} halo={1} />
         </>
       ) : null}
       {stage >= 5 ? (

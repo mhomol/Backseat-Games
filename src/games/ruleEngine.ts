@@ -6,6 +6,8 @@ import type {
   SessionState,
 } from '../types/game';
 import type { GameRules } from '../types/preferences';
+import type { ThemeId } from '../types/theme';
+import { isThemeId } from '../types/theme';
 import { createBingoState, applyBingoAction } from './bingo';
 import { applyColorCatchAction, createColorCatchState, getColorCatchMarkCount } from './colorCatch';
 import { applyHangmanAction, createHangmanState, resolveHangmanWinner } from './hangman';
@@ -21,6 +23,7 @@ export function createSession(
   host: Player,
   gameType: GameType,
   gameRules: GameRules,
+  themeId: ThemeId = 'classic',
 ): SessionState {
   return {
     sessionId,
@@ -29,6 +32,7 @@ export function createSession(
     players: [host],
     hostId: host.id,
     gameRules,
+    themeId: isThemeId(themeId) ? themeId : 'classic',
     gameState: null,
     winnerId: null,
     lastRejection: null,

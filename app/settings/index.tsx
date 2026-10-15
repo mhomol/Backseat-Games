@@ -7,6 +7,7 @@ import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { FirstRunTeaching } from '@/components/onboarding/FirstRunTeaching';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsToggle } from '@/components/settings/SettingsToggle';
+import { ThemePickerSection } from '@/components/settings/ThemePickerSection';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { usePurchaseStore } from '@/store/purchaseStore';
@@ -28,6 +29,7 @@ export default function SettingsScreen() {
   const updatePreferences = usePreferencesStore((state) => state.updatePreferences);
   const stats = useStatsStore((state) => state.stats);
   const spottedCodes = usePlateCollectionStore((state) => state.spottedCodes);
+  const ownsTheme = usePurchaseStore((state) => state.ownsTheme);
   const canHost = usePurchaseStore((state) => state.canHost);
   const requiresPurchase = usePurchaseStore((state) => state.requiresPurchase);
   const productPrice = usePurchaseStore((state) => state.productPrice);
@@ -55,7 +57,7 @@ export default function SettingsScreen() {
       return;
     }
     useSessionStore.setState({
-      toast: 'No previous host unlock found for this Apple ID.',
+      toast: 'No previous purchases found for this Apple ID.',
     });
   };
 
@@ -86,7 +88,7 @@ export default function SettingsScreen() {
             </Text>
             <SettingsLinkRow
               label="Restore purchases"
-              description="Re-sync your host-online unlock from the App Store"
+              description="Re-sync host unlock and holiday themes from the App Store"
               onPress={() => {
                 void handleRestore();
               }}
@@ -101,6 +103,13 @@ export default function SettingsScreen() {
           </Text>
         </SettingsSection>
       )}
+      {Platform.OS === 'ios' ? (
+        <ThemePickerSection
+          selectedThemeId={preferences.selectedThemeId}
+          ownsTheme={ownsTheme}
+          onSelect={(selectedThemeId) => updatePreferences({ selectedThemeId })}
+        />
+      ) : null}
       <SettingsSection title="Sound & Haptics">
         <SettingsToggle
           label="Sound effects"

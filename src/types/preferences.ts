@@ -1,4 +1,5 @@
 import type { GameType } from './game';
+import type { ThemeId } from './theme';
 
 export type QxzMatchMode = 'anywhere' | 'starts-with';
 
@@ -49,6 +50,8 @@ export interface AppPreferences {
   hapticsEnabled: boolean;
   /** Cold-start opening jingle on Home. Independent of sound effects. */
   introJingleEnabled: boolean;
+  /** Applied look; paid themes also need StoreKit entitlement. */
+  selectedThemeId: ThemeId;
 }
 
 export type GameRulesSlice<T extends GameType> = GameRules[T];

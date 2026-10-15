@@ -31,6 +31,8 @@ import { stripHangmanSecret } from '../games/hangman';
 import { mergeGameRules } from '../data/defaultPreferences';
 import { collectNewlySpottedPlates } from '../utils/collectSpottedPlates';
 import { canStartHostedSession } from '../utils/hostEntitlement';
+import { isThemeId } from '../types/theme';
+import { resolveSelectableTheme } from '../utils/themeEntitlement';
 import { usePlateCollectionStore } from './plateCollectionStore';
 import type { ColorCatchDifficulty, GameRules, HangmanDifficulty } from '../types/preferences';
 
@@ -91,7 +93,10 @@ export const useSessionStore = create<SessionStore>((set, get) => {
       .recordFinishedSession(previousSession, nextSession, localPlayerId);
     const spotted = collectNewlySpottedPlates(previousSession, nextSession, localPlayerId);
     usePlateCollectionStore.getState().recordSpotted(spotted);
-    set({ session: nextSession, ...extra });
+    const session = isThemeId(nextSession.themeId)
+      ? nextSession
+      : { ...nextSession, themeId: 'classic' as const };
+    set({ session, ...extra });
   };
 
   const outboundSession = (session: SessionState): SessionState => stripHangmanSecret(session);
@@ -316,7 +321,11 @@ export const useSessionStore = create<SessionStore>((set, get) => {
           },
         };
       }
-      let session = createSession(sessionId, host, gameType, gameRules);
+      const themeId = resolveSelectableTheme(
+        usePreferencesStore.getState().preferences.selectedThemeId,
+        usePurchaseStore.getState().ownedThemeIds,
+      );
+      let session = createSession(sessionId, host, gameType, gameRules, themeId);
       void savePlayerName(hostName);
 
       if (solo) {

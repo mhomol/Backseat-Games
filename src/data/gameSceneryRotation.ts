@@ -53,14 +53,22 @@ export const gameSceneryRotation: GameSceneryEntry[] = [
   },
 ];
 
-export function sceneryIndexForSession(sessionId: string): number {
+export function sceneryIndexForSession(
+  sessionId: string,
+  rotation: readonly GameSceneryEntry[] = gameSceneryRotation,
+): number {
   let hash = 0;
   for (let i = 0; i < sessionId.length; i += 1) {
     hash = (hash * 31 + sessionId.charCodeAt(i)) >>> 0;
   }
-  return hash % gameSceneryRotation.length;
+  const length = rotation.length || 1;
+  return hash % length;
 }
 
-export function gameSceneryForSession(sessionId: string): GameSceneryEntry {
-  return gameSceneryRotation[sceneryIndexForSession(sessionId)];
+export function gameSceneryForSession(
+  sessionId: string,
+  rotation: readonly GameSceneryEntry[] = gameSceneryRotation,
+): GameSceneryEntry {
+  const list = rotation.length > 0 ? rotation : gameSceneryRotation;
+  return list[sceneryIndexForSession(sessionId, list)]!;
 }

@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
 import { AmbientSceneryEffects } from '@/components/brand/AmbientSceneryEffects';
+import { HolidayWeatherEffects } from '@/components/brand/HolidayWeatherEffects';
 import { GAME_SCENERY_ASPECT } from '@/data/gameSceneryRotation';
-import { heroAspectRatio, sceneryImages, type SceneryVariant } from '@/data/brandAssets';
+import { heroAspectRatio, type SceneryVariant } from '@/data/brandAssets';
+import { useThemePack } from '@/hooks/useResolvedTheme';
 import { brand } from '@/theme/brand';
 
 type SceneryBackgroundProps = {
@@ -24,11 +26,13 @@ export function SceneryBackground({
   children,
   ambientEffects = true,
 }: SceneryBackgroundProps) {
-  const ratio = scenerySource ? GAME_SCENERY_ASPECT : heroAspectRatio(variant);
-  const source = scenerySource ?? sceneryImages[variant];
+  const pack = useThemePack();
+  const ratio =
+    scenerySource || pack.id !== 'classic' ? GAME_SCENERY_ASPECT : heroAspectRatio(variant);
+  const source = scenerySource ?? pack.heroes[variant];
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: pack.sky }]}>
       <View style={styles.anchor}>
         <View style={[styles.artFrame, { aspectRatio: ratio }]}>
           <Image
@@ -38,6 +42,7 @@ export function SceneryBackground({
             accessibilityIgnoresInvertColors
           />
           {ambientEffects ? <AmbientSceneryEffects /> : null}
+          {ambientEffects ? <HolidayWeatherEffects ambient={pack.ambient} /> : null}
           <View style={styles.overlay} pointerEvents="box-none">
             {children}
           </View>
@@ -69,3 +74,4 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFill,
   },
 });
+

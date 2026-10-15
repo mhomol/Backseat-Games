@@ -1,4 +1,5 @@
 import type { ColorCatchDifficulty, GameRules, HangmanDifficulty } from './preferences';
+import type { ThemeId } from './theme';
 
 export type GameType =
   | 'license-plates'
@@ -41,6 +42,8 @@ export interface SessionState {
   players: Player[];
   hostId: string;
   gameRules: GameRules;
+  /** Host look for this trip. Joiners render this even without owning the IAP. */
+  themeId: ThemeId;
   gameState: GameState | null;
   winnerId: string | null;
   lastRejection: { playerId: string; reason: string } | null;

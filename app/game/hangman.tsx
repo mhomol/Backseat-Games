@@ -212,7 +212,17 @@ export default function HangmanScreen() {
                   <Text style={styles.secretHint}>Answer: {secretForSupplier}</Text>
                 ) : null}
               </View>
-              <HangmanDrawing missCount={gameState.missCount} maxMisses={gameState.maxMisses} />
+              <HangmanDrawing
+                missCount={gameState.missCount}
+                maxMisses={gameState.maxMisses}
+                character={
+                  session.themeId === 'christmas'
+                    ? 'santa'
+                    : session.themeId === 'thanksgiving'
+                      ? 'pilgrim'
+                      : 'hitchhiker'
+                }
+              />
             </View>
             <View style={styles.pad}>
               {LETTERS.map((letter) => {

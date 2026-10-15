@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { BrandDisclaimer } from '@/components/brand/BrandDisclaimer';
 import { HeroSignHotspots } from '@/components/brand/HeroSignHotspots';
 import { SceneryBackground } from '@/components/brand/SceneryBackground';
+import { StoreEntryButton } from '@/components/store/StoreEntryButton';
 import { FirstRunTeaching } from '@/components/onboarding/FirstRunTeaching';
 import { playOpenJingle } from '@/services/feedback';
 import {
@@ -13,16 +14,21 @@ import {
   markFirstRunTeachingSeen,
 } from '@/services/firstRunStorage';
 import { usePreferencesStore } from '@/store/preferencesStore';
+import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import {
   isOnlineMultiplayerAvailable,
   MULTIPLAYER_COMING_SOON_MESSAGE,
 } from '@/utils/platformFeatures';
+import { useThemePack } from '@/hooks/useResolvedTheme';
 import { spacing } from '@/theme';
 
 export default function HomeScreen() {
   const [teachingOpen, setTeachingOpen] = useState(false);
   const preferencesLoaded = usePreferencesStore((state) => state.loaded);
+  const ownsTheme = usePurchaseStore((state) => state.ownsTheme);
+  const showStoreBadge = !ownsTheme('thanksgiving') || !ownsTheme('christmas');
+  const themePack = useThemePack();
 
   useEffect(() => {
     if (!preferencesLoaded) {
@@ -50,7 +56,15 @@ export default function HomeScreen() {
 
   return (
     <SceneryBackground variant="home">
-      <StatusBar style="dark" />
+      <StatusBar style={themePack.id === 'christmas' ? 'light' : 'dark'} />
+      {Platform.OS === 'ios' ? (
+        <StoreEntryButton
+          badge={showStoreBadge}
+          onPress={() => {
+            router.push('/store');
+          }}
+        />
+      ) : null}
       <HeroSignHotspots
         variant="home"
         onPress={(id) => {

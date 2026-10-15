@@ -185,7 +185,10 @@ Host unlock IAP is enforced in **TestFlight and App Store builds only** (`__DEV_
 ### Prerequisites
 
 1. **Paid Apps Agreement** active in App Store Connect (Agreements, Tax, and Banking).
-2. Non-consumable product `com.homolworks.backseatgames.host_unlock` created at **$0.99**, status **Ready to Submit** — see [MONETIZATION.md](./MONETIZATION.md).
+2. Non-consumable products **Ready to Submit** — see [MONETIZATION.md](./MONETIZATION.md):
+   - `com.homolworks.backseatgames.host_unlock` ($0.99)
+   - `com.homolworks.backseatgames.theme_thanksgiving` ($0.99)
+   - `com.homolworks.backseatgames.theme_christmas` ($0.99)
 3. **Sandbox Apple ID** — App Store Connect → Users and Access → Sandbox → Testers.
 4. **Physical iPhone** with TestFlight build installed.
 
@@ -199,6 +202,7 @@ Host unlock IAP is enforced in **TestFlight and App Store builds only** (`__DEV_
 6. Confirm **Join** still works on a second phone without purchase.
 7. **Settings → Restore purchases** on a reinstall → online hosting works without repurchasing.
 8. Optional: enable airplane mode → confirm Solo Mode still works without unlock.
+9. **1.5 holiday themes:** Home **Store** → preview Thanksgiving/Christmas → sandbox buy each SKU. **Settings → Theme** applies owned looks. Host a session; a second phone without the IAP still sees the host theme. Restore on reinstall returns host unlock **and** both themes. Classic remains the default.
 
 ### Troubleshooting IAP
 

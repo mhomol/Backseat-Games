@@ -62,7 +62,11 @@ export default function BingoScreen() {
         </ContentCapsule>
         <View style={styles.grid}>
           {Array.from({ length: BINGO_SIZE }).map((_, index) => {
-            const { id, label, icon, category } = getBingoSquareLabel(card, index);
+            const { id, label, icon, category } = getBingoSquareLabel(
+              card,
+              index,
+              session.themeId ?? 'classic',
+            );
             const isMarked = marked[index];
             return (
               <BingoCell

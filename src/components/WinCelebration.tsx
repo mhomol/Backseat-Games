@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { Image, Modal, StyleSheet, Text, View } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { playInvalidFeedback, playTruckHornFeedback, playWinFeedback } from '../services/feedback';
+import { HolidayWeatherEffects } from '@/components/brand/HolidayWeatherEffects';
+import { useThemePack } from '@/hooks/useResolvedTheme';
 import { borders, colors, fonts, radii, spacing } from '../theme';
 import type { WinnerOutcome } from '../utils/winnerLabel';
 import { BigButton } from './BigButton';
@@ -29,6 +31,7 @@ export function WinCelebration({
 }: WinCelebrationProps) {
   const animationRef = useRef<LottieView>(null);
   const isLoss = outcome === 'loss';
+  const pack = useThemePack();
 
   useEffect(() => {
     if (!visible) {
@@ -56,7 +59,12 @@ export function WinCelebration({
   return (
     <Modal transparent animationType="slide" visible={visible}>
       <View style={styles.overlay}>
-        <View style={styles.card}>
+        <View style={[styles.card, { borderColor: pack.id === 'classic' ? colors.sunnyYellowDark : pack.sky }]}>
+          {pack.ambient !== 'classic' && !isLoss ? (
+            <View style={styles.weatherClip} pointerEvents="none">
+              <HolidayWeatherEffects ambient={pack.ambient} />
+            </View>
+          ) : null}
           {isLoss ? (
             <Image
               source={require('../../assets/branding/wrong-way-sign.png')}
@@ -110,6 +118,11 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     alignItems: 'center',
     gap: spacing.sm,
+    overflow: 'hidden',
+  },
+  weatherClip: {
+    ...StyleSheet.absoluteFill,
+    opacity: 0.55,
   },
   lottie: {
     width: 180,

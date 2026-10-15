@@ -1,4 +1,9 @@
-import { bingoItems } from '../data';
+import {
+  bingoPoolIds,
+  findBingoItem,
+  FREE_CENTER_LABEL,
+  themeIdFromSession,
+} from '../data/bingoPools';
 import type {
   ApplyResult,
   BingoCard,
@@ -6,6 +11,7 @@ import type {
   GameAction,
   SessionState,
 } from '../types/game';
+import type { ThemeId } from '../types/theme';
 
 const BINGO_SIZE = 25;
 const FREE_CENTER_INDEX = 12;
@@ -30,11 +36,12 @@ function seededShuffle<T>(items: T[], seed: string): T[] {
   return copy;
 }
 
-export function generateBingoCard(sessionId: string, playerId: string): BingoCard {
-  const shuffled = seededShuffle(
-    bingoItems.map((item) => item.id),
-    `${sessionId}:${playerId}`,
-  );
+export function generateBingoCard(
+  sessionId: string,
+  playerId: string,
+  themeId: ThemeId = 'classic',
+): BingoCard {
+  const shuffled = seededShuffle(bingoPoolIds(themeId), `${sessionId}:${playerId}`);
   const itemIds = shuffled.slice(0, 24);
   return { itemIds, freeCenter: true };
 }
@@ -42,9 +49,10 @@ export function generateBingoCard(sessionId: string, playerId: string): BingoCar
 export function createBingoState(session: SessionState): BingoState {
   const cards: Record<string, BingoCard> = {};
   const marked: Record<string, boolean[]> = {};
+  const themeId = themeIdFromSession(session.themeId);
 
   for (const player of session.players) {
-    cards[player.id] = generateBingoCard(session.sessionId, player.id);
+    cards[player.id] = generateBingoCard(session.sessionId, player.id, themeId);
     marked[player.id] = Array(BINGO_SIZE).fill(false);
     marked[player.id][FREE_CENTER_INDEX] = true;
   }
@@ -181,15 +189,16 @@ export function applyBingoAction(
 export function getBingoSquareLabel(
   card: BingoCard,
   index: number,
+  themeId: ThemeId = 'classic',
 ): { id?: string; label: string; icon: string; category?: string } {
   if (index === FREE_CENTER_INDEX) {
-    return { label: 'Road Trip!', icon: '🚗', category: 'vehicles' };
+    return { label: FREE_CENTER_LABEL[themeId], icon: '🚗', category: 'vehicles' };
   }
   const itemIndex = index < FREE_CENTER_INDEX ? index : index - 1;
   const itemId = card.itemIds[itemIndex];
-  const item = bingoItems.find((entry) => entry.id === itemId);
+  const item = findBingoItem(itemId);
   return {
-    id: item?.id,
+    id: item?.id ?? itemId,
     label: item?.label ?? '???',
     icon: item?.icon ?? '❓',
     category: item?.category,

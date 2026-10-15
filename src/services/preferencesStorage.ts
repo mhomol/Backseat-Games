@@ -5,6 +5,7 @@ import {
   mergeGameRules,
 } from '../data/defaultPreferences';
 import type { AppPreferences } from '../types/preferences';
+import { parseStoredThemeId } from '../utils/themeEntitlement';
 
 const STORAGE_KEY = 'backseat-games.preferences';
 
@@ -16,6 +17,7 @@ function mergeWithDefaults(partial: Partial<AppPreferences> | null): AppPreferen
   return clonePreferences({
     ...DEFAULT_PREFERENCES,
     ...partial,
+    selectedThemeId: parseStoredThemeId(partial.selectedThemeId),
     gameRules: mergeGameRules(DEFAULT_PREFERENCES.gameRules, partial.gameRules),
   });
 }

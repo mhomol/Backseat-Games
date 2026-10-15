@@ -87,6 +87,7 @@ export default function RootLayout() {
         <View style={styles.root}>
           <Stack screenOptions={stackScreenOptions}>
             <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="store" options={{ title: 'Store' }} />
             <Stack.Screen name="host/setup" options={{ title: '' }} />
             <Stack.Screen name="join/index" options={{ title: '' }} />
             <Stack.Screen name="lobby/[sessionId]" options={{ title: '' }} />

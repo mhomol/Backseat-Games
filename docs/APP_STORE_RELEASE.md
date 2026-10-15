@@ -330,6 +330,48 @@ What’s new in 1.4
 
 ---
 
+## Version 1.5.0 — Holiday themes
+
+Marketing version: **1.5.0**. Do **not** submit until **1.4.0** is approved (or rejected and replaced). Target submit **~Nov 13, 2026**. No other builds **Nov 16–25** or **Dec 20–Jan 3** except hotfixes.
+
+Create and attach two new non-consumable IAPs (see [MONETIZATION.md](./MONETIZATION.md)):
+
+- `com.homolworks.backseatgames.theme_thanksgiving` — $0.99
+- `com.homolworks.backseatgames.theme_christmas` — $0.99
+
+### What’s New (App Store Connect — paste into version 1.5)
+
+```
+What’s new in 1.5
+
+• Holiday themes — Thanksgiving and Christmas looks for the whole trip, including themed Travel Bingo sights
+• Hangman dresses up — pilgrim for Thanksgiving, Santa for Christmas
+• Store on the home screen — preview, buy, and restore; pick the theme you own in Settings
+```
+
+### Promo text (listing, no new build)
+
+- **At submit (through Thanksgiving travel):** lead with Thanksgiving; mention Christmas is included in the same update.
+- **Around Nov 30:** swap promotional text to lead with Christmas. Do not ship a 1.5.1 for copy only.
+
+### TestFlight matrix
+
+- [ ] Buy Thanksgiving, apply in Settings, confirm home/host/games + Hangman pilgrim
+- [ ] Buy Christmas separately; restore on a reinstall restores **both** themes **and** host unlock
+- [ ] Joiner without purchase sees the host’s theme
+- [ ] Classic remains default and free
+- [ ] Home Store corner control; Settings apply picker; preview before buy
+- [ ] Sign hotspots still hit on themed heroes (after art is promoted)
+
+### Ship checklist
+
+- [ ] Run **Actions → iOS TestFlight** on the 1.5 branch / `master` after the version bump
+- [ ] Create App Store Connect version **1.5.0**, attach build + both theme IAPs + host unlock
+- [ ] Fresh screenshots (Store, Settings theme picker, Thanksgiving home)
+- [ ] Paste **What’s New** above; submit ~Nov 13 when 1.4 is live
+
+---
+
 ## After approval
 
 - [ ] Smoke-test production listing and IAP

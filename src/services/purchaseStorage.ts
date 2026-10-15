@@ -1,37 +1,39 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  DEFAULT_HOST_ENTITLEMENT,
-  type HostEntitlementCache,
-} from '../types/purchases';
+import { DEFAULT_ENTITLEMENT, type EntitlementCache } from '../types/purchases';
+import { uniquePaidThemes } from '../utils/themeEntitlement';
 
 const STORAGE_KEY = 'backseat-games.host-entitlement';
 
-function mergeWithDefaults(partial: Partial<HostEntitlementCache> | null): HostEntitlementCache {
+function mergeWithDefaults(partial: Partial<EntitlementCache> | null): EntitlementCache {
   if (!partial) {
-    return { ...DEFAULT_HOST_ENTITLEMENT };
+    return { ...DEFAULT_ENTITLEMENT };
   }
   return {
     hostUnlocked: partial.hostUnlocked ?? false,
+    ownedThemeIds: uniquePaidThemes(partial.ownedThemeIds ?? []),
     lastVerifiedAt: partial.lastVerifiedAt ?? null,
   };
 }
 
-export async function loadHostEntitlementCache(): Promise<HostEntitlementCache> {
+export async function loadHostEntitlementCache(): Promise<EntitlementCache> {
   try {
     const raw = await AsyncStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      return { ...DEFAULT_HOST_ENTITLEMENT };
+      return { ...DEFAULT_ENTITLEMENT };
     }
-    return mergeWithDefaults(JSON.parse(raw) as Partial<HostEntitlementCache>);
+    return mergeWithDefaults(JSON.parse(raw) as Partial<EntitlementCache>);
   } catch {
-    return { ...DEFAULT_HOST_ENTITLEMENT };
+    return { ...DEFAULT_ENTITLEMENT };
   }
 }
 
-export async function saveHostEntitlementCache(cache: HostEntitlementCache): Promise<void> {
+export async function saveHostEntitlementCache(cache: EntitlementCache): Promise<void> {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
   } catch {
     // Non-fatal — entitlement falls back to StoreKit on next launch.
   }
 }
+
+export const loadEntitlementCache = loadHostEntitlementCache;
+export const saveEntitlementCache = saveHostEntitlementCache;

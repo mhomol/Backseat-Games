@@ -26,8 +26,9 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 - Done in v1.1: First-run teaching (host vs join, free join, one-time for-life host unlock)
 - Done in v1.1: Claim / bingo stamp / letter-advance micro-animations
-- Done: Solo Mode (offline) on host setup for launch games; Hangman Solo needs internet for a public word API
-- Done: Hangman (solo or exactly two phones; classic drawing; first to 5)
+- Done: Solo Mode (offline) on host setup for all five games; Hangman Solo uses a local Easy/Medium/Hard list
+- Done: Hangman (solo or exactly two phones; wooden hitchhiker drawing with road-dash letter tiles and a Wrong Way sign on a loss; first to 5; Solo uses a local Easy/Medium/Hard word list — no internet needed)
+- Done for 1.4: Hangman drawing / aesthetic polish
 - Done: Color Catch (Travel Bingo-style 5×5 of vehicle colors, free center)
 - Done: License Plates collection progress (lifetime spotted codes on this device)
 - Done: Sign Game quality-of-life (invalid stays in the word dialog + invalid sound; skip low STT confidence when reported)
@@ -52,6 +53,10 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 ## App Store And Growth
 
+- **1.4:** submitted for App Store review Oct 13, 2026 — not live yet
+- **After 1.4 approval:** marketing push is the priority for this product (launch plan lives with the Homol Works bot)
+- **1.5 (in progress):** Holiday themes — see Monetization below; version **1.5.0**, submit ~Nov 13, 2026 after 1.4 is live
+
 - Done: App Store 1.2.1 approved (delight + Solo offline + accessibility)
 - Done: Refresh screenshots after delight art + solo setup lands
 - Done: Ratings prompt after successful play sessions (StoreKit, 14-day cooldown)
@@ -59,7 +64,22 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 ## Monetization
 
 - Done in v1.1: Stronger one-time for-life copy on first-run + HostUnlockSheet
-- Later IAP: purchasable game themes (new look-and-feel, including themed bingo packs) plus purchasable animations — not a free host-setup filter
+- **1.5 track — Holiday themes:** purchasable game themes (look-and-feel, including themed bingo packs) for Thanksgiving and Christmas, plus Hangman costumes and extra motion — not a free host-setup filter
+  — Two SKUs (~$0.99): `theme_thanksgiving`, `theme_christmas`
+  — Store from home (corner control) + Settings apply picker
+  — Both themes ship in one release; submit by ~Nov 13, 2026 (live before Nov 25-26 travel)
+  — Swap promo text Thanksgiving -> Christmas around Nov 30 (no new build)
+  — No other builds Nov 16-25 or Dec 20-Jan 3 except hotfixes
+  — Manual Flux Kontext Pro art first ([HOLIDAY_THEMES.md](./HOLIDAY_THEMES.md)); do not automate Replicate until vetted
+  — Acceptance criteria:
+    — [ ] Themes purchasable via IAP
+    — [ ] Restore Purchases restores owned themes (and host unlock)
+    — [ ] A selected theme applies across all games
+    — [ ] Theme previews available before buying (Store)
+    — [ ] Applying an owned theme is done in Settings
+    — [ ] Host theme syncs to joiners without them buying
+    — [ ] Hangman: hitchhiker / pilgrim / Santa; Wrong Way on loss unchanged
+    — [ ] Home Store entry is a corner control, not a fourth post sign
 - P3: Promo-code friendly UI
 
 ## Technical Debt

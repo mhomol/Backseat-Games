@@ -94,12 +94,14 @@ See [TESTFLIGHT_CI.md](./TESTFLIGHT_CI.md) § Testing In-App Purchases for the s
 
 | File | Purpose |
 |------|---------|
-| [`src/types/purchases.ts`](../src/types/purchases.ts) | Product ID constant |
+| [`src/types/purchases.ts`](../src/types/purchases.ts) | Host + theme product IDs |
 | [`src/services/iapService.ts`](../src/services/iapService.ts) | StoreKit init, purchase, restore |
 | [`src/services/purchaseStorage.ts`](../src/services/purchaseStorage.ts) | AsyncStorage entitlement cache |
 | [`src/store/purchaseStore.ts`](../src/store/purchaseStore.ts) | Zustand entitlement state |
-| [`src/components/purchases/HostUnlockSheet.tsx`](../src/components/purchases/HostUnlockSheet.tsx) | Paywall UI |
-| [`src/utils/hostEntitlement.ts`](../src/utils/hostEntitlement.ts) | Pure entitlement helpers |
+| [`src/components/purchases/HostUnlockSheet.tsx`](../src/components/purchases/HostUnlockSheet.tsx) | Host paywall UI |
+| [`app/store/index.tsx`](../app/store/index.tsx) | Theme Store catalog |
+| [`src/utils/hostEntitlement.ts`](../src/utils/hostEntitlement.ts) | Host entitlement helpers |
+| [`src/utils/themeEntitlement.ts`](../src/utils/themeEntitlement.ts) | Theme ownership helpers |
 
 **Gate points:** home Start sign → paywall; `/host/setup` redirect; `sessionStore.hostGame()` toast guard.
 
@@ -113,6 +115,27 @@ Separate checklist (not blocking IAP):
 - Privacy Nutrition Label questionnaire
 - Age rating
 - App Review notes (offline multiplayer, sandbox test steps)
+
+## Holiday themes (iOS 1.5)
+
+Purchasable **look-and-feel** packs. Classic remains free. Assets ship in the app; IAP only unlocks applying a theme on this Apple ID. The **host’s** selected theme is stamped on the session so passengers see it without buying.
+
+| Product | Product ID | Price | Type |
+|---------|------------|-------|------|
+| Thanksgiving theme | `com.homolworks.backseatgames.theme_thanksgiving` | **$0.99** (Tier 1) | Non-consumable |
+| Christmas theme | `com.homolworks.backseatgames.theme_christmas` | **$0.99** (Tier 1) | Non-consumable |
+
+No bundle SKU in 1.5. Family Sharing: same as host unlock if already enabled.
+
+**Where to buy:** Home **Store** corner control, or Settings → Store. Preview before buying.
+
+**Where to apply:** Settings → Theme. After purchase, Store may offer **Use this theme** (same preference).
+
+**Restore:** Settings and Store restore host unlock **and** owned themes.
+
+Create both products in App Store Connect (non-consumable, Ready to Submit) and **attach them to the 1.5.0 version**. App Review screenshots: Store catalog + Settings picker (existing screenshot-size rules in the table above).
+
+See [HOLIDAY_THEMES.md](./HOLIDAY_THEMES.md) for art and [FEATURES.md](./FEATURES.md) for player-facing copy.
 
 ## Future
 

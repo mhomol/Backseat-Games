@@ -26,6 +26,7 @@ export const DEFAULT_PREFERENCES: AppPreferences = {
   soundEffectsEnabled: true,
   hapticsEnabled: true,
   introJingleEnabled: true,
+  selectedThemeId: 'classic',
 };
 
 export function cloneGameRules(rules: GameRules): GameRules {

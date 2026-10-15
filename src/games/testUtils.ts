@@ -1,6 +1,7 @@
 import { cloneGameRules, DEFAULT_GAME_RULES } from '../data/defaultPreferences';
 import type { Player, SessionState } from '../types/game';
 import type { GameRules } from '../types/preferences';
+import type { ThemeId } from '../types/theme';
 import { createSession } from './ruleEngine';
 
 export function playerFromLocal(id: string, name: string, isHost: boolean): Player {
@@ -12,6 +13,7 @@ export function testSession(
   host: Player,
   gameType: NonNullable<SessionState['gameType']>,
   gameRules: GameRules = DEFAULT_GAME_RULES,
+  themeId: ThemeId = 'classic',
 ): SessionState {
-  return createSession(sessionId, host, gameType, cloneGameRules(gameRules));
+  return createSession(sessionId, host, gameType, cloneGameRules(gameRules), themeId);
 }
