@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
+import { HolidayTileGarnish } from '@/components/brand/HolidayTileGarnish';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
@@ -79,6 +80,7 @@ export default function LicensePlatesScreen() {
 
           return (
             <PlateTile
+              garnishSeed={item.code.charCodeAt(0) + item.code.charCodeAt(1)}
               code={item.code}
               name={item.name}
               plateImage={plateImage}
@@ -113,6 +115,7 @@ export default function LicensePlatesScreen() {
 }
 
 function PlateTile({
+  garnishSeed,
   code,
   name,
   plateImage,
@@ -121,6 +124,7 @@ function PlateTile({
   ownerName,
   onPress,
 }: {
+  garnishSeed: number;
   code: string;
   name: string;
   plateImage?: ImageSourcePropType;
@@ -189,6 +193,7 @@ function PlateTile({
           </Animated.View>
         ) : null}
       </Pressable>
+      <HolidayTileGarnish seed={garnishSeed} />
     </Animated.View>
   );
 }
@@ -203,6 +208,7 @@ const styles = StyleSheet.create({
   },
   tileWrap: {
     flex: 1,
+    overflow: 'visible',
   },
   cell: {
     flex: 1,

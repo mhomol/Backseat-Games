@@ -152,4 +152,12 @@ export const bingoItemImages: Record<string, ImageSourcePropType> = {
   'lightning': require('../../assets/bingo-icons/items/lightning.png'),
   'farmland': require('../../assets/bingo-icons/items/farmland.png'),
   'green-hills': require('../../assets/bingo-icons/items/green-hills.png'),
+  'inflatable-turkey': require('../../assets/bingo-icons/items/inflatable-turkey.png'),
+  'pumpkin-stand': require('../../assets/bingo-icons/items/pumpkin-stand.png'),
+  'scarecrow': require('../../assets/bingo-icons/items/scarecrow.png'),
+  'turkey-crossing': require('../../assets/bingo-icons/items/turkey-crossing.png'),
+  'inflatable-santa': require('../../assets/bingo-icons/items/inflatable-santa.png'),
+  'inflatable-snowman': require('../../assets/bingo-icons/items/inflatable-snowman.png'),
+  'door-wreath': require('../../assets/bingo-icons/items/door-wreath.png'),
+  'santa-crossing': require('../../assets/bingo-icons/items/santa-crossing.png'),
 };

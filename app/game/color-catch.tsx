@@ -10,6 +10,7 @@ import Animated, {
 import { bingoItemImages } from '@/data/bingoItemImages';
 import { playBingoFeedback, playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
+import { HolidayTileGarnish } from '@/components/brand/HolidayTileGarnish';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
@@ -79,6 +80,7 @@ export default function ColorCatchScreen() {
             return (
               <ColorCell
                 key={index}
+                garnishSeed={index}
                 label={square.label}
                 hex={square.hex}
                 isMarked={isMarked}
@@ -112,6 +114,7 @@ export default function ColorCatchScreen() {
 }
 
 function ColorCell({
+  garnishSeed,
   label,
   hex,
   isMarked,
@@ -119,6 +122,7 @@ function ColorCell({
   cellWidth,
   onPress,
 }: {
+  garnishSeed: number;
   label: string;
   hex: string;
   isMarked: boolean;
@@ -180,6 +184,7 @@ function ColorCell({
           <Animated.Text style={[styles.stamp, stampStyle]}>✓</Animated.Text>
         ) : null}
       </Pressable>
+      <HolidayTileGarnish seed={garnishSeed} />
     </Animated.View>
   );
 }
@@ -206,6 +211,7 @@ const styles = StyleSheet.create({
     width: '19%',
     aspectRatio: 1,
     padding: 2,
+    overflow: 'visible',
   },
   cell: {
     flex: 1,

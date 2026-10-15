@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { playBingoFeedback, playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
+import { HolidayTileGarnish } from '@/components/brand/HolidayTileGarnish';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
 import { GameEndBar } from '@/components/GameEndBar';
 import { GameSessionOverlays } from '@/components/GameSessionOverlays';
@@ -71,6 +72,7 @@ export default function BingoScreen() {
             return (
               <BingoCell
                 key={index}
+                garnishSeed={index}
                 itemId={id}
                 label={label}
                 icon={icon}
@@ -105,6 +107,7 @@ export default function BingoScreen() {
 }
 
 function BingoCell({
+  garnishSeed,
   itemId,
   label,
   icon,
@@ -113,6 +116,7 @@ function BingoCell({
   isFree,
   onPress,
 }: {
+  garnishSeed: number;
   itemId?: string;
   label: string;
   icon: string;
@@ -175,6 +179,7 @@ function BingoCell({
           <Animated.Text style={[styles.stamp, stampStyle]}>✓</Animated.Text>
         ) : null}
       </Pressable>
+      <HolidayTileGarnish seed={garnishSeed} />
     </Animated.View>
   );
 }
@@ -201,6 +206,7 @@ const styles = StyleSheet.create({
     width: '19%',
     aspectRatio: 1,
     padding: 2,
+    overflow: 'visible',
   },
   cell: {
     flex: 1,

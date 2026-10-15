@@ -5,6 +5,8 @@
  *   node scripts/generate-bingo-item-icons.mjs --pilot
  *   node scripts/generate-bingo-item-icons.mjs
  *   node scripts/generate-bingo-item-icons.mjs --ids=cow,deer,stop-sign
+ *   node scripts/generate-bingo-item-icons.mjs --holiday
+ *   node scripts/generate-bingo-item-icons.mjs --holiday --ids=scarecrow,inflatable-santa
  *   node scripts/generate-bingo-item-icons.mjs --placeholders-only
  */
 
@@ -16,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const ITEMS_JSON = join(ROOT, 'src/data/bingo-items.json');
+const HOLIDAY_JSON = join(ROOT, 'src/data/bingo-holiday-items.json');
 const PROMPTS_PATH = join(__dirname, 'brand-prompts.json');
 const DRAFTS = join(ROOT, 'assets/branding/drafts/v11-bingo-items');
 const OUT_DIR = join(ROOT, 'assets/bingo-icons/items');
@@ -153,21 +156,31 @@ async function main() {
   const idsArg = args.find((a) => a.startsWith('--ids='));
   const filterIds = idsArg ? idsArg.split('=')[1].split(',') : null;
 
+  const holidayOnly = args.includes('--holiday');
   const allItems = JSON.parse(await readFile(ITEMS_JSON, 'utf8'));
-  const targetItems = allItems.filter((item) => item.category === 'animals' || item.category === 'signs');
+  const holidayFile = JSON.parse(await readFile(HOLIDAY_JSON, 'utf8'));
+  const holidayItems = [...holidayFile.thanksgiving, ...holidayFile.christmas];
+  const classicTargets = allItems.filter((item) => item.category === 'animals' || item.category === 'signs');
+  const targetItems = holidayOnly ? holidayItems : classicTargets;
   let selected = targetItems;
   if (pilot) selected = targetItems.filter((item) => PILOT_IDS.includes(item.id));
-  if (filterIds) selected = targetItems.filter((item) => filterIds.includes(item.id));
+  if (filterIds) {
+    const pool = holidayOnly ? holidayItems : [...classicTargets, ...holidayItems];
+    selected = pool.filter((item) => filterIds.includes(item.id));
+  }
 
-  await writePlaceholders(targetItems.filter((item) => {
+  const missing = targetItems.filter((item) => {
     try {
       const st = statSync(join(OUT_DIR, `${item.id}.png`));
       return st.size < 1000;
     } catch {
       return true;
     }
-  }));
-  await writeItemImagesModule(targetItems);
+  });
+  await writePlaceholders(missing);
+  if (!holidayOnly) {
+    await writeItemImagesModule(classicTargets);
+  }
   if (placeholdersOnly) return;
 
   const token = process.env.REPLICATE_API_TOKEN;
