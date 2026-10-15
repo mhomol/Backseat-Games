@@ -1,11 +1,13 @@
 import { Stack } from 'expo-router';
-import { stackScreenOptions } from '@/theme/navigation';
+import { useThemePack } from '@/hooks/useResolvedTheme';
+import { stackScreenOptionsForPack } from '@/theme/navigation';
 
 export default function GameLayout() {
+  const stackOptions = stackScreenOptionsForPack(useThemePack());
   return (
     <Stack
       screenOptions={{
-        ...stackScreenOptions,
+        ...stackOptions,
         headerBackVisible: false,
         headerLeft: () => null,
         gestureEnabled: false,

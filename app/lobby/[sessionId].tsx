@@ -19,6 +19,7 @@ import { GAME_LABELS } from '@/data';
 import { getMultiplayerService } from '@/multiplayer';
 import { useSessionStore } from '@/store/sessionStore';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
+import { useThemePack } from '@/hooks/useResolvedTheme';
 import { shareJoinInvite } from '@/utils/joinLink';
 import type { GameType } from '@/types/game';
 import { borders, colors, fonts, radii, spacing } from '@/theme';
@@ -39,6 +40,7 @@ export default function LobbyScreen() {
   const startHostedGame = useSessionStore((state) => state.startHostedGame);
   const updateSessionRules = useSessionStore((state) => state.updateSessionRules);
   const scenerySource = useSessionGameScenery();
+  const themePack = useThemePack();
   const relayJoinCode = useSessionStore((state) => state.relayJoinCode);
   const hostPresent = useSessionStore((state) => state.hostPresent);
   const isSolo = useSessionStore((state) => state.isSolo);
@@ -67,8 +69,8 @@ export default function LobbyScreen() {
 
   if (!session) {
     return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.skyBlueDark} />
+      <View style={[styles.loading, { backgroundColor: themePack.sky }]}>
+        <ActivityIndicator size="large" color={colors.coral} />
       </View>
     );
   }
@@ -192,7 +194,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.heroSky,
   },
   subtitle: {
     fontFamily: fonts.body,

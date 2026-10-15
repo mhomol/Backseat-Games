@@ -1,63 +1,111 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { borders, colors, fonts, radii, spacing } from '@/theme';
+import { colors, fonts } from '@/theme';
 
 type StoreEntryButtonProps = {
   onPress: () => void;
   badge?: boolean;
 };
 
+const CLOUD_FILL = colors.cloudWhite;
+const CLOUD_LINE = '#9BB3C2';
+
+/**
+ * Sky cloud on the home hero (right-hand cloud bank), not a status-bar chip.
+ * Percentages are of the scenery art frame so it stays with the illustration.
+ */
 export function StoreEntryButton({ onPress, badge = false }: StoreEntryButtonProps) {
-  const insets = useSafeAreaInsets();
   return (
-    <View
-      pointerEvents="box-none"
-      style={[styles.wrap, { top: insets.top + spacing.sm, right: insets.right + spacing.sm }]}
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel="Store"
+      style={({ pressed }) => [styles.hit, pressed && styles.pressed]}
     >
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel="Store"
-        style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-      >
-        <Text style={styles.label}>Store</Text>
-        {badge ? <View style={styles.badge} accessibilityLabel="New holiday themes" /> : null}
-      </Pressable>
-    </View>
+      <View pointerEvents="none" style={[styles.puffTop, styles.outline]} />
+      <View pointerEvents="none" style={[styles.puffLeft, styles.outline]} />
+      <View pointerEvents="none" style={[styles.puffRight, styles.outline]} />
+      <View pointerEvents="none" style={[styles.puffBody, styles.outline]} />
+      <View pointerEvents="none" style={[styles.puffTop, styles.fill]} />
+      <View pointerEvents="none" style={[styles.puffLeft, styles.fill]} />
+      <View pointerEvents="none" style={[styles.puffRight, styles.fill]} />
+      <View pointerEvents="none" style={[styles.puffBody, styles.fill]} />
+      <Text style={styles.label}>Store</Text>
+      {badge ? <View style={styles.badge} accessibilityLabel="New holiday themes" /> : null}
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: {
+  hit: {
     position: 'absolute',
+    left: '62%',
+    top: '26.5%',
+    width: '36%',
+    height: '11%',
     zIndex: 20,
-  },
-  button: {
-    minWidth: 44,
-    minHeight: 44,
-    paddingHorizontal: spacing.md,
-    borderRadius: radii.pill,
-    backgroundColor: colors.cream,
-    borderWidth: borders.thick,
-    borderColor: colors.sunnyYellowDark,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pressed: {
-    opacity: 0.85,
+    opacity: 0.88,
+    transform: [{ scale: 0.97 }],
+  },
+  outline: {
+    backgroundColor: CLOUD_LINE,
+  },
+  fill: {
+    backgroundColor: CLOUD_FILL,
+    transform: [{ scale: 0.9 }],
+  },
+  puffBody: {
+    position: 'absolute',
+    left: '6%',
+    right: '6%',
+    bottom: '10%',
+    height: '64%',
+    borderRadius: 999,
+  },
+  puffLeft: {
+    position: 'absolute',
+    left: '0%',
+    bottom: '18%',
+    width: '42%',
+    height: '72%',
+    borderRadius: 999,
+  },
+  puffRight: {
+    position: 'absolute',
+    right: '2%',
+    bottom: '16%',
+    width: '40%',
+    height: '70%',
+    borderRadius: 999,
+  },
+  puffTop: {
+    position: 'absolute',
+    left: '26%',
+    top: '0%',
+    width: '46%',
+    height: '64%',
+    borderRadius: 999,
   },
   label: {
     fontFamily: fonts.display,
-    fontSize: 16,
-    color: colors.roadGray,
+    fontSize: 17,
+    color: colors.coral,
+    zIndex: 2,
+    marginTop: 8,
   },
   badge: {
     position: 'absolute',
-    top: 6,
+    top: 2,
     right: 8,
     width: 10,
     height: 10,
     borderRadius: 5,
     backgroundColor: colors.coral,
+    borderWidth: 1.5,
+    borderColor: colors.cloudWhite,
+    zIndex: 3,
   },
 });

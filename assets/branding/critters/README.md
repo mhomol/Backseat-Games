@@ -11,6 +11,8 @@ Locked selection (July 2026):
 | `bird-2.png` | `drafts/v11-recraft/bird-2-match.webp` (wings-down companion) |
 | `gopher-up.png` | `drafts/v11-recraft/gopher-up-v2.webp` |
 | `gopher-wink.png` | `drafts/v11-recraft/gopher-wink-match.webp` (wink companion) |
+| `sleigh.png` | Christmas sky flyer (replaces the plane) — `drafts/sleigh-critter-draft.jpg` |
+| `turkey-1.png` / `turkey-2.png` | Thanksgiving 2-frame flap (replaces the bird) |
 
 Cream backgrounds are edge-flooded to transparent PNG alpha. Plane flies right→left
 with a **static body** + **2-frame propeller overlay** on the nose (avoids whole-body

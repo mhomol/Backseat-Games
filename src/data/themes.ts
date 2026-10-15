@@ -36,7 +36,15 @@ const classicHeroes: Record<SceneryVariant, ImageSourcePropType> = {
 };
 
 const thanksgivingWaiting = require('../../assets/branding/themes/thanksgiving/waiting-hero.webp');
+const thanksgivingLighthouse = require('../../assets/branding/themes/thanksgiving/thanksgiving-lighthouse.webp');
+const thanksgivingSmallTown = require('../../assets/branding/themes/thanksgiving/thanksgiving-small-town.webp');
+const thanksgivingCornfield = require('../../assets/branding/themes/thanksgiving/thanksgiving-cornfield.webp');
+const thanksgivingSunflowers = require('../../assets/branding/themes/thanksgiving/thanksgiving-sunflowers.webp');
 const christmasWaiting = require('../../assets/branding/themes/christmas/waiting-hero.webp');
+const christmasSanta = require('../../assets/branding/themes/christmas/christmas-santa.webp');
+const christmasSnowman = require('../../assets/branding/themes/christmas/christmas-snowman.webp');
+const christmasTree = require('../../assets/branding/themes/christmas/christmas-tree.webp');
+const christmasDowntown = require('../../assets/branding/themes/christmas/christmas-downtown.webp');
 
 const thanksgivingHeroes: Record<SceneryVariant, ImageSourcePropType> = {
   home: require('../../assets/branding/themes/thanksgiving/home-hero.webp'),
@@ -80,6 +88,26 @@ export const themePacks: Record<ThemeId, ThemePack> = {
         label: 'Thanksgiving pumpkin road',
         source: thanksgivingWaiting,
       },
+      {
+        id: 'thanksgiving-lighthouse',
+        label: 'Thanksgiving lighthouse causeway',
+        source: thanksgivingLighthouse,
+      },
+      {
+        id: 'thanksgiving-small-town',
+        label: 'Thanksgiving small town',
+        source: thanksgivingSmallTown,
+      },
+      {
+        id: 'thanksgiving-cornfield',
+        label: 'Thanksgiving cornfield',
+        source: thanksgivingCornfield,
+      },
+      {
+        id: 'thanksgiving-sunflowers',
+        label: 'Thanksgiving sunflower road',
+        source: thanksgivingSunflowers,
+      },
     ],
     heroes: thanksgivingHeroes,
   },
@@ -97,6 +125,26 @@ export const themePacks: Record<ThemeId, ThemePack> = {
         id: 'christmas-waiting',
         label: 'Christmas snow road',
         source: christmasWaiting,
+      },
+      {
+        id: 'christmas-santa',
+        label: 'Christmas Santa sleigh',
+        source: christmasSanta,
+      },
+      {
+        id: 'christmas-snowman',
+        label: 'Christmas cottage snowman',
+        source: christmasSnowman,
+      },
+      {
+        id: 'christmas-tree',
+        label: 'Christmas town tree',
+        source: christmasTree,
+      },
+      {
+        id: 'christmas-downtown',
+        label: 'Christmas downtown',
+        source: christmasDowntown,
       },
     ],
     heroes: christmasHeroes,

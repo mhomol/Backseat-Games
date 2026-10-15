@@ -16,9 +16,16 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-type CritterKind = 'plane' | 'bird' | 'gopher';
+type SkyFlyer = 'plane' | 'sleigh';
+type SkyBird = 'bird' | 'turkey';
+type CritterKind = SkyFlyer | SkyBird | 'gopher';
 
-const CRITTERS: CritterKind[] = ['plane', 'bird', 'gopher'];
+type AmbientSceneryEffectsProps = {
+  /** Christmas swaps the plane for a Santa sleigh. */
+  skyFlyer?: SkyFlyer;
+  /** Thanksgiving swaps the songbird for a turkey. */
+  skyBird?: SkyBird;
+};
 
 const birdFrames = [
   require('../../../assets/branding/critters/bird-1.png'),
@@ -32,19 +39,28 @@ const planePropFrames = [
 ];
 const gopherUp = require('../../../assets/branding/critters/gopher-up.png');
 const gopherWink = require('../../../assets/branding/critters/gopher-wink.png');
+const sleighSprite = require('../../../assets/branding/critters/sleigh.png');
+const turkeyFrames = [
+  require('../../../assets/branding/critters/turkey-1.png'),
+  require('../../../assets/branding/critters/turkey-2.png'),
+];
 
 function randomGapMs(): number {
   return 12000 + Math.floor(Math.random() * 28000);
 }
 
-function pickCritter(): CritterKind {
-  return CRITTERS[Math.floor(Math.random() * CRITTERS.length)]!;
+function pickCritter(skyFlyer: SkyFlyer, skyBird: SkyBird): CritterKind {
+  const critters: CritterKind[] = [skyFlyer, skyBird, 'gopher'];
+  return critters[Math.floor(Math.random() * critters.length)]!;
 }
 
 /**
  * Occasional ambient scenery critters. Non-interactive overlay.
  */
-export function AmbientSceneryEffects() {
+export function AmbientSceneryEffects({
+  skyFlyer = 'plane',
+  skyBird = 'bird',
+}: AmbientSceneryEffectsProps) {
   const { width, height } = useWindowDimensions();
   const [reduceMotion, setReduceMotion] = useState(false);
   const [active, setActive] = useState<CritterKind | null>(null);
@@ -96,19 +112,20 @@ export function AmbientSceneryEffects() {
       scheduleNext();
     };
 
-    const runPlane = () => {
-      setActive('plane');
+    const runSkyFlyer = (kind: SkyFlyer) => {
+      setActive(kind);
       setPlaneFrame(0);
-      // Art faces left — fly right-to-left so the nose leads.
+      // Plane and sleigh both face left — fly right-to-left so the nose leads.
       const skyY = height * (0.06 + Math.random() * 0.2);
-      translateX.value = width + 140;
+      translateX.value = width + 160;
       translateY.value = skyY;
       opacity.value = 1;
-      // Fast 2-frame prop swap — enough for a 2-blade spin at this size.
-      flapId = setInterval(() => {
-        setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
-      }, 90);
-      translateX.value = withTiming(-140, {
+      if (kind === 'plane') {
+        flapId = setInterval(() => {
+          setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
+        }, 90);
+      }
+      translateX.value = withTiming(-180, {
         duration: 8000 + Math.floor(Math.random() * 3000),
         easing: Easing.linear,
       }, (finished) => {
@@ -116,25 +133,27 @@ export function AmbientSceneryEffects() {
           runOnJS(finish)();
         }
       });
-      // Mild altitude drift so the path is not a flat line every time.
       translateY.value = withTiming(skyY + (Math.random() - 0.5) * height * 0.08, {
         duration: 8000,
         easing: Easing.inOut(Easing.sin),
       });
     };
 
-    const runBird = () => {
-      setActive('bird');
+    const runFlapper = (kind: SkyBird) => {
+      setActive(kind);
       setBirdFrame(0);
       const skyY = height * (0.1 + Math.random() * 0.22);
-      translateX.value = -100;
+      const startX = kind === 'turkey' ? -120 : -100;
+      const endX = width + (kind === 'turkey' ? 120 : 100);
+      const duration = (kind === 'turkey' ? 7500 : 6000) + Math.floor(Math.random() * 2500);
+      translateX.value = startX;
       translateY.value = skyY;
       opacity.value = 1;
       flapId = setInterval(() => {
         setBirdFrame((frame) => (frame === 0 ? 1 : 0));
-      }, 180);
-      translateX.value = withTiming(width + 100, {
-        duration: 6000 + Math.floor(Math.random() * 2500),
+      }, kind === 'turkey' ? 220 : 180);
+      translateX.value = withTiming(endX, {
+        duration,
         easing: Easing.linear,
       }, (finished) => {
         if (finished) {
@@ -142,7 +161,7 @@ export function AmbientSceneryEffects() {
         }
       });
       translateY.value = withTiming(skyY + (Math.random() - 0.5) * height * 0.1, {
-        duration: 6500,
+        duration: duration + 500,
         easing: Easing.inOut(Easing.sin),
       });
     };
@@ -181,11 +200,11 @@ export function AmbientSceneryEffects() {
       if (cancelled) {
         return;
       }
-      const kind = pickCritter();
-      if (kind === 'plane') {
-        runPlane();
-      } else if (kind === 'bird') {
-        runBird();
+      const kind = pickCritter(skyFlyer, skyBird);
+      if (kind === 'plane' || kind === 'sleigh') {
+        runSkyFlyer(kind);
+      } else if (kind === 'bird' || kind === 'turkey') {
+        runFlapper(kind);
       } else {
         runGopher();
       }
@@ -204,7 +223,7 @@ export function AmbientSceneryEffects() {
       }
       clearFlap();
     };
-  }, [reduceMotion, width, height, translateX, translateY, opacity]);
+  }, [reduceMotion, width, height, skyFlyer, skyBird, translateX, translateY, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }, { translateY: translateY.value }],
@@ -232,9 +251,17 @@ export function AmbientSceneryEffects() {
         />
       </View>
     );
+  } else if (active === 'sleigh') {
+    critter = (
+      <Image source={sleighSprite} style={styles.sleigh} resizeMode="contain" />
+    );
   } else if (active === 'bird') {
     critter = (
       <Image source={birdFrames[birdFrame]} style={styles.bird} resizeMode="contain" />
+    );
+  } else if (active === 'turkey') {
+    critter = (
+      <Image source={turkeyFrames[birdFrame]} style={styles.turkey} resizeMode="contain" />
     );
   } else {
     critter = (
@@ -286,9 +313,17 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
   },
+  sleigh: {
+    width: 128,
+    height: 72,
+  },
   bird: {
     width: 56,
     height: 56,
+  },
+  turkey: {
+    width: 72,
+    height: 72,
   },
   gopher: {
     width: 72,

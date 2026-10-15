@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { AppState, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import {
   Fredoka_600SemiBold,
   Fredoka_700Bold,
@@ -21,8 +22,8 @@ import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
 import { usePlateCollectionStore } from '@/store/plateCollectionStore';
 import { useStatsStore } from '@/store/statsStore';
-import { colors } from '@/theme';
-import { stackScreenOptions } from '@/theme/navigation';
+import { useThemePack } from '@/hooks/useResolvedTheme';
+import { stackScreenOptionsForPack } from '@/theme/navigation';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {
   // Splash may already be hidden in dev reloads.
@@ -46,6 +47,8 @@ export default function RootLayout() {
   const loadEntitlement = usePurchaseStore((state) => state.loadEntitlement);
   const toast = useSessionStore((state) => state.toast);
   const clearToast = useSessionStore((state) => state.clearToast);
+  const themePack = useThemePack();
+  const stackOptions = stackScreenOptionsForPack(themePack);
 
   const fontsReady = fredokaLoaded && nunitoLoaded;
   const fontError = fredokaError ?? nunitoError;
@@ -82,10 +85,11 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.root}>
+    <GestureHandlerRootView style={[styles.root, { backgroundColor: themePack.sky }]}>
       <SafeAreaProvider>
-        <View style={styles.root}>
-          <Stack screenOptions={stackScreenOptions}>
+        <View style={[styles.root, { backgroundColor: themePack.sky }]}>
+          <StatusBar style={themePack.id === 'christmas' ? 'light' : 'dark'} />
+          <Stack screenOptions={stackOptions}>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="store" options={{ title: 'Store' }} />
             <Stack.Screen name="host/setup" options={{ title: '' }} />
@@ -104,6 +108,5 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.heroSky,
   },
 });

@@ -1,12 +1,14 @@
 import { Stack } from 'expo-router';
 import { StackBackButton } from '@/components/navigation/StackBackButton';
-import { stackScreenOptions } from '@/theme/navigation';
+import { useThemePack } from '@/hooks/useResolvedTheme';
+import { stackScreenOptionsForPack } from '@/theme/navigation';
 
 export default function SettingsLayout() {
+  const stackOptions = stackScreenOptionsForPack(useThemePack());
   return (
     <Stack
       screenOptions={{
-        ...stackScreenOptions,
+        ...stackOptions,
         headerLargeTitle: false,
       }}
     >

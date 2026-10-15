@@ -12,7 +12,7 @@ type SceneryBackgroundProps = {
   /** Overrides the static variant art (lobby + gameplay rotation). */
   scenerySource?: ImageSourcePropType;
   children?: ReactNode;
-  /** Ambient plane/bird/gopher overlays. Default true. */
+  /** Ambient sky/critter overlays. Default true. */
   ambientEffects?: boolean;
 };
 
@@ -41,7 +41,12 @@ export function SceneryBackground({
             resizeMode="cover"
             accessibilityIgnoresInvertColors
           />
-          {ambientEffects ? <AmbientSceneryEffects /> : null}
+          {ambientEffects ? (
+            <AmbientSceneryEffects
+              skyFlyer={pack.id === 'christmas' ? 'sleigh' : 'plane'}
+              skyBird={pack.id === 'thanksgiving' ? 'turkey' : 'bird'}
+            />
+          ) : null}
           {ambientEffects ? <HolidayWeatherEffects ambient={pack.ambient} /> : null}
           <View style={styles.overlay} pointerEvents="box-none">
             {children}

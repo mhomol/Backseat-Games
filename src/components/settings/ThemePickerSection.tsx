@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { BrandLockIcon } from '@/components/brand/BrandLockIcon';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsLinkRow } from '@/components/settings/SettingsLinkRow';
 import { themePacks } from '@/data/themes';
@@ -54,7 +55,13 @@ export function ThemePickerSection({
                   : 'Locked — get it in the Store'}
               </Text>
             </View>
-            <Text style={styles.mark}>{selected ? '●' : owned ? '○' : '🔒'}</Text>
+            {owned ? (
+              <Text style={styles.mark}>{selected ? '●' : '○'}</Text>
+            ) : (
+              <View style={styles.lock}>
+                <BrandLockIcon />
+              </View>
+            )}
           </Pressable>
         );
       })}
@@ -102,6 +109,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bodyBold,
     fontSize: 18,
     color: colors.roadGray,
+    marginLeft: spacing.sm,
+  },
+  lock: {
     marginLeft: spacing.sm,
   },
 });
