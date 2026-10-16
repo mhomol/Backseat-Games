@@ -67,21 +67,21 @@ const halloweenHome = require('../../assets/branding/themes/halloween/home-hero.
 const halloweenHost = require('../../assets/branding/themes/halloween/host-hero.webp');
 
 const thanksgivingHeroes: Record<SceneryVariant, HeroArt> = {
-  home: { source: thanksgivingHome, sky: '#FD9C45' },
+  home: { source: thanksgivingHome, sky: '#FB9D46' },
   host: { source: thanksgivingHost, sky: '#F67E20' },
   join: { source: thanksgivingWaiting, sky: '#FA9B41' },
   lobby: { source: thanksgivingWaiting, sky: '#FA9B41' },
 };
 
 const christmasHeroes: Record<SceneryVariant, HeroArt> = {
-  home: { source: christmasHome, sky: '#1D2941' },
+  home: { source: christmasHome, sky: '#1A2740' },
   host: { source: christmasHost, sky: '#212237' },
   join: { source: christmasWaiting, sky: '#18273F' },
   lobby: { source: christmasWaiting, sky: '#18273F' },
 };
 
 const halloweenHeroes: Record<SceneryVariant, HeroArt> = {
-  home: { source: halloweenHome, sky: '#63243D' },
+  home: { source: halloweenHome, sky: '#62253C' },
   host: { source: halloweenHost, sky: '#150820' },
   join: { source: halloweenWaiting, sky: '#281F1D' },
   lobby: { source: halloweenWaiting, sky: '#281F1D' },
@@ -104,7 +104,7 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     id: 'halloween',
     name: 'Halloween',
     productId: HALLOWEEN_THEME_PRODUCT_ID,
-    sky: '#63243D',
+    sky: '#62253C',
     ambient: 'halloween',
     hangmanCharacter: 'ghost',
     freeCenterLabel: 'Trick or Trip!',
@@ -147,7 +147,7 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     id: 'thanksgiving',
     name: 'Thanksgiving',
     productId: THANKSGIVING_THEME_PRODUCT_ID,
-    sky: '#FD9C45',
+    sky: '#FB9D46',
     ambient: 'leaves',
     hangmanCharacter: 'pilgrim',
     freeCenterLabel: 'Turkey Trot!',
@@ -190,7 +190,7 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     id: 'christmas',
     name: 'Christmas',
     productId: CHRISTMAS_THEME_PRODUCT_ID,
-    sky: '#1D2941',
+    sky: '#1A2740',
     ambient: 'snow',
     hangmanCharacter: 'santa',
     freeCenterLabel: 'Holiday Ride!',

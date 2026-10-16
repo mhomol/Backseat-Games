@@ -1,10 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo, StyleSheet, useWindowDimensions, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 import { useThemePack } from '@/hooks/useResolvedTheme';
 
 const LIGHT_COLORS = ['#E74C3C', '#F1C40F', '#27AE60', '#E67E22', '#3498DB'] as const;
@@ -28,73 +23,9 @@ function strandPoints(width: number): Point[] {
   });
 }
 
-function HalloweenPinEyes({ reduceMotion }: { reduceMotion: boolean }) {
-  const opacity = useSharedValue(0);
-  const pupilX = useSharedValue(0);
-
-  useEffect(() => {
-    if (reduceMotion) {
-      opacity.value = 0;
-      return;
-    }
-
-    let cancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    const later = (fn: () => void, ms: number) => {
-      timeoutId = setTimeout(() => {
-        if (!cancelled) {
-          fn();
-        }
-      }, ms);
-    };
-
-    const hideAndWait = () => {
-      opacity.value = withTiming(0, { duration: 220 });
-      later(peek, 8000 + Math.floor(Math.random() * 14000));
-    };
-
-    const peek = () => {
-      pupilX.value = 0;
-      opacity.value = withTiming(1, { duration: 160 });
-      later(() => {
-        pupilX.value = withTiming(Math.random() > 0.5 ? 1.8 : -1.8, { duration: 260 });
-        later(() => {
-          pupilX.value = withTiming(0, { duration: 260 });
-          later(hideAndWait, 600 + Math.floor(Math.random() * 700));
-        }, 480);
-      }, 380);
-    };
-
-    later(peek, 2800 + Math.floor(Math.random() * 2500));
-    return () => {
-      cancelled = true;
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [opacity, pupilX, reduceMotion]);
-
-  const wrapStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
-  const pupilStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: pupilX.value }],
-  }));
-
-  return (
-    <Animated.View pointerEvents="none" style={[styles.pinEyes, wrapStyle]}>
-      <View style={styles.eye}>
-        <Animated.View style={[styles.pupil, pupilStyle]} />
-      </View>
-      <View style={styles.eye}>
-        <Animated.View style={[styles.pupil, pupilStyle]} />
-      </View>
-    </Animated.View>
-  );
-}
-
 /**
- * Christmas lights sit on the baked-in home wordmark. Halloween peeks from the pin.
- * Percentages match the hero art frame.
+ * Christmas lights sit on the baked-in home wordmark. Percentages match the hero art frame.
+ * Halloween logo details are painted into the hero in Flux, not overlaid here.
  */
 export function HeroLogoSeasonalDoodles() {
   const pack = useThemePack();
@@ -127,14 +58,6 @@ export function HeroLogoSeasonalDoodles() {
     }, 520);
     return () => clearInterval(id);
   }, [reduceMotion, pack.id]);
-
-  if (pack.id === 'halloween') {
-    return (
-      <View pointerEvents="none" style={styles.root}>
-        <HalloweenPinEyes reduceMotion={reduceMotion} />
-      </View>
-    );
-  }
 
   if (pack.id !== 'christmas') {
     return null;
@@ -192,34 +115,6 @@ const styles = StyleSheet.create({
   root: {
     ...StyleSheet.absoluteFill,
     zIndex: 6,
-  },
-  pinEyes: {
-    position: 'absolute',
-    left: '38.6%',
-    top: '21.4%',
-    width: '8.2%',
-    aspectRatio: 1.15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 3,
-  },
-  eye: {
-    width: '38%',
-    aspectRatio: 0.72,
-    backgroundColor: '#F4D03F',
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: '#1A0A00',
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pupil: {
-    width: '46%',
-    height: '68%',
-    backgroundColor: '#0D0D0D',
-    borderRadius: 999,
   },
   strand: {
     position: 'absolute',

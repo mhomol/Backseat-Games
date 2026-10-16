@@ -59,6 +59,22 @@ Same waiting-hero source, one prompt each. Keep the car.
 3. **Lighthouse / causeway night:** moonlit water, a few pumpkins on the rocks.
 4. **Downtown trick-or-treat glow:** storefront warm lights and a couple of pumpkins on the curb, no crowds that hide the car.
 
+### Bake a tiny logo beat (home hero only)
+
+Feed the **already packed themed home hero**, not Classic. One source at a time. Change **only** the wordmark sticker. Keep BACKSEAT / GAMES lettering, signs, car, and landscape. No extra text or watermark. Christmas **lights stay in code** — do not paint lights onto the Christmas hero.
+
+**Halloween** — source `assets/branding/themes/halloween/home-hero.webp`
+
+Keep the exact same BACKSEAT GAMES logo, pin, signs, car, and Halloween landscape. The only change: inside the circular hole of the blue map-pin “O” in GAMES, paint two small glowing evil eyes (yellow-amber irises, vertical slit pupils, slightly menacing, still cute kids-app). Center them in that circle. Do not restyle the pin, letters, or anything else.
+
+**Christmas** — source `assets/branding/themes/christmas/home-hero.webp`
+
+Keep the exact same BACKSEAT GAMES lettering, white sticker, signs, car, and winter landscape. Replace **only** the blue map-pin “O” in GAMES with a small cute cartoon Christmas tree in that same slot (same size as the pin head, green tree, a few ornaments, tiny star or no star). Do not add string lights — those are a code overlay. Do not restyle the other letters.
+
+**Thanksgiving** — source `assets/branding/themes/thanksgiving/home-hero.webp`
+
+Keep the exact same BACKSEAT GAMES lettering, white sticker, signs, car, and autumn landscape. Two small logo-only changes: (1) replace the blue map-pin “O” in GAMES with a tiny cute cornucopia in that same slot; (2) scatter a few maple/oak leaves on the white sticker around the letters (not covering the type). Do not restyle the letters or add extra objects.
+
 ### After you like a still
 
 Save locally (`Pictures\Replicate\`), then promote with `sky` sampled from **that** file. Hangman Halloween costume is a **code drawing** (ghost/witch hitchhiker), not Kontext. Bingo icons stay Recraft V4, cream `#FFF8EE`, bold black outline, subject only.

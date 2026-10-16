@@ -36,7 +36,7 @@ export function HolidayTileGarnish({ seed = 0, shape = 'square' }: HolidayTileGa
         wide ? styles.wrapWide : styles.wrapSquare,
         {
           bottom: wide ? -4 : -3,
-          right: wide ? -2 : -4,
+          right: wide ? 14 : -4,
           transform: [{ rotate: `${tilt}deg` }],
         },
       ]}
