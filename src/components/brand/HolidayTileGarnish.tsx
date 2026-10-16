@@ -16,7 +16,7 @@ function bit(seed: number, shift: number): number {
   return ((seed * 17 + shift * 13) % 7) - 3;
 }
 
-/** Doodle leaf pile or snowdrift on the top-right of a game tile. */
+/** Doodle leaf/snow/candy pile nested in the bottom-right corner of a game tile. */
 export function HolidayTileGarnish({ seed = 0, shape = 'square' }: HolidayTileGarnishProps) {
   const pack = useThemePack();
   if (pack.ambient === 'classic') {
@@ -35,8 +35,8 @@ export function HolidayTileGarnish({ seed = 0, shape = 'square' }: HolidayTileGa
         styles.wrap,
         wide ? styles.wrapWide : styles.wrapSquare,
         {
-          top: wide ? -8 : -6,
-          right: wide ? 6 : -4,
+          bottom: wide ? -4 : -3,
+          right: wide ? -2 : -4,
           transform: [{ rotate: `${tilt}deg` }],
         },
       ]}

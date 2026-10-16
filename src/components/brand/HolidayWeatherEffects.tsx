@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo, StyleSheet, useWindowDimensions, View } from 'react-native';
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withRepeat,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import type { ThemeAmbient } from '@/types/theme';
@@ -135,6 +137,111 @@ function Particle({ flake, height, kind }: { flake: Flake; height: number; kind:
   );
 }
 
+const GHOST_COUNT = 7;
+
+function MiniGhost({ size }: { size: number }) {
+  const eye = Math.max(2, Math.round(size * 0.16));
+  return (
+    <View style={{ width: size, height: size * 1.2 }}>
+      <View
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: 'rgba(255, 248, 238, 0.92)',
+          borderRadius: size / 2,
+          borderBottomLeftRadius: size * 0.18,
+          borderBottomRightRadius: size * 0.18,
+          borderWidth: 1,
+          borderColor: 'rgba(45, 52, 54, 0.35)',
+        }}
+      >
+        <View
+          style={{
+            position: 'absolute',
+            top: size * 0.32,
+            left: size * 0.26,
+            width: eye,
+            height: eye,
+            borderRadius: eye / 2,
+            backgroundColor: '#2D3436',
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: size * 0.32,
+            right: size * 0.26,
+            width: eye,
+            height: eye,
+            borderRadius: eye / 2,
+            backgroundColor: '#2D3436',
+          }}
+        />
+      </View>
+    </View>
+  );
+}
+
+function FloatingGhost({
+  index,
+  width,
+  height,
+}: {
+  index: number;
+  width: number;
+  height: number;
+}) {
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(height);
+  const opacity = useSharedValue(0);
+  const size = 12 + (index % 4) * 3;
+
+  const play = useCallback(() => {
+    const startX = 10 + Math.random() * Math.max(width - 36, 1);
+    const startY = height * (0.3 + Math.random() * 0.55);
+    const rise = 70 + Math.random() * 100;
+    const drift = (Math.random() - 0.5) * 36;
+    const duration = 2600 + Math.random() * 2200;
+    translateX.value = startX;
+    translateY.value = startY;
+    opacity.value = 0;
+    opacity.value = withSequence(
+      withTiming(0.92, { duration: 280 }),
+      withDelay(duration - 720, withTiming(0, { duration: 440 })),
+    );
+    translateX.value = withTiming(startX + drift, {
+      duration,
+      easing: Easing.inOut(Easing.sin),
+    });
+    translateY.value = withTiming(startY - rise, {
+      duration,
+      easing: Easing.out(Easing.quad),
+    }, (finished) => {
+      if (finished) {
+        runOnJS(play)();
+      }
+    });
+  }, [height, opacity, translateX, translateY, width]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(play, 200 + index * 380 + Math.random() * 600);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [index, play]);
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }, { translateY: translateY.value }],
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.View pointerEvents="none" style={[styles.ghost, style]}>
+      <MiniGhost size={size} />
+    </Animated.View>
+  );
+}
+
 export function HolidayWeatherEffects({ ambient }: { ambient: ThemeAmbient }) {
   const { width, height } = useWindowDimensions();
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -158,7 +265,21 @@ export function HolidayWeatherEffects({ ambient }: { ambient: ThemeAmbient }) {
     };
   }, []);
 
-  if (!weather || reduceMotion) {
+  if (reduceMotion) {
+    return null;
+  }
+
+  if (ambient === 'halloween') {
+    return (
+      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+        {Array.from({ length: GHOST_COUNT }, (_, index) => (
+          <FloatingGhost key={index} index={index} width={width} height={height} />
+        ))}
+      </View>
+    );
+  }
+
+  if (!weather) {
     return null;
   }
 
@@ -175,5 +296,10 @@ const styles = StyleSheet.create({
   particle: {
     position: 'absolute',
     top: -16,
+  },
+  ghost: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
 });
