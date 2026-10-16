@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
 import { AmbientSceneryEffects } from '@/components/brand/AmbientSceneryEffects';
+import { HeroLogoSeasonalDoodles } from '@/components/brand/HeroLogoSeasonalDoodles';
 import { HolidayWeatherEffects } from '@/components/brand/HolidayWeatherEffects';
 import { GAME_SCENERY_ASPECT } from '@/data/gameSceneryRotation';
 import { heroAspectRatio, type SceneryVariant } from '@/data/brandAssets';
@@ -43,11 +44,19 @@ export function SceneryBackground({
           />
           {ambientEffects ? (
             <AmbientSceneryEffects
-              skyFlyer={pack.id === 'christmas' ? 'sleigh' : 'plane'}
-              skyBird={pack.id === 'thanksgiving' ? 'turkey' : 'bird'}
+              skyFlyer={
+                pack.id === 'christmas' ? 'sleigh' : pack.id === 'thanksgiving' ? 'balloon' : 'plane'
+              }
+              skyBird={
+                pack.id === 'thanksgiving' ? 'turkey' : pack.id === 'christmas' ? 'dove' : 'bird'
+              }
+              groundCritter={
+                pack.id === 'thanksgiving' ? 'fox' : pack.id === 'christmas' ? 'reindeer' : 'gopher'
+              }
             />
           ) : null}
           {ambientEffects ? <HolidayWeatherEffects ambient={pack.ambient} /> : null}
+          {variant === 'home' ? <HeroLogoSeasonalDoodles /> : null}
           <View style={styles.overlay} pointerEvents="box-none">
             {children}
           </View>

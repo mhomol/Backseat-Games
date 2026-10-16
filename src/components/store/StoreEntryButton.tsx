@@ -38,10 +38,10 @@ export function StoreEntryButton({ onPress, badge = false }: StoreEntryButtonPro
 const styles = StyleSheet.create({
   hit: {
     position: 'absolute',
-    left: '70%',
-    top: '8.5%',
-    width: '26%',
-    height: '7.5%',
+    left: '76%',
+    top: '3.2%',
+    width: '20%',
+    height: '5.6%',
     zIndex: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -91,10 +91,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: fonts.display,
-    fontSize: 13,
+    fontSize: 16,
     color: colors.coral,
     zIndex: 2,
-    marginTop: 4,
+    marginTop: 1,
   },
   badge: {
     position: 'absolute',

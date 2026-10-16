@@ -13,6 +13,10 @@ Locked selection (July 2026):
 | `gopher-wink.png` | `drafts/v11-recraft/gopher-wink-match.webp` (wink companion) |
 | `sleigh.png` | Christmas sky flyer (replaces the plane) — `drafts/sleigh-critter-draft.jpg` |
 | `turkey-1.png` / `turkey-2.png` | Thanksgiving 2-frame flap (replaces the bird) |
+| `balloon.png` | Thanksgiving sky flyer (replaces the plane) |
+| `fox-up.png` / `fox-wink.png` | Thanksgiving peek (replaces the gopher) |
+| `dove-1.png` / `dove-2.png` | Christmas 2-frame flap (replaces the bird) |
+| `reindeer-up.png` / `reindeer-wink.png` | Christmas peek (replaces the gopher) |
 
 Cream backgrounds are edge-flooded to transparent PNG alpha. Plane flies right→left
 with a **static body** + **2-frame propeller overlay** on the nose (avoids whole-body

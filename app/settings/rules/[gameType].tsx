@@ -1,13 +1,14 @@
 import { useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { GameRulesEditor } from '@/components/settings/GameRulesEditor';
+import { OnSkyText } from '@/components/brand/OnSkyText';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { GAME_RULES_TITLE } from '@/data/gameRulesCopy';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { isGameType } from '@/types/game';
 import type { GameType } from '@/types/game';
-import { colors, fonts } from '@/theme';
+import { fonts } from '@/theme';
 
 function parseGameType(value: string | string[] | undefined): GameType | null {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -26,10 +27,10 @@ export default function GameRulesSettingsScreen() {
 
   return (
     <SceneryScrollShell>
-      <Text style={styles.lead}>
+      <OnSkyText style={styles.lead}>
         These defaults apply when you host a new game. Change rules for a single trip in the
         waiting room before you start.
-      </Text>
+      </OnSkyText>
       <SettingsSection title={GAME_RULES_TITLE[gameType]}>
         <GameRulesEditor
           gameType={gameType}
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
   lead: {
     fontFamily: fonts.body,
     fontSize: 14,
-    color: colors.roadGray,
     lineHeight: 20,
   },
 });

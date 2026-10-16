@@ -193,7 +193,7 @@ function PlateTile({
           </Animated.View>
         ) : null}
       </Pressable>
-      <HolidayTileGarnish seed={garnishSeed} />
+      <HolidayTileGarnish seed={garnishSeed} shape="wide" />
     </Animated.View>
   );
 }

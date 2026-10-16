@@ -77,7 +77,7 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     id: 'thanksgiving',
     name: 'Thanksgiving',
     productId: THANKSGIVING_THEME_PRODUCT_ID,
-    sky: '#FA9B40',
+    sky: '#E07E24',
     ambient: 'leaves',
     hangmanCharacter: 'pilgrim',
     freeCenterLabel: 'Turkey Trot!',

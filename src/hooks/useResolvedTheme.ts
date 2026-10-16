@@ -2,6 +2,7 @@ import { getThemePack, type ThemePack } from '@/data/themes';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import { useSessionStore } from '@/store/sessionStore';
+import { colors } from '@/theme';
 import type { ThemeId } from '@/types/theme';
 import { isThemeId } from '@/types/theme';
 import { resolveSelectableTheme } from '@/utils/themeEntitlement';
@@ -20,4 +21,21 @@ export function useResolvedThemeId(): ThemeId {
 
 export function useThemePack(): ThemePack {
   return getThemePack(useResolvedThemeId());
+}
+
+/** Copy that sits on hero sky (not inside a cream card). Christmas sky needs cream ink. */
+export function useOnSkyColors(): { text: string; muted: string; link: string } {
+  const pack = useThemePack();
+  if (pack.id === 'christmas') {
+    return {
+      text: colors.cream,
+      muted: 'rgba(255, 248, 238, 0.78)',
+      link: '#A8D8FF',
+    };
+  }
+  return {
+    text: colors.roadGray,
+    muted: colors.roadGrayLight,
+    link: colors.skyBlueDark,
+  };
 }

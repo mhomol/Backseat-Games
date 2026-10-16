@@ -1,5 +1,6 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { OnSkyText } from '@/components/brand/OnSkyText';
 import { SceneryScrollShell } from '@/components/brand/SceneryScrollShell';
 import { BigButton } from '@/components/BigButton';
 import { PAID_THEME_PACKS, themePacks } from '@/data/themes';
@@ -47,9 +48,9 @@ export default function StoreScreen() {
 
   return (
     <SceneryScrollShell>
-      <Text style={styles.lead}>
+      <OnSkyText style={styles.lead}>
         Holiday looks for the whole trip. Preview below, buy once, then apply anytime in Settings.
-      </Text>
+      </OnSkyText>
       <View style={styles.card}>
         <Image source={themePacks.classic.heroes.home} style={styles.preview} resizeMode="cover" />
         <Text style={styles.name}>Classic</Text>
@@ -92,10 +93,14 @@ export default function StoreScreen() {
         );
       })}
       <Pressable onPress={() => void handleRestore()} accessibilityRole="button">
-        <Text style={styles.restore}>Restore purchases</Text>
+        <OnSkyText tone="link" style={styles.restore}>
+          Restore purchases
+        </OnSkyText>
       </Pressable>
       <Pressable onPress={() => router.back()} accessibilityRole="button">
-        <Text style={styles.restore}>Back</Text>
+        <OnSkyText tone="link" style={styles.restore}>
+          Back
+        </OnSkyText>
       </Pressable>
     </SceneryScrollShell>
   );
@@ -105,7 +110,6 @@ const styles = StyleSheet.create({
   lead: {
     fontFamily: fonts.body,
     fontSize: 15,
-    color: colors.roadGray,
     marginBottom: spacing.sm,
   },
   card: {
@@ -134,7 +138,6 @@ const styles = StyleSheet.create({
   restore: {
     fontFamily: fonts.bodyBold,
     fontSize: 16,
-    color: colors.skyBlueDark,
     textAlign: 'center',
     paddingVertical: spacing.sm,
   },

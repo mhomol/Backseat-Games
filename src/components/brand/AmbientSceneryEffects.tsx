@@ -16,22 +16,21 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-type SkyFlyer = 'plane' | 'sleigh';
-type SkyBird = 'bird' | 'turkey';
-type CritterKind = SkyFlyer | SkyBird | 'gopher';
+type SkyFlyer = 'plane' | 'sleigh' | 'balloon';
+type SkyBird = 'bird' | 'turkey' | 'dove';
+type GroundCritter = 'gopher' | 'fox' | 'reindeer';
+type CritterKind = SkyFlyer | SkyBird | GroundCritter;
 
 type AmbientSceneryEffectsProps = {
-  /** Christmas swaps the plane for a Santa sleigh. */
   skyFlyer?: SkyFlyer;
-  /** Thanksgiving swaps the songbird for a turkey. */
   skyBird?: SkyBird;
+  groundCritter?: GroundCritter;
 };
 
 const birdFrames = [
   require('../../../assets/branding/critters/bird-1.png'),
   require('../../../assets/branding/critters/bird-2.png'),
 ];
-/** Static body (no blades); props alternate on the nose. */
 const planeBody = require('../../../assets/branding/critters/plane.png');
 const planePropFrames = [
   require('../../../assets/branding/critters/plane-prop-1.png'),
@@ -44,14 +43,35 @@ const turkeyFrames = [
   require('../../../assets/branding/critters/turkey-1.png'),
   require('../../../assets/branding/critters/turkey-2.png'),
 ];
+const doveFrames = [
+  require('../../../assets/branding/critters/dove-1.png'),
+  require('../../../assets/branding/critters/dove-2.png'),
+];
+const balloonSprite = require('../../../assets/branding/critters/balloon.png');
+const foxUp = require('../../../assets/branding/critters/fox-up.png');
+const foxWink = require('../../../assets/branding/critters/fox-wink.png');
+const reindeerUp = require('../../../assets/branding/critters/reindeer-up.png');
+const reindeerWink = require('../../../assets/branding/critters/reindeer-wink.png');
 
 function randomGapMs(): number {
   return 12000 + Math.floor(Math.random() * 28000);
 }
 
-function pickCritter(skyFlyer: SkyFlyer, skyBird: SkyBird): CritterKind {
-  const critters: CritterKind[] = [skyFlyer, skyBird, 'gopher'];
+function pickCritter(
+  skyFlyer: SkyFlyer,
+  skyBird: SkyBird,
+  groundCritter: GroundCritter,
+): CritterKind {
+  const critters: CritterKind[] = [skyFlyer, skyBird, groundCritter];
   return critters[Math.floor(Math.random() * critters.length)]!;
+}
+
+function isSkyFlyer(kind: CritterKind): kind is SkyFlyer {
+  return kind === 'plane' || kind === 'sleigh' || kind === 'balloon';
+}
+
+function isSkyBird(kind: CritterKind): kind is SkyBird {
+  return kind === 'bird' || kind === 'turkey' || kind === 'dove';
 }
 
 /**
@@ -60,6 +80,7 @@ function pickCritter(skyFlyer: SkyFlyer, skyBird: SkyBird): CritterKind {
 export function AmbientSceneryEffects({
   skyFlyer = 'plane',
   skyBird = 'bird',
+  groundCritter = 'gopher',
 }: AmbientSceneryEffectsProps) {
   const { width, height } = useWindowDimensions();
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -115,16 +136,19 @@ export function AmbientSceneryEffects({
     const runSkyFlyer = (kind: SkyFlyer) => {
       setActive(kind);
       setPlaneFrame(0);
-      // Plane and sleigh both face left — fly right-to-left so the nose leads.
       const skyY = height * (0.06 + Math.random() * 0.2);
       translateX.value = width + 160;
       translateY.value = skyY;
       opacity.value = 1;
-      flapId = setInterval(() => {
-        setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
-      }, 90);
+      if (kind !== 'balloon') {
+        flapId = setInterval(() => {
+          setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
+        }, 90);
+      }
+      const duration =
+        (kind === 'balloon' ? 11000 : 8000) + Math.floor(Math.random() * 3000);
       translateX.value = withTiming(-180, {
-        duration: 8000 + Math.floor(Math.random() * 3000),
+        duration,
         easing: Easing.linear,
       }, (finished) => {
         if (finished) {
@@ -132,7 +156,7 @@ export function AmbientSceneryEffects({
         }
       });
       translateY.value = withTiming(skyY + (Math.random() - 0.5) * height * 0.08, {
-        duration: 8000,
+        duration,
         easing: Easing.inOut(Easing.sin),
       });
     };
@@ -164,11 +188,10 @@ export function AmbientSceneryEffects({
       });
     };
 
-    const runGopher = () => {
-      setActive('gopher');
+    const runPeek = (kind: GroundCritter) => {
+      setActive(kind);
       setGopherWinkOn(false);
       translateX.value = width * 0.2 + Math.random() * width * 0.5;
-      // Peek sits slightly below the screen edge so paws don't float.
       const hiddenY = 98;
       const peekedY = 8;
       translateY.value = hiddenY;
@@ -198,13 +221,13 @@ export function AmbientSceneryEffects({
       if (cancelled) {
         return;
       }
-      const kind = pickCritter(skyFlyer, skyBird);
-      if (kind === 'plane' || kind === 'sleigh') {
+      const kind = pickCritter(skyFlyer, skyBird, groundCritter);
+      if (isSkyFlyer(kind)) {
         runSkyFlyer(kind);
-      } else if (kind === 'bird' || kind === 'turkey') {
+      } else if (isSkyBird(kind)) {
         runFlapper(kind);
       } else {
-        runGopher();
+        runPeek(kind);
       }
     };
 
@@ -221,7 +244,7 @@ export function AmbientSceneryEffects({
       }
       clearFlap();
     };
-  }, [reduceMotion, width, height, skyFlyer, skyBird, translateX, translateY, opacity]);
+  }, [reduceMotion, width, height, skyFlyer, skyBird, groundCritter, translateX, translateY, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }, { translateY: translateY.value }],
@@ -233,7 +256,7 @@ export function AmbientSceneryEffects({
   }
 
   const positionStyle =
-    active === 'gopher'
+    active === 'gopher' || active === 'fox' || active === 'reindeer'
       ? styles.gopherAnchor
       : styles.skyAnchor;
 
@@ -260,6 +283,10 @@ export function AmbientSceneryEffects({
         />
       </View>
     );
+  } else if (active === 'balloon') {
+    critter = (
+      <Image source={balloonSprite} style={styles.balloon} resizeMode="contain" />
+    );
   } else if (active === 'bird') {
     critter = (
       <Image source={birdFrames[birdFrame]} style={styles.bird} resizeMode="contain" />
@@ -267,6 +294,26 @@ export function AmbientSceneryEffects({
   } else if (active === 'turkey') {
     critter = (
       <Image source={turkeyFrames[birdFrame]} style={styles.turkey} resizeMode="contain" />
+    );
+  } else if (active === 'dove') {
+    critter = (
+      <Image source={doveFrames[birdFrame]} style={styles.dove} resizeMode="contain" />
+    );
+  } else if (active === 'fox') {
+    critter = (
+      <Image
+        source={gopherWinkOn ? foxWink : foxUp}
+        style={styles.gopher}
+        resizeMode="contain"
+      />
+    );
+  } else if (active === 'reindeer') {
+    critter = (
+      <Image
+        source={gopherWinkOn ? reindeerWink : reindeerUp}
+        style={styles.gopher}
+        resizeMode="contain"
+      />
     );
   } else {
     critter = (
@@ -310,7 +357,6 @@ const styles = StyleSheet.create({
     width: 88,
     height: 56,
   },
-  /** Nose hub sits near the left; overlay spins in place over the cowling. */
   planeProp: {
     position: 'absolute',
     left: -4,
@@ -326,13 +372,16 @@ const styles = StyleSheet.create({
     width: 128,
     height: 72,
   },
-  /** Pink nose hub — same 2-frame prop overlay as the plane. */
   sleighProp: {
     position: 'absolute',
     left: 2,
     top: 24,
     width: 38,
     height: 38,
+  },
+  balloon: {
+    width: 72,
+    height: 102,
   },
   bird: {
     width: 56,
@@ -341,6 +390,10 @@ const styles = StyleSheet.create({
   turkey: {
     width: 72,
     height: 72,
+  },
+  dove: {
+    width: 64,
+    height: 64,
   },
   gopher: {
     width: 72,
