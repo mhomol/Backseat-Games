@@ -1,16 +1,36 @@
-import { useEffect, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { AccessibilityInfo, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useThemePack } from '@/hooks/useResolvedTheme';
 
 const LIGHT_COLORS = ['#E74C3C', '#F1C40F', '#27AE60', '#E67E22', '#3498DB'] as const;
+const BULB_COUNT = 10;
+const STRING_LEFT = 0.14;
+const STRING_WIDTH = 0.72;
+const DROOP_PX = 18;
+const WIRE = '#1A4D2E';
+
+type Point = { x: number; y: number };
+
+function strandPoints(width: number): Point[] {
+  return Array.from({ length: BULB_COUNT }, (_, index) => {
+    const t = index / (BULB_COUNT - 1);
+    return {
+      x: t * width,
+      y: 3 + DROOP_PX * 4 * t * (1 - t),
+    };
+  });
+}
 
 /**
- * Sits on the baked-in home wordmark. Percentages match the hero art frame.
+ * Christmas lights sit on the baked-in home wordmark. Percentages match the hero art frame.
  */
 export function HeroLogoSeasonalDoodles() {
   const pack = useThemePack();
+  const { width: screenWidth } = useWindowDimensions();
   const [reduceMotion, setReduceMotion] = useState(false);
   const [blinkOn, setBlinkOn] = useState(true);
+  const stringWidth = screenWidth * STRING_WIDTH;
+  const points = useMemo(() => strandPoints(stringWidth), [stringWidth]);
 
   useEffect(() => {
     let mounted = true;
@@ -36,61 +56,54 @@ export function HeroLogoSeasonalDoodles() {
     return () => clearInterval(id);
   }, [reduceMotion, pack.id]);
 
-  if (pack.id === 'classic') {
+  if (pack.id !== 'christmas') {
     return null;
-  }
-
-  if (pack.id === 'thanksgiving') {
-    return (
-      <View pointerEvents="none" style={styles.root}>
-        <CornucopiaDoodle />
-      </View>
-    );
   }
 
   return (
     <View pointerEvents="none" style={styles.root}>
-      <View style={styles.lightRow}>
-        {LIGHT_COLORS.concat(LIGHT_COLORS).map((color, index) => {
-          const groupA = index % 2 === 0;
-          const lit = reduceMotion || (groupA ? blinkOn : !blinkOn);
+      <View style={[styles.strand, { width: stringWidth, height: DROOP_PX + 22 }]}>
+        {points.slice(0, -1).map((start, index) => {
+          const end = points[index + 1]!;
+          const dx = end.x - start.x;
+          const dy = end.y - start.y;
+          const length = Math.hypot(dx, dy);
+          const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
           return (
             <View
-              key={`light-${index}`}
+              key={`wire-${index}`}
               style={[
-                styles.bulb,
-                { backgroundColor: color, opacity: lit ? 1 : 0.28 },
+                styles.wire,
+                {
+                  width: length,
+                  left: (start.x + end.x) / 2 - length / 2,
+                  top: (start.y + end.y) / 2 - 1.25,
+                  transform: [{ rotate: `${deg}deg` }],
+                },
               ]}
             />
           );
         })}
+        {points.map((point, index) => {
+          const groupA = index % 2 === 0;
+          const lit = reduceMotion || (groupA ? blinkOn : !blinkOn);
+          const color = LIGHT_COLORS[index % LIGHT_COLORS.length]!;
+          return (
+            <View
+              key={`bulb-${index}`}
+              style={[styles.socketWrap, { left: point.x - 5, top: point.y - 1 }]}
+            >
+              <View style={styles.socket} />
+              <View
+                style={[
+                  styles.bulb,
+                  { backgroundColor: color, opacity: lit ? 1 : 0.32 },
+                ]}
+              />
+            </View>
+          );
+        })}
       </View>
-      <ChristmasTreeDoodle />
-    </View>
-  );
-}
-
-function ChristmasTreeDoodle() {
-  return (
-    <View style={styles.treeAnchor}>
-      <View style={styles.treeStar} />
-      <View style={[styles.treeLayer, styles.treeTop]} />
-      <View style={[styles.treeLayer, styles.treeMid]} />
-      <View style={[styles.treeLayer, styles.treeBot]} />
-      <View style={styles.treeTrunk} />
-    </View>
-  );
-}
-
-function CornucopiaDoodle() {
-  return (
-    <View style={styles.hornAnchor}>
-      <View style={styles.hornBody} />
-      <View style={styles.hornLip} />
-      <View style={[styles.hornFruit, styles.fruitPumpkin]} />
-      <View style={[styles.hornFruit, styles.fruitApple]} />
-      <View style={[styles.hornFruit, styles.fruitGrape]} />
-      <View style={styles.hornLeaf} />
     </View>
   );
 }
@@ -100,143 +113,34 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFill,
     zIndex: 6,
   },
-  lightRow: {
+  strand: {
     position: 'absolute',
-    top: '7.4%',
-    left: '16%',
-    width: '68%',
-    height: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    top: '12.2%',
+    left: `${STRING_LEFT * 100}%`,
+  },
+  wire: {
+    position: 'absolute',
+    height: 2.5,
+    backgroundColor: WIRE,
+    borderRadius: 2,
+  },
+  socketWrap: {
+    position: 'absolute',
+    width: 10,
     alignItems: 'center',
+  },
+  socket: {
+    width: 4,
+    height: 4,
+    backgroundColor: WIRE,
+    borderRadius: 1,
   },
   bulb: {
-    width: 8,
-    height: 10,
-    borderRadius: 4,
+    width: 9,
+    height: 12,
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: '#2D3436',
-  },
-  treeAnchor: {
-    position: 'absolute',
-    left: '28.5%',
-    top: '19.5%',
-    width: 36,
-    height: 48,
-    alignItems: 'center',
-  },
-  treeLayer: {
-    position: 'absolute',
-    backgroundColor: '#1E8449',
-    borderWidth: 1.5,
-    borderColor: '#2D3436',
-  },
-  treeTop: {
-    top: 6,
-    width: 16,
-    height: 16,
-    borderRadius: 4,
-    transform: [{ rotate: '45deg' }],
-  },
-  treeMid: {
-    top: 16,
-    width: 24,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: '#27AE60',
-  },
-  treeBot: {
-    top: 26,
-    width: 30,
-    height: 16,
-    borderRadius: 8,
-  },
-  treeTrunk: {
-    position: 'absolute',
-    bottom: 2,
-    width: 7,
-    height: 8,
-    backgroundColor: '#8B5E3C',
-    borderWidth: 1,
-    borderColor: '#2D3436',
-  },
-  treeStar: {
-    position: 'absolute',
-    top: 0,
-    width: 8,
-    height: 8,
-    backgroundColor: '#F1C40F',
-    transform: [{ rotate: '45deg' }],
-    borderWidth: 1,
-    borderColor: '#2D3436',
-  },
-  hornAnchor: {
-    position: 'absolute',
-    left: '70%',
-    top: '22%',
-    width: 52,
-    height: 36,
-  },
-  hornBody: {
-    position: 'absolute',
-    left: 8,
-    top: 10,
-    width: 34,
-    height: 16,
-    borderRadius: 12,
-    backgroundColor: '#C47A3A',
-    borderWidth: 1.5,
-    borderColor: '#2D3436',
-    transform: [{ rotate: '-18deg' }],
-  },
-  hornLip: {
-    position: 'absolute',
-    left: 2,
-    top: 6,
-    width: 16,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#A15C28',
-    borderWidth: 1.5,
-    borderColor: '#2D3436',
-  },
-  hornFruit: {
-    position: 'absolute',
-    borderWidth: 1,
-    borderColor: '#2D3436',
-    borderRadius: 999,
-  },
-  fruitPumpkin: {
-    left: 0,
-    top: 4,
-    width: 12,
-    height: 11,
-    backgroundColor: '#E67E22',
-  },
-  fruitApple: {
-    left: 8,
-    top: 0,
-    width: 10,
-    height: 10,
-    backgroundColor: '#C0392B',
-  },
-  fruitGrape: {
-    left: 16,
-    top: 3,
-    width: 8,
-    height: 8,
-    backgroundColor: '#8E44AD',
-  },
-  hornLeaf: {
-    position: 'absolute',
-    left: 22,
-    top: 0,
-    width: 10,
-    height: 6,
-    borderRadius: 6,
-    backgroundColor: '#27AE60',
-    borderWidth: 1,
-    borderColor: '#2D3436',
-    transform: [{ rotate: '28deg' }],
+    marginTop: -1,
   },
 });

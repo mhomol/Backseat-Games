@@ -1,11 +1,15 @@
-import type { ReactNode } from 'react';
+import { useLayoutEffect, type ReactNode } from 'react';
 import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
+import { useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { AmbientSceneryEffects } from '@/components/brand/AmbientSceneryEffects';
 import { HeroLogoSeasonalDoodles } from '@/components/brand/HeroLogoSeasonalDoodles';
 import { HolidayWeatherEffects } from '@/components/brand/HolidayWeatherEffects';
 import { GAME_SCENERY_ASPECT } from '@/data/gameSceneryRotation';
 import { heroAspectRatio, type SceneryVariant } from '@/data/brandAssets';
+import { skyForDisplayedArt } from '@/data/themes';
 import { useThemePack } from '@/hooks/useResolvedTheme';
+import { stackChromeForSky, statusBarStyleForSky } from '@/theme/navigation';
 import { brand } from '@/theme/brand';
 
 type SceneryBackgroundProps = {
@@ -28,12 +32,19 @@ export function SceneryBackground({
   ambientEffects = true,
 }: SceneryBackgroundProps) {
   const pack = useThemePack();
+  const navigation = useNavigation();
   const ratio =
     scenerySource || pack.id !== 'classic' ? GAME_SCENERY_ASPECT : heroAspectRatio(variant);
-  const source = scenerySource ?? pack.heroes[variant];
+  const source = scenerySource ?? pack.heroes[variant].source;
+  const sky = skyForDisplayedArt(pack, variant, scenerySource);
+
+  useLayoutEffect(() => {
+    navigation.setOptions(stackChromeForSky(sky));
+  }, [navigation, sky]);
 
   return (
-    <View style={[styles.root, { backgroundColor: pack.sky }]}>
+    <View style={[styles.root, { backgroundColor: sky }]}>
+      <StatusBar style={statusBarStyleForSky(sky)} />
       <View style={styles.anchor}>
         <View style={[styles.artFrame, { aspectRatio: ratio }]}>
           <Image

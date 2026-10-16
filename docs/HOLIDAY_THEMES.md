@@ -31,8 +31,8 @@ Same model and sources after Thanksgiving is locked. Swap autumn for winter (sno
 ## Promote
 
 1. Save the Replicate download (URLs expire). Prefer `%USERPROFILE%\Pictures\Replicate\` then copy into `assets/branding/drafts/`.
-2. Scenery: `node scripts/promote-game-scenery.mjs path/to.png "Thanksgiving roadside"` then register in `src/data/gameSceneryRotation.ts` **and** the theme pack in `src/data/themes.ts`.
-3. Heroes: convert PNG→WebP like today; wire paths in `src/data/themes.ts`. Recalibrate `src/data/heroHotspots.ts` only if taps drift.
+2. Scenery: `node scripts/promote-game-scenery.mjs path/to.png "Thanksgiving roadside"` then register in `src/data/gameSceneryRotation.ts` **and** the theme pack in `src/data/themes.ts`. The script prints a `sky:` hex sampled from the top of the file — required on every `GameSceneryEntry`.
+3. Heroes: convert PNG→WebP like today; wire `{ source, sky }` in `src/data/themes.ts`. Sample sky with `node scripts/sample-hero-sky.mjs path/to/hero.webp` (top ~2% of **that** file). Do not reuse another hero’s hex. Recalibrate `src/data/heroHotspots.ts` only if taps drift.
 4. Bingo item icons: Recraft V4 (`recraft-ai/recraft-v4`), then add `require`s in `src/data/bingoItemImages.ts`. Holiday **ids** already live in `src/data/bingo-holiday-items.json` (emoji until PNGs exist).
 
 Hangman pilgrim/Santa are **code costumes**, not Kontext.

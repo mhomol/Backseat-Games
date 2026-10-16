@@ -22,6 +22,7 @@ import {
 } from '@/utils/platformFeatures';
 import { useThemePack } from '@/hooks/useResolvedTheme';
 import { spacing } from '@/theme';
+import { statusBarStyleForSky } from '@/theme/navigation';
 
 export default function HomeScreen() {
   const [teachingOpen, setTeachingOpen] = useState(false);
@@ -56,7 +57,7 @@ export default function HomeScreen() {
 
   return (
     <SceneryBackground variant="home">
-      <StatusBar style={themePack.id === 'christmas' ? 'light' : 'dark'} />
+      <StatusBar style={statusBarStyleForSky(themePack.heroes.home.sky)} />
       {Platform.OS === 'ios' ? (
         <StoreEntryButton
           badge={showStoreBadge}

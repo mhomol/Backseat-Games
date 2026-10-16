@@ -9,6 +9,8 @@ export type GameSceneryEntry = {
   id: string;
   label: string;
   source: ImageSourcePropType;
+  /** Top-of-art average — letterbox + stack header for this still only. */
+  sky: string;
 };
 
 /**
@@ -20,36 +22,43 @@ export const gameSceneryRotation: GameSceneryEntry[] = [
     id: 'rolling-hills',
     label: 'Rolling hills (original waiting room)',
     source: require('../../assets/branding/waiting-hero.webp'),
+    sky: '#5BB9E2',
   },
   {
     id: 'countryside-blue-sky',
     label: 'Countryside & open road',
     source: require('../../assets/branding/game-scenery/countryside-blue-sky.webp'),
+    sky: '#5CBAE2',
   },
   {
     id: 'canyon-blue-sky',
     label: 'Desert canyon',
     source: require('../../assets/branding/game-scenery/canyon-blue-sky.webp'),
+    sky: '#5ABAE1',
   },
   {
     id: 'snowy-moose-blue-sky',
     label: 'Snowy mountains & moose',
     source: require('../../assets/branding/game-scenery/snowy-moose-blue-sky.webp'),
+    sky: '#5BBBE3',
   },
   {
     id: 'serengeti-blue-sky',
     label: 'Serengeti safari',
     source: require('../../assets/branding/game-scenery/serengeti-blue-sky.webp'),
+    sky: '#5ABAE2',
   },
   {
     id: 'city-blue-sky',
     label: 'City street',
     source: require('../../assets/branding/game-scenery/city-blue-sky.webp'),
+    sky: '#5EADCF',
   },
   {
     id: 'golden-gate-blue-sky',
     label: 'Golden Gate bridge',
     source: require('../../assets/branding/game-scenery/golden-gate-blue-sky.webp'),
+    sky: '#58BBE4',
   },
 ];
 

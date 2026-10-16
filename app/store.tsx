@@ -52,7 +52,7 @@ export default function StoreScreen() {
         Holiday looks for the whole trip. Preview below, buy once, then apply anytime in Settings.
       </OnSkyText>
       <View style={styles.card}>
-        <Image source={themePacks.classic.heroes.home} style={styles.preview} resizeMode="cover" />
+        <Image source={themePacks.classic.heroes.home.source} style={styles.preview} resizeMode="cover" />
         <Text style={styles.name}>Classic</Text>
         <Text style={styles.blurb}>The original road-trip look. Always free.</Text>
         <BigButton
@@ -67,7 +67,7 @@ export default function StoreScreen() {
         const inUse = selectedThemeId === themeId && owned;
         return (
           <View key={pack.id} style={styles.card}>
-            <Image source={pack.heroes.home} style={styles.preview} resizeMode="cover" />
+            <Image source={pack.heroes.home.source} style={styles.preview} resizeMode="cover" />
             <Text style={styles.name}>{pack.name}</Text>
             <Text style={styles.blurb}>
               {themeId === 'thanksgiving'

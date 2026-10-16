@@ -8,6 +8,7 @@ import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { sampleTopSky } from './sample-hero-sky.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
@@ -38,11 +39,13 @@ await sharp(input)
   .webp({ quality: 92 })
   .toFile(outPath);
 
+const sky = await sampleTopSky(outPath);
 console.log(`Wrote assets/branding/game-scenery/${outFile} (${W}×${H})`);
-console.log('\nAdd to src/data/gameSceneryRotation.ts:');
+console.log('\nAdd to src/data/gameSceneryRotation.ts (sky is sampled from the top of this file):');
 console.log(`  {
     id: '${id}',
     label: '${label}',
     source: require('../../assets/branding/game-scenery/${outFile}'),
+    sky: '${sky}',
   },`);
 console.log('\nUpdate assets/branding/game-scenery/ROTATION.md with the new row.');

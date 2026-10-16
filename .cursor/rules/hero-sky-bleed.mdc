@@ -1,0 +1,17 @@
+---
+description: Every hero and game-scenery image must ship with a sampled top-of-art sky bleed for header and letterbox.
+alwaysApply: true
+---
+
+# Hero sky bleed
+
+Each background illustration (home/host/join/lobby heroes **and** every gameplay rotation still) has its own sky color at the top of the file. Thanksgiving home vs host already differ. **Never** use one theme-wide `pack.sky` as the header/letterbox for every screen.
+
+When adding or replacing any hero or scenery image:
+
+1. Sample the top of **that file**: `node scripts/sample-hero-sky.mjs path/to/image.webp`
+2. Store the hex on the same registry row as the asset (`HeroArt.sky` or `GameSceneryEntry.sky`). TypeScript requires the field — do not leave it off or copy a sibling image's hex.
+3. `SceneryBackground` applies that hex to the letterbox **and** the stack header for whatever art is on screen. Do not hardcode theme chrome in layouts for a specific hero.
+4. `scripts/promote-game-scenery.mjs` prints a `sky:` snippet after resize — paste it with the `require`.
+
+`ThemePack.sky` is only the fallback for loading shells (use the home-hero sample).
