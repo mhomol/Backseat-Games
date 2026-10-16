@@ -1,6 +1,6 @@
 # Holiday themes — art pipeline (iOS 1.5)
 
-**v1 heroes are packed** (720×1456 WebP under `assets/branding/themes/`). Classic remains the fallback if a pack file is missing. **Do not** call Replicate from an agent until a look is vetted manually.
+**v1 heroes are packed** (720×1456 WebP under `assets/branding/themes/`). Halloween home/host/waiting plus four gameplay stills (cemetery, chapel, maze, trick-or-treat) are packed. Classic remains the fallback if a pack file is missing. **Do not** call Replicate from an agent until a look is vetted manually.
 
 Thanksgiving host is packed from **v2** (`thanksgiving-host-hero-v2.png`) with a correct TRAVEL BINGO label.
 
@@ -27,6 +27,41 @@ Keep the exact same composition: BACKSEAT GAMES logo, wooden signpost with the t
 ## Christmas
 
 Same model and sources after Thanksgiving is locked. Swap autumn for winter (snow on pines, optional wreath/lights that do not hide the car silhouette, warm lights in the distance). Do not restack signs.
+
+## Halloween (Flux Kontext Pro — you run these)
+
+Same model and **one source at a time**. Keep logo, signs, pink car, luggage, rear camera angle. Change **only** the landscape. No extra cars, no new text, no watermark. Expect a **dark dusk/night sky** (purple-navy) so header bleed will be cream ink like Christmas — sample `sky` per file after promote.
+
+### Waiting / game scenery (start here)
+
+Source: `assets/branding/waiting-hero.webp`
+
+Keep the exact same pink vintage compact car with luggage on the roof rack, same rear camera angle, same cartoon style. Change only the landscape to a Halloween road trip at dusk: deep purple-navy sky, a few jack-o-lanterns and hay bales along the roadside, orange-leaf trees, maybe a distant farmhouse porch light. Do not change the car, do not add people, witches flying, extra vehicles, text, logo, or watermark.
+
+### Home hero
+
+Source: `assets/branding/home-hero.webp`
+
+Keep the exact same composition: BACKSEAT GAMES logo, wooden signpost with the three level arrow signs and their existing labels, and the pink car in the same place. Add Halloween only in the scenery (dusk sky, jack-o-lanterns, autumn trees). Do not move, restyle, or rewrite the signs or logo. No extra text.
+
+### Host hero
+
+Source: `assets/branding/host-hero.webp`
+
+Keep the exact same five game signs, post, labels, pink car, and camera angle. Change only the landscape to Halloween dusk (pumpkins, hay, purple-navy sky). Do not restack, relabel, or redraw the signs. No extra text.
+
+### Extra scenery rotation (after waiting is locked)
+
+Same waiting-hero source, one prompt each. Keep the car.
+
+1. **Small-town Halloween:** Main Street with porch jack-o-lanterns and paper bats, still the same pink car on the road.
+2. **Corn maze dusk:** tall corn and a simple maze entrance off the shoulder, no people.
+3. **Lighthouse / causeway night:** moonlit water, a few pumpkins on the rocks.
+4. **Downtown trick-or-treat glow:** storefront warm lights and a couple of pumpkins on the curb, no crowds that hide the car.
+
+### After you like a still
+
+Save locally (`Pictures\Replicate\`), then promote with `sky` sampled from **that** file. Hangman Halloween costume is a **code drawing** (ghost/witch hitchhiker), not Kontext. Bingo icons stay Recraft V4, cream `#FFF8EE`, bold black outline, subject only.
 
 ## Promote
 

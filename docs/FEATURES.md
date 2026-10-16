@@ -8,7 +8,7 @@ How to play Backseat Games — written for family testers, not engineers.
 
 Typically the front-seat parent on their phone. The host picks the game. For alone time, leave **Play online** off on the game selection screen and jump straight into a free local game. For a car full of players, turn **Play online** on, wait for everyone to join, and tap **Start Game**.
 
-**Pricing:** Solo Mode is **free**. Joining is **free** for everyone. Hosting online (join codes / waiting room) requires a **one-time $0.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay. Optional **holiday themes** (Thanksgiving, Christmas) are separate one-time $0.99 purchases. Apply a theme you own in **Settings**. Buy from the **Store** button on Home. If the host applies a theme, everyone in that trip sees it.
+**Pricing:** Solo Mode is **free**. Joining is **free** for everyone. Hosting online (join codes / waiting room) requires a **one-time $0.99 in-app purchase** on iPhone — see [MONETIZATION.md](./MONETIZATION.md). Passengers never pay. Optional **holiday themes** (Halloween, Thanksgiving, Christmas) are separate one-time $0.99 purchases. Apply a theme you own in **Settings**. Buy from the **Store** button on Home. If the host applies a theme, everyone in that trip sees it.
 
 ### How to join
 
@@ -106,7 +106,7 @@ Each player gets a **unique 5×5 card** with road-trip sights. First to get **bi
 
 ### What's on the cards?
 
-Animals, vehicles, road signs, landmarks, scenery, and roadside businesses — drawn from a pool of ~150 items (cow, red barn, golden arches, wind turbine, etc.). Holiday themes mix in extra seasonal sights (still includes everyday highway items). The free center says **Road Trip!** on Classic, **Turkey Trot!** on Thanksgiving, and **Holiday Ride!** on Christmas.
+Animals, vehicles, road signs, landmarks, scenery, and roadside businesses — drawn from a pool of ~150 items (cow, red barn, golden arches, wind turbine, etc.). Holiday themes mix in extra seasonal sights (still includes everyday highway items). The free center says **Road Trip!** on Classic, **Trick or Trip!** on Halloween, **Turkey Trot!** on Thanksgiving, and **Holiday Ride!** on Christmas.
 
 ---
 
@@ -144,7 +144,7 @@ When enabled in car rules, tap **Say the word** in the submit dialog. Your phone
 
 ## Hangman
 
-Guess letters to complete a word or short phrase before the hangman drawing is finished. Classic uses a wooden hitchhiker. Thanksgiving uses a **pilgrim**. Christmas uses **Santa**. Misses still fill the drawing the same way; a loss still shows the Wrong Way sign.
+Guess letters to complete a word or short phrase before the hangman drawing is finished. Classic uses a wooden hitchhiker. Halloween uses a **ghost**. Thanksgiving uses a **pilgrim**. Christmas uses **Santa**. Misses still fill the drawing the same way; a loss still shows the Wrong Way sign.
 
 ### Solo
 

@@ -5,6 +5,7 @@ import type { HangmanCharacter, ThemeAmbient, ThemeId } from '../types/theme';
 import type { PaidThemeId } from '../types/theme';
 import {
   CHRISTMAS_THEME_PRODUCT_ID,
+  HALLOWEEN_THEME_PRODUCT_ID,
   THANKSGIVING_THEME_PRODUCT_ID,
 } from '../types/purchases';
 import holidayBingo from './bingo-holiday-items.json';
@@ -33,6 +34,7 @@ export type ThemePack = {
 
 const thanksgivingExtras = holidayBingo.thanksgiving as BingoItem[];
 const christmasExtras = holidayBingo.christmas as BingoItem[];
+const halloweenExtras = holidayBingo.halloween as BingoItem[];
 
 const classicHeroes: Record<SceneryVariant, HeroArt> = {
   home: { source: sceneryImages.home, sky: '#59B9E1' },
@@ -56,6 +58,13 @@ const thanksgivingHome = require('../../assets/branding/themes/thanksgiving/home
 const thanksgivingHost = require('../../assets/branding/themes/thanksgiving/host-hero.webp');
 const christmasHome = require('../../assets/branding/themes/christmas/home-hero.webp');
 const christmasHost = require('../../assets/branding/themes/christmas/host-hero.webp');
+const halloweenWaiting = require('../../assets/branding/themes/halloween/waiting-hero.webp');
+const halloweenCemetery = require('../../assets/branding/themes/halloween/halloween-cemetery.webp');
+const halloweenHouse = require('../../assets/branding/themes/halloween/halloween-house.webp');
+const halloweenMaze = require('../../assets/branding/themes/halloween/halloween-maze.webp');
+const halloweenTrickOrTreat = require('../../assets/branding/themes/halloween/halloween-trickortreat.webp');
+const halloweenHome = require('../../assets/branding/themes/halloween/home-hero.webp');
+const halloweenHost = require('../../assets/branding/themes/halloween/host-hero.webp');
 
 const thanksgivingHeroes: Record<SceneryVariant, HeroArt> = {
   home: { source: thanksgivingHome, sky: '#FD9C45' },
@@ -71,6 +80,13 @@ const christmasHeroes: Record<SceneryVariant, HeroArt> = {
   lobby: { source: christmasWaiting, sky: '#18273F' },
 };
 
+const halloweenHeroes: Record<SceneryVariant, HeroArt> = {
+  home: { source: halloweenHome, sky: '#63243D' },
+  host: { source: halloweenHost, sky: '#150820' },
+  join: { source: halloweenWaiting, sky: '#281F1D' },
+  lobby: { source: halloweenWaiting, sky: '#281F1D' },
+};
+
 export const themePacks: Record<ThemeId, ThemePack> = {
   classic: {
     id: 'classic',
@@ -83,6 +99,49 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     extraBingoItems: [],
     scenery: gameSceneryRotation,
     heroes: classicHeroes,
+  },
+  halloween: {
+    id: 'halloween',
+    name: 'Halloween',
+    productId: HALLOWEEN_THEME_PRODUCT_ID,
+    sky: '#63243D',
+    ambient: 'halloween',
+    hangmanCharacter: 'ghost',
+    freeCenterLabel: 'Trick or Trip!',
+    extraBingoItems: halloweenExtras,
+    scenery: [
+      {
+        id: 'halloween-waiting',
+        label: 'Halloween cemetery road',
+        source: halloweenWaiting,
+        sky: '#281F1D',
+      },
+      {
+        id: 'halloween-cemetery',
+        label: 'Halloween lightning hill',
+        source: halloweenCemetery,
+        sky: '#B4100F',
+      },
+      {
+        id: 'halloween-house',
+        label: 'Halloween chapel road',
+        source: halloweenHouse,
+        sky: '#150620',
+      },
+      {
+        id: 'halloween-maze',
+        label: 'Halloween corn maze',
+        source: halloweenMaze,
+        sky: '#312724',
+      },
+      {
+        id: 'halloween-trickortreat',
+        label: 'Halloween trick-or-treat street',
+        source: halloweenTrickOrTreat,
+        sky: '#1E0925',
+      },
+    ],
+    heroes: halloweenHeroes,
   },
   thanksgiving: {
     id: 'thanksgiving',
@@ -172,7 +231,11 @@ export const themePacks: Record<ThemeId, ThemePack> = {
   },
 };
 
-export const PAID_THEME_PACKS: ThemePack[] = [themePacks.thanksgiving, themePacks.christmas];
+export const PAID_THEME_PACKS: ThemePack[] = [
+  themePacks.halloween,
+  themePacks.thanksgiving,
+  themePacks.christmas,
+];
 
 export function getThemePack(themeId: ThemeId): ThemePack {
   return themePacks[themeId];

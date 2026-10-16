@@ -124,8 +124,28 @@ Purchasable **look-and-feel** packs. Classic remains free. Assets ship in the ap
 |---------|------------|-------|------|
 | Thanksgiving theme | `com.homolworks.backseatgames.theme_thanksgiving` | **$0.99** (Tier 1) | Non-consumable |
 | Christmas theme | `com.homolworks.backseatgames.theme_christmas` | **$0.99** (Tier 1) | Non-consumable |
+| Halloween theme | `com.homolworks.backseatgames.theme_halloween` | **$0.99** (Tier 1) | Non-consumable |
 
 No bundle SKU in 1.5. Family Sharing: same as host unlock if already enabled.
+
+### Create the Halloween IAP (browser)
+
+Do this in App Store Connect **before** wiring the SKU in code, same as Thanksgiving/Christmas. List view **truncates** the product ID — copy-paste the full string.
+
+1. Paid Apps Agreement still active.
+2. **Apps → Backseat Games → Features → In-App Purchases → + → Non-Consumable**.
+3. Reference name: `Halloween Theme` (internal only).
+4. Product ID: `com.homolworks.backseatgames.theme_halloween` (must match code exactly when we add it).
+5. Price: **$0.99** (Tier 1).
+6. Localization display name: **Halloween**.
+7. Description: e.g. “Halloween look for the whole trip — scenery, Travel Bingo sights, and Hangman. Classic stays free. Passengers see the host’s theme.”
+8. Optional Family Sharing (match Thanksgiving/Christmas).
+9. **App Review Screenshot** = **1290 × 2796** (or another [screenshot spec](https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications) size). Do **not** upload 1024×1024 here. Promo **Image** (1024×1024) is optional.
+10. Leave status **Prepare for Submission** / **Ready to Submit**. Sandbox/TestFlight works without attaching to a version.
+11. **Do not** Add for Review on the IAP until version **1.5.0** exists — Apple would review it against live 1.4.
+12. When 1.5.0 is created, attach Halloween **and** Thanksgiving **and** Christmas **and** host unlock to that version.
+
+Code SKU is `com.homolworks.backseatgames.theme_halloween`. Create the ASC product if it is not already there. Sandbox works without attaching to a version.
 
 **Where to buy:** Home **Store** corner control, or Settings → Store. Preview before buying.
 

@@ -42,5 +42,27 @@
     { "id": "lighted-tunnel", "label": "Light Tunnel", "icon": "💡", "category": "landmarks" },
     { "id": "wrapped-porch", "label": "Wrapped Porch", "icon": "🎁", "category": "landmarks" },
     { "id": "red-bow-wreath", "label": "Red Bow Wreath", "icon": "🎀", "category": "landmarks" }
+  ],
+  "halloween": [
+    { "id": "jack-o-lantern", "label": "Jack-o'-Lantern", "icon": "🎃", "category": "landmarks" },
+    { "id": "skeleton-lawn", "label": "Lawn Skeleton", "icon": "💀", "category": "landmarks" },
+    { "id": "ghost-inflatable", "label": "Ghost Inflatable", "icon": "👻", "category": "landmarks" },
+    { "id": "witch-hat-mailbox", "label": "Witch Hat Mailbox", "icon": "🧙", "category": "landmarks" },
+    { "id": "spider-web-porch", "label": "Spider Web Porch", "icon": "🕸️", "category": "landmarks" },
+    { "id": "haunted-house-sign", "label": "Haunted House Sign", "icon": "🏚️", "category": "signs" },
+    { "id": "candy-bowl", "label": "Candy Bowl", "icon": "🍬", "category": "landmarks" },
+    { "id": "tombstone-yard", "label": "Yard Tombstone", "icon": "🪦", "category": "landmarks" },
+    { "id": "bat-banner", "label": "Bat Banner", "icon": "🦇", "category": "signs" },
+    { "id": "black-cat-lawn", "label": "Black Cat Decor", "icon": "🐈‍⬛", "category": "landmarks" },
+    { "id": "hay-bales", "label": "Hay Bales", "icon": "🌾", "category": "scenery" },
+    { "id": "corn-maze-halloween", "label": "Halloween Maze", "icon": "🌽", "category": "landmarks" },
+    { "id": "trick-or-treat-sign", "label": "Trick-or-Treat Sign", "icon": "🪧", "category": "signs" },
+    { "id": "orange-lights", "label": "Orange Lights", "icon": "🟠", "category": "scenery" },
+    { "id": "mummy-inflatable", "label": "Mummy Inflatable", "icon": "🧻", "category": "landmarks" },
+    { "id": "cauldron-porch", "label": "Porch Cauldron", "icon": "🫕", "category": "landmarks" },
+    { "id": "costume-shop", "label": "Costume Shop", "icon": "🎭", "category": "businesses" },
+    { "id": "pumpkin-patch-halloween", "label": "Pumpkin Patch", "icon": "🎃", "category": "scenery" },
+    { "id": "broom-lawn", "label": "Lawn Broom", "icon": "🧹", "category": "landmarks" },
+    { "id": "full-moon-flag", "label": "Full Moon Flag", "icon": "🌕", "category": "signs" }
   ]
 }

@@ -12,14 +12,15 @@ const REPLICATE = join(process.env.USERPROFILE ?? '', 'Pictures/Replicate');
 const OUT = join(ROOT, 'assets/branding/critters');
 const DRAFTS = join(ROOT, 'assets/branding/drafts');
 
-function isBg(r, g, b, a) {
+function isBg(r, g, b, a, creamOnly) {
   if (a < 16) return true;
   const cream = Math.abs(r - 255) + Math.abs(g - 248) + Math.abs(b - 238) < 55;
+  if (creamOnly) return cream;
   const white = r >= 232 && g >= 228 && b >= 218;
   return cream || white;
 }
 
-async function floodClear(buf) {
+async function floodClear(buf, { creamOnly = false, skipBottom = false } = {}) {
   const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const w = info.width;
   const h = info.height;
@@ -30,13 +31,13 @@ async function floodClear(buf) {
     const i = y * w + x;
     if (visited[i]) return;
     const o = i * 4;
-    if (!isBg(data[o], data[o + 1], data[o + 2], data[o + 3])) return;
+    if (!isBg(data[o], data[o + 1], data[o + 2], data[o + 3], creamOnly)) return;
     visited[i] = 1;
     stack.push(i);
   };
   for (let x = 0; x < w; x++) {
     push(x, 0);
-    push(x, h - 1);
+    if (!skipBottom) push(x, h - 1);
   }
   for (let y = 0; y < h; y++) {
     push(0, y);
@@ -102,6 +103,46 @@ const JOBS = [
     draft: 'balloon.jpg',
     mode: 'tall',
   },
+  {
+    src: '2026-10-16_1156_halloween-witch-1.jpg',
+    out: 'witch-1.png',
+    draft: 'witch-1.jpg',
+    mode: 'wide',
+  },
+  {
+    src: '2026-10-16_1156_halloween-witch-2.jpg',
+    out: 'witch-2.png',
+    draft: 'witch-2.jpg',
+    mode: 'wide',
+  },
+  {
+    src: '2026-10-16_1156_halloween-raven-1.jpg',
+    out: 'raven-1.png',
+    draft: 'raven-1.jpg',
+    mode: 'square',
+  },
+  {
+    src: '2026-10-16_1156_halloween-raven-2.jpg',
+    out: 'raven-2.png',
+    draft: 'raven-2.jpg',
+    mode: 'square',
+  },
+  {
+    src: '2026-10-16_1156_halloween-ghost-up.jpg',
+    out: 'ghost-up.png',
+    draft: 'ghost-up.jpg',
+    mode: 'peek',
+    creamOnly: true,
+    skipBottom: true,
+  },
+  {
+    src: '2026-10-16_1156_halloween-ghost-wink.jpg',
+    out: 'ghost-wink.png',
+    draft: 'ghost-wink.jpg',
+    mode: 'peek',
+    creamOnly: true,
+    skipBottom: true,
+  },
 ];
 
 async function main() {
@@ -111,7 +152,10 @@ async function main() {
   for (const job of JOBS) {
     const src = join(REPLICATE, job.src);
     await copyFile(src, join(DRAFTS, job.draft));
-    const flooded = await floodClear(await sharp(src).png().toBuffer());
+    const flooded = await floodClear(await sharp(src).png().toBuffer(), {
+      creamOnly: Boolean(job.creamOnly),
+      skipBottom: Boolean(job.skipBottom),
+    });
     let outBuf;
     if (job.mode === 'peek') {
       outBuf = await sharp(flooded)
@@ -122,6 +166,12 @@ async function main() {
       const trimmed = await trimTransparent(flooded);
       outBuf = await sharp(trimmed)
         .resize(360, 512, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png({ compressionLevel: 9 })
+        .toBuffer();
+    } else if (job.mode === 'wide') {
+      const trimmed = await trimTransparent(flooded);
+      outBuf = await sharp(trimmed)
+        .resize(512, 288, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png({ compressionLevel: 9 })
         .toBuffer();
     } else {

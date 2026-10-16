@@ -2,7 +2,10 @@ import { useLayoutEffect, type ReactNode } from 'react';
 import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { AmbientSceneryEffects } from '@/components/brand/AmbientSceneryEffects';
+import {
+  AmbientSceneryEffects,
+  crittersForThemeId,
+} from '@/components/brand/AmbientSceneryEffects';
 import { HeroLogoSeasonalDoodles } from '@/components/brand/HeroLogoSeasonalDoodles';
 import { HolidayWeatherEffects } from '@/components/brand/HolidayWeatherEffects';
 import { GAME_SCENERY_ASPECT } from '@/data/gameSceneryRotation';
@@ -54,17 +57,7 @@ export function SceneryBackground({
             accessibilityIgnoresInvertColors
           />
           {ambientEffects ? (
-            <AmbientSceneryEffects
-              skyFlyer={
-                pack.id === 'christmas' ? 'sleigh' : pack.id === 'thanksgiving' ? 'balloon' : 'plane'
-              }
-              skyBird={
-                pack.id === 'thanksgiving' ? 'turkey' : pack.id === 'christmas' ? 'dove' : 'bird'
-              }
-              groundCritter={
-                pack.id === 'thanksgiving' ? 'fox' : pack.id === 'christmas' ? 'reindeer' : 'gopher'
-              }
-            />
+            <AmbientSceneryEffects {...crittersForThemeId(pack.id)} />
           ) : null}
           {ambientEffects ? <HolidayWeatherEffects ambient={pack.ambient} /> : null}
           {variant === 'home' ? <HeroLogoSeasonalDoodles /> : null}

@@ -23,7 +23,9 @@ type Flake = {
 
 const LEAF_COLORS = ['#C0392B', '#D35400', '#E67E22', '#B9770E', '#A04000'];
 
-function makeFlakes(kind: Exclude<ThemeAmbient, 'classic'>, width: number): Flake[] {
+type WeatherKind = 'leaves' | 'snow';
+
+function makeFlakes(kind: WeatherKind, width: number): Flake[] {
   const count = kind === 'snow' ? 18 : 12;
   return Array.from({ length: count }, (_, index) => ({
     id: index,
@@ -37,7 +39,7 @@ function makeFlakes(kind: Exclude<ThemeAmbient, 'classic'>, width: number): Flak
   }));
 }
 
-function Particle({ flake, height, kind }: { flake: Flake; height: number; kind: 'leaves' | 'snow' }) {
+function Particle({ flake, height, kind }: { flake: Flake; height: number; kind: WeatherKind }) {
   const translateY = useSharedValue(-20);
   const translateX = useSharedValue(0);
   const rotate = useSharedValue(flake.tilt);
@@ -136,9 +138,10 @@ function Particle({ flake, height, kind }: { flake: Flake; height: number; kind:
 export function HolidayWeatherEffects({ ambient }: { ambient: ThemeAmbient }) {
   const { width, height } = useWindowDimensions();
   const [reduceMotion, setReduceMotion] = useState(false);
+  const weather: WeatherKind | null = ambient === 'leaves' || ambient === 'snow' ? ambient : null;
   const flakes = useMemo(
-    () => (ambient === 'classic' ? [] : makeFlakes(ambient, width)),
-    [ambient, width],
+    () => (weather ? makeFlakes(weather, width) : []),
+    [weather, width],
   );
 
   useEffect(() => {
@@ -155,14 +158,14 @@ export function HolidayWeatherEffects({ ambient }: { ambient: ThemeAmbient }) {
     };
   }, []);
 
-  if (ambient === 'classic' || reduceMotion) {
+  if (!weather || reduceMotion) {
     return null;
   }
 
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
       {flakes.map((flake) => (
-        <Particle key={flake.id} flake={flake} height={height} kind={ambient} />
+        <Particle key={flake.id} flake={flake} height={height} kind={weather} />
       ))}
     </View>
   );

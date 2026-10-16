@@ -7,11 +7,12 @@ export function productIdForPaidTheme(themeId: PaidThemeId): string {
 }
 
 export function paidThemeIdForProduct(productId: string): PaidThemeId | null {
-  if (productId === PAID_THEME_PRODUCT_IDS.thanksgiving) {
-    return 'thanksgiving';
-  }
-  if (productId === PAID_THEME_PRODUCT_IDS.christmas) {
-    return 'christmas';
+  for (const [themeId, sku] of Object.entries(PAID_THEME_PRODUCT_IDS) as Array<
+    [PaidThemeId, string]
+  >) {
+    if (sku === productId) {
+      return themeId;
+    }
   }
   return null;
 }

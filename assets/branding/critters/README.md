@@ -17,6 +17,9 @@ Locked selection (July 2026):
 | `fox-up.png` / `fox-wink.png` | Thanksgiving peek (replaces the gopher) |
 | `dove-1.png` / `dove-2.png` | Christmas 2-frame flap (replaces the bird) |
 | `reindeer-up.png` / `reindeer-wink.png` | Christmas peek (replaces the gopher) |
+| `witch-1.png` / `witch-2.png` | Halloween sky flyer (replaces the plane; cape/hair flap) |
+| `raven-1.png` / `raven-2.png` | Halloween 2-frame flap (replaces the bird) |
+| `ghost-up.png` / `ghost-wink.png` | Halloween peek (replaces the gopher) |
 
 Cream backgrounds are edge-flooded to transparent PNG alpha. Plane flies right→left
 with a **static body** + **2-frame propeller overlay** on the nose (avoids whole-body

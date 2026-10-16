@@ -1,5 +1,6 @@
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { brand } from '@/theme';
+import type { HangmanCharacter } from '@/types/theme';
 
 const WOOD = brand.wood;
 const WOOD_DARK = '#5C3A22';
@@ -70,12 +71,25 @@ export function HangmanDrawing({
 }: {
   missCount: number;
   maxMisses: number;
-  character?: 'hitchhiker' | 'pilgrim' | 'santa';
+  character?: HangmanCharacter;
 }) {
   const stage = Math.min(missCount, maxMisses);
-  const coat = character === 'santa' ? SANTA_RED : character === 'pilgrim' ? PILGRIM : SHIRT;
+  const coat =
+    character === 'santa'
+      ? SANTA_RED
+      : character === 'pilgrim'
+        ? PILGRIM
+        : character === 'ghost'
+          ? CREAM
+          : SHIRT;
   const who =
-    character === 'santa' ? 'Santa' : character === 'pilgrim' ? 'Pilgrim' : 'Roadside traveler';
+    character === 'santa'
+      ? 'Santa'
+      : character === 'pilgrim'
+        ? 'Pilgrim'
+        : character === 'ghost'
+          ? 'Ghost'
+          : 'Roadside traveler';
   return (
     <View
       style={styles.frame}

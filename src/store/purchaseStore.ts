@@ -31,11 +31,12 @@ interface PurchaseStore {
 
 export const usePurchaseStore = create<PurchaseStore>((set, get) => ({
   hostUnlocked: __DEV__ || !isIapSupported(),
-  ownedThemeIds: __DEV__ ? ['thanksgiving', 'christmas'] : [],
+  ownedThemeIds: __DEV__ ? ['halloween', 'thanksgiving', 'christmas'] : [],
   loaded: false,
   busy: false,
   productPrice: HOST_UNLOCK_FALLBACK_PRICE,
   themePrices: {
+    halloween: THEME_FALLBACK_PRICE,
     thanksgiving: THEME_FALLBACK_PRICE,
     christmas: THEME_FALLBACK_PRICE,
   },

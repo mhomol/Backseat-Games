@@ -38,6 +38,7 @@ export type IapInitResult = {
 };
 
 const DEFAULT_THEME_PRICES: ThemePriceMap = {
+  halloween: THEME_FALLBACK_PRICE,
   thanksgiving: THEME_FALLBACK_PRICE,
   christmas: THEME_FALLBACK_PRICE,
 };
@@ -87,6 +88,10 @@ function pricesFromProducts(products: Product[] | undefined): {
   return {
     hostPrice: formatProductPrice(host as Product | undefined, HOST_UNLOCK_FALLBACK_PRICE),
     themePrices: {
+      halloween: formatProductPrice(
+        bySku.get(productIdForPaidTheme('halloween')) as Product | undefined,
+        THEME_FALLBACK_PRICE,
+      ),
       thanksgiving: formatProductPrice(
         bySku.get(productIdForPaidTheme('thanksgiving')) as Product | undefined,
         THEME_FALLBACK_PRICE,
@@ -195,7 +200,7 @@ export async function initHostUnlockIap(): Promise<IapInitResult> {
     return {
       hostUnlocked: true,
       productPrice: HOST_UNLOCK_FALLBACK_PRICE,
-      ownedThemeIds: ['thanksgiving', 'christmas'],
+      ownedThemeIds: ['halloween', 'thanksgiving', 'christmas'],
       themePrices: DEFAULT_THEME_PRICES,
     };
   }
@@ -327,7 +332,7 @@ export async function restoreAllPurchases(): Promise<{
   if (__DEV__) {
     return {
       hostUnlocked: true,
-      ownedThemeIds: ['thanksgiving', 'christmas'],
+      ownedThemeIds: ['halloween', 'thanksgiving', 'christmas'],
     };
   }
 

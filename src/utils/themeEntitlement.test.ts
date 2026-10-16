@@ -2,6 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   CHRISTMAS_THEME_PRODUCT_ID,
+  HALLOWEEN_THEME_PRODUCT_ID,
   THANKSGIVING_THEME_PRODUCT_ID,
 } from '../types/purchases';
 import {
@@ -16,6 +17,7 @@ describe('themeEntitlement', () => {
   it('maps product IDs to paid themes', () => {
     assert.equal(paidThemeIdForProduct(THANKSGIVING_THEME_PRODUCT_ID), 'thanksgiving');
     assert.equal(paidThemeIdForProduct(CHRISTMAS_THEME_PRODUCT_ID), 'christmas');
+    assert.equal(paidThemeIdForProduct(HALLOWEEN_THEME_PRODUCT_ID), 'halloween');
     assert.equal(paidThemeIdForProduct('other'), null);
   });
 

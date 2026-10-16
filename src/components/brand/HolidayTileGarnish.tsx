@@ -10,6 +10,7 @@ type HolidayTileGarnishProps = {
 
 const leafPile = require('../../../assets/branding/tile-garnish/leaf-pile.png');
 const snowDrift = require('../../../assets/branding/tile-garnish/snow-drift.png');
+const candyPile = require('../../../assets/branding/tile-garnish/candy-pile.png');
 
 function bit(seed: number, shift: number): number {
   return ((seed * 17 + shift * 13) % 7) - 3;
@@ -23,7 +24,8 @@ export function HolidayTileGarnish({ seed = 0, shape = 'square' }: HolidayTileGa
   }
 
   const wide = shape === 'wide';
-  const snow = pack.ambient === 'snow';
+  const source =
+    pack.ambient === 'snow' ? snowDrift : pack.ambient === 'halloween' ? candyPile : leafPile;
   const tilt = bit(seed, 1);
 
   return (
@@ -40,7 +42,7 @@ export function HolidayTileGarnish({ seed = 0, shape = 'square' }: HolidayTileGa
       ]}
     >
       <Image
-        source={snow ? snowDrift : leafPile}
+        source={source}
         style={wide ? styles.artWide : styles.artSquare}
         resizeMode="contain"
       />

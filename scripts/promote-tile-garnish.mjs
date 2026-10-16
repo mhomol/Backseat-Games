@@ -65,6 +65,11 @@ const JOBS = [
     out: 'snow-drift.png',
     draft: 'tile-snow-drift.jpg',
   },
+  {
+    src: '2026-10-16_1156_halloween-candy-pile.jpg',
+    out: 'candy-pile.png',
+    draft: 'tile-candy-pile.jpg',
+  },
 ];
 
 async function main() {

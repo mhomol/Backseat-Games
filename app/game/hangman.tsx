@@ -15,6 +15,7 @@ import { GameSessionOverlays } from '@/components/GameSessionOverlays';
 import { HangmanDrawing } from '@/components/HangmanDrawing';
 import { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
 import { useSessionGameScenery } from '@/hooks/useSessionGameScenery';
+import { useThemePack } from '@/hooks/useResolvedTheme';
 import { pickHangmanPhrase } from '@/data/hangmanDictionary';
 import { loadHangmanSolved, markHangmanSolved } from '@/services/hangmanSolvedStorage';
 import { playClaimFeedback, playInvalidFeedback } from '@/services/feedback';
@@ -34,6 +35,7 @@ export default function HangmanScreen() {
   const localPlayerId = useSessionStore((state) => state.localPlayerId);
   const dispatchAction = useSessionStore((state) => state.dispatchAction);
   const scenerySource = useSessionGameScenery();
+  const pack = useThemePack();
   const [phraseDraft, setPhraseDraft] = useState('');
   const [localSecret, setLocalSecret] = useState<string | null>(null);
   const [wordError, setWordError] = useState<string | null>(null);
@@ -215,13 +217,7 @@ export default function HangmanScreen() {
               <HangmanDrawing
                 missCount={gameState.missCount}
                 maxMisses={gameState.maxMisses}
-                character={
-                  session.themeId === 'christmas'
-                    ? 'santa'
-                    : session.themeId === 'thanksgiving'
-                      ? 'pilgrim'
-                      : 'hitchhiker'
-                }
+                character={pack.hangmanCharacter}
               />
             </View>
             <View style={styles.pad}>

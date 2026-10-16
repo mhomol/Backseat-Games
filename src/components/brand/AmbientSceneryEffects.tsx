@@ -16,10 +16,27 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-type SkyFlyer = 'plane' | 'sleigh' | 'balloon';
-type SkyBird = 'bird' | 'turkey' | 'dove';
-type GroundCritter = 'gopher' | 'fox' | 'reindeer';
+export type SkyFlyer = 'plane' | 'sleigh' | 'balloon' | 'witch';
+export type SkyBird = 'bird' | 'turkey' | 'dove' | 'raven';
+export type GroundCritter = 'gopher' | 'fox' | 'reindeer' | 'ghost';
 type CritterKind = SkyFlyer | SkyBird | GroundCritter;
+
+export type AmbientCritterSet = {
+  skyFlyer: SkyFlyer;
+  skyBird: SkyBird;
+  groundCritter: GroundCritter;
+};
+
+const CRITTERS_BY_THEME: Record<string, AmbientCritterSet> = {
+  classic: { skyFlyer: 'plane', skyBird: 'bird', groundCritter: 'gopher' },
+  thanksgiving: { skyFlyer: 'balloon', skyBird: 'turkey', groundCritter: 'fox' },
+  christmas: { skyFlyer: 'sleigh', skyBird: 'dove', groundCritter: 'reindeer' },
+  halloween: { skyFlyer: 'witch', skyBird: 'raven', groundCritter: 'ghost' },
+};
+
+export function crittersForThemeId(themeId: string): AmbientCritterSet {
+  return CRITTERS_BY_THEME[themeId] ?? CRITTERS_BY_THEME.classic!;
+}
 
 type AmbientSceneryEffectsProps = {
   skyFlyer?: SkyFlyer;
@@ -52,6 +69,16 @@ const foxUp = require('../../../assets/branding/critters/fox-up.png');
 const foxWink = require('../../../assets/branding/critters/fox-wink.png');
 const reindeerUp = require('../../../assets/branding/critters/reindeer-up.png');
 const reindeerWink = require('../../../assets/branding/critters/reindeer-wink.png');
+const witchFrames = [
+  require('../../../assets/branding/critters/witch-1.png'),
+  require('../../../assets/branding/critters/witch-2.png'),
+];
+const ravenFrames = [
+  require('../../../assets/branding/critters/raven-1.png'),
+  require('../../../assets/branding/critters/raven-2.png'),
+];
+const ghostUp = require('../../../assets/branding/critters/ghost-up.png');
+const ghostWink = require('../../../assets/branding/critters/ghost-wink.png');
 
 function randomGapMs(): number {
   return 12000 + Math.floor(Math.random() * 28000);
@@ -67,11 +94,11 @@ function pickCritter(
 }
 
 function isSkyFlyer(kind: CritterKind): kind is SkyFlyer {
-  return kind === 'plane' || kind === 'sleigh' || kind === 'balloon';
+  return kind === 'plane' || kind === 'sleigh' || kind === 'balloon' || kind === 'witch';
 }
 
 function isSkyBird(kind: CritterKind): kind is SkyBird {
-  return kind === 'bird' || kind === 'turkey' || kind === 'dove';
+  return kind === 'bird' || kind === 'turkey' || kind === 'dove' || kind === 'raven';
 }
 
 /**
@@ -140,7 +167,11 @@ export function AmbientSceneryEffects({
       translateX.value = width + 160;
       translateY.value = skyY;
       opacity.value = 1;
-      if (kind !== 'balloon') {
+      if (kind === 'witch') {
+        flapId = setInterval(() => {
+          setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
+        }, 200);
+      } else if (kind !== 'balloon') {
         flapId = setInterval(() => {
           setPlaneFrame((frame) => (frame === 0 ? 1 : 0));
         }, 90);
@@ -256,7 +287,7 @@ export function AmbientSceneryEffects({
   }
 
   const positionStyle =
-    active === 'gopher' || active === 'fox' || active === 'reindeer'
+    active === 'gopher' || active === 'fox' || active === 'reindeer' || active === 'ghost'
       ? styles.gopherAnchor
       : styles.skyAnchor;
 
@@ -287,6 +318,10 @@ export function AmbientSceneryEffects({
     critter = (
       <Image source={balloonSprite} style={styles.balloon} resizeMode="contain" />
     );
+  } else if (active === 'witch') {
+    critter = (
+      <Image source={witchFrames[planeFrame]} style={styles.witch} resizeMode="contain" />
+    );
   } else if (active === 'bird') {
     critter = (
       <Image source={birdFrames[birdFrame]} style={styles.bird} resizeMode="contain" />
@@ -298,6 +333,10 @@ export function AmbientSceneryEffects({
   } else if (active === 'dove') {
     critter = (
       <Image source={doveFrames[birdFrame]} style={styles.dove} resizeMode="contain" />
+    );
+  } else if (active === 'raven') {
+    critter = (
+      <Image source={ravenFrames[birdFrame]} style={styles.dove} resizeMode="contain" />
     );
   } else if (active === 'fox') {
     critter = (
@@ -311,6 +350,14 @@ export function AmbientSceneryEffects({
     critter = (
       <Image
         source={gopherWinkOn ? reindeerWink : reindeerUp}
+        style={styles.gopher}
+        resizeMode="contain"
+      />
+    );
+  } else if (active === 'ghost') {
+    critter = (
+      <Image
+        source={gopherWinkOn ? ghostWink : ghostUp}
         style={styles.gopher}
         resizeMode="contain"
       />
@@ -382,6 +429,10 @@ const styles = StyleSheet.create({
   balloon: {
     width: 72,
     height: 102,
+  },
+  witch: {
+    width: 112,
+    height: 64,
   },
   bird: {
     width: 56,

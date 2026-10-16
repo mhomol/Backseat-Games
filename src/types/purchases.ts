@@ -8,18 +8,22 @@ export const THANKSGIVING_THEME_PRODUCT_ID =
 
 export const CHRISTMAS_THEME_PRODUCT_ID = 'com.homolworks.backseatgames.theme_christmas';
 
+export const HALLOWEEN_THEME_PRODUCT_ID = 'com.homolworks.backseatgames.theme_halloween';
+
 /** Fallback when StoreKit price is unavailable (must match App Store Connect tier). */
 export const HOST_UNLOCK_FALLBACK_PRICE = '$0.99';
 
 export const THEME_FALLBACK_PRICE = '$0.99';
 
 export const PAID_THEME_PRODUCT_IDS: Record<PaidThemeId, string> = {
+  halloween: HALLOWEEN_THEME_PRODUCT_ID,
   thanksgiving: THANKSGIVING_THEME_PRODUCT_ID,
   christmas: CHRISTMAS_THEME_PRODUCT_ID,
 };
 
 export const ALL_IAP_SKUS = [
   HOST_UNLOCK_PRODUCT_ID,
+  HALLOWEEN_THEME_PRODUCT_ID,
   THANKSGIVING_THEME_PRODUCT_ID,
   CHRISTMAS_THEME_PRODUCT_ID,
 ] as const;

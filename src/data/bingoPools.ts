@@ -5,16 +5,22 @@ import type { ThemeId } from '../types/theme';
 import { isThemeId } from '../types/theme';
 
 const extrasByTheme: Record<Exclude<ThemeId, 'classic'>, BingoItem[]> = {
+  halloween: holidayBingo.halloween as BingoItem[],
   thanksgiving: holidayBingo.thanksgiving as BingoItem[],
   christmas: holidayBingo.christmas as BingoItem[],
 };
 
 const extraById: Record<string, BingoItem> = Object.fromEntries(
-  [...extrasByTheme.thanksgiving, ...extrasByTheme.christmas].map((item) => [item.id, item]),
+  [
+    ...extrasByTheme.halloween,
+    ...extrasByTheme.thanksgiving,
+    ...extrasByTheme.christmas,
+  ].map((item) => [item.id, item]),
 );
 
 export const FREE_CENTER_LABEL: Record<ThemeId, string> = {
   classic: 'Road Trip!',
+  halloween: 'Trick or Trip!',
   thanksgiving: 'Turkey Trot!',
   christmas: 'Holiday Ride!',
 };

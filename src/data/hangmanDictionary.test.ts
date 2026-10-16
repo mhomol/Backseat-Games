@@ -4,11 +4,11 @@ import { hangmanPool, pickHangmanPhrase } from './hangmanDictionary';
 import { normalizeHangmanPhrase } from '../games/hangman';
 
 describe('hangmanDictionary', () => {
-  it('ships one hundred unique phrases per difficulty', () => {
+  it('ships one hundred twenty five unique phrases per difficulty', () => {
     for (const difficulty of ['easy', 'medium', 'hard'] as const) {
       const pool = hangmanPool(difficulty);
-      assert.equal(pool.length, 100);
-      assert.equal(new Set(pool).size, 100);
+      assert.equal(pool.length, 125);
+      assert.equal(new Set(pool).size, 125);
     }
   });
 

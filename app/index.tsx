@@ -28,7 +28,8 @@ export default function HomeScreen() {
   const [teachingOpen, setTeachingOpen] = useState(false);
   const preferencesLoaded = usePreferencesStore((state) => state.loaded);
   const ownsTheme = usePurchaseStore((state) => state.ownsTheme);
-  const showStoreBadge = !ownsTheme('thanksgiving') || !ownsTheme('christmas');
+  const showStoreBadge =
+    !ownsTheme('halloween') || !ownsTheme('thanksgiving') || !ownsTheme('christmas');
   const themePack = useThemePack();
 
   useEffect(() => {

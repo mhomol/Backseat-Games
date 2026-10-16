@@ -7,6 +7,13 @@ import { playerFromLocal, testSession } from './testUtils';
 import { startGame } from './ruleEngine';
 
 describe('themed bingo', () => {
+  it('adds holiday ids to the Halloween pool and still deals 24 squares', () => {
+    const extra = holidayBingoItems('halloween').map((item) => item.id);
+    assert.ok(extra.includes('jack-o-lantern'));
+    const card = generateBingoCard('hw-session', 'host', 'halloween');
+    assert.equal(card.itemIds.length, 24);
+  });
+
   it('adds holiday ids to the Thanksgiving pool and still deals 24 squares', () => {
     const extra = holidayBingoItems('thanksgiving').map((item) => item.id);
     assert.ok(extra.includes('inflatable-turkey'));

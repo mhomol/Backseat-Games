@@ -70,9 +70,11 @@ export default function StoreScreen() {
             <Image source={pack.heroes.home.source} style={styles.preview} resizeMode="cover" />
             <Text style={styles.name}>{pack.name}</Text>
             <Text style={styles.blurb}>
-              {themeId === 'thanksgiving'
-                ? 'Autumn roadside, Turkey Trot bingo, and a pilgrim on Hangman.'
-                : 'Winter roadside, Holiday Ride bingo, and Santa on Hangman.'}
+              {themeId === 'halloween'
+                ? 'Dusk roadside, Trick or Trip bingo, and a ghost on Hangman.'
+                : themeId === 'thanksgiving'
+                  ? 'Autumn roadside, Turkey Trot bingo, and a pilgrim on Hangman.'
+                  : 'Winter roadside, Holiday Ride bingo, and Santa on Hangman.'}
             </Text>
             {owned ? (
               <BigButton
