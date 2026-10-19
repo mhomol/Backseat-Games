@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { bingoItemImages } from '@/data/bingoItemImages';
-import { playBingoFeedback, playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
+import { playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { HolidayTileGarnish } from '@/components/brand/HolidayTileGarnish';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
@@ -93,7 +93,6 @@ export default function ColorCatchScreen() {
                   } else if (!isMarked) {
                     const winMode = session.gameRules['color-catch'].winMode;
                     if (wouldCompleteColorCatch(marked, index, winMode, gameState.gridSize)) {
-                      void playBingoFeedback();
                       void playTruckHornFeedback();
                     } else {
                       void playClaimFeedback();

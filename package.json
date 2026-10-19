@@ -14,6 +14,7 @@
     "generate:brand": "node scripts/generate-brand-assets.mjs",
     "prepare:hero-flux": "node scripts/prepare-hero-flux-input.mjs",
     "generate:sounds": "node scripts/generate-sounds.mjs",
+    "generate:theme-sounds": "node scripts/generate-theme-sounds.mjs",
     "crop:icon": "node scripts/crop-icon-from-hero.mjs",
     "prepare:app-store-screenshots": "node scripts/resize-app-store-screenshots.mjs",
     "prepare:app-store-previews": "node scripts/prepare-app-store-previews.mjs"

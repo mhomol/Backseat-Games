@@ -101,6 +101,7 @@ docs/
 - [Roadmap](docs/ROADMAP.md) — release direction and longer-term options
 - [Backlog](docs/BACKLOG.md) — polish, game ideas, and technical follow-ups
 - [Monetization](docs/MONETIZATION.md) — host unlock IAP, holiday themes, sandbox testing
+- [Theming](docs/THEMING.md) — checklist and per-pack inventory for Classic + paid looks
 - [Holiday themes](docs/HOLIDAY_THEMES.md) — 1.5 Kontext art (manual Replicate first)
 
 ## TestFlight (recommended — no EAS cloud quota)

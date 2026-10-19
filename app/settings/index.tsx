@@ -113,7 +113,7 @@ export default function SettingsScreen() {
       <SettingsSection title="Sound & Haptics">
         <SettingsToggle
           label="Sound effects"
-          description="Taps, horns, bingo, and winner celebrations."
+          description="Taps, horns, and winner celebrations."
           value={preferences.soundEffectsEnabled}
           onValueChange={(soundEffectsEnabled) => updatePreferences({ soundEffectsEnabled })}
         />

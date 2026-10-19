@@ -7,7 +7,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { playBingoFeedback, playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
+import { playClaimFeedback, playTruckHornFeedback } from '@/services/feedback';
 import { ContentCapsule } from '@/components/brand/ContentCapsule';
 import { HolidayTileGarnish } from '@/components/brand/HolidayTileGarnish';
 import { SceneryScreenFrame } from '@/components/brand/SceneryScreenFrame';
@@ -86,7 +86,6 @@ export default function BingoScreen() {
                   } else if (!isMarked) {
                     const winMode = session.gameRules.bingo.winMode;
                     if (wouldCompleteBingo(marked, index, winMode)) {
-                      void playBingoFeedback();
                       void playTruckHornFeedback();
                     } else {
                       void playClaimFeedback();

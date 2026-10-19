@@ -6,7 +6,7 @@ export type PaidThemeId = Exclude<ThemeId, 'classic'>;
 
 export type ThemeAmbient = 'classic' | 'leaves' | 'snow' | 'halloween';
 
-export type HangmanCharacter = 'hitchhiker' | 'pilgrim' | 'santa' | 'ghost';
+export type HangmanCharacter = 'hitchhiker' | 'pilgrim' | 'santa' | 'ghost' | 'skeleton' | 'snowman';
 
 export function isThemeId(value: string | null | undefined): value is ThemeId {
   return (

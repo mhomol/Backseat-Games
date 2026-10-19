@@ -10,4 +10,4 @@ Promoted from `assets/branding/drafts/*-hero-v1.png` (720×1456 WebP). Wired in 
 
 Home wordmarks are the logo-beat stills (Thanksgiving pumpkin-O, Halloween pin eyes, Christmas tree-O). Christmas lights stay a code overlay. Thanksgiving host is **v2** so the bingo arrow reads TRAVEL BINGO.
 
-See [docs/HOLIDAY_THEMES.md](../../../docs/HOLIDAY_THEMES.md).
+See [docs/THEMING.md](../../../docs/THEMING.md) for the full pack checklist and [docs/HOLIDAY_THEMES.md](../../../docs/HOLIDAY_THEMES.md) for Kontext stills.

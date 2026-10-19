@@ -1,5 +1,9 @@
 # Holiday themes — art pipeline (iOS 1.5)
 
+Pack checklist (heroes, Hangman, sounds, IAP, bingo extras): [THEMING.md](./THEMING.md).
+
+This page is the still-generation pipeline only.
+
 **v1 heroes are packed** (720×1456 WebP under `assets/branding/themes/`). Halloween home/host/waiting plus four gameplay stills (cemetery, chapel, maze, trick-or-treat) are packed. Classic remains the fallback if a pack file is missing. **Do not** call Replicate from an agent until a look is vetted manually.
 
 Thanksgiving host is packed from **v2** (`thanksgiving-host-hero-v2.png`) with a correct TRAVEL BINGO label.

@@ -106,7 +106,7 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     productId: HALLOWEEN_THEME_PRODUCT_ID,
     sky: '#62253C',
     ambient: 'halloween',
-    hangmanCharacter: 'ghost',
+    hangmanCharacter: 'skeleton',
     freeCenterLabel: 'Trick or Trip!',
     extraBingoItems: halloweenExtras,
     scenery: [
@@ -192,7 +192,7 @@ export const themePacks: Record<ThemeId, ThemePack> = {
     productId: CHRISTMAS_THEME_PRODUCT_ID,
     sky: '#1A2740',
     ambient: 'snow',
-    hangmanCharacter: 'santa',
+    hangmanCharacter: 'snowman',
     freeCenterLabel: 'Holiday Ride!',
     extraBingoItems: christmasExtras,
     scenery: [

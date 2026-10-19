@@ -1,34 +1,85 @@
 import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { usePreferencesStore } from '../store/preferencesStore';
+import { usePurchaseStore } from '../store/purchaseStore';
+import { useSessionStore } from '../store/sessionStore';
+import type { ThemeId } from '../types/theme';
+import { isThemeId } from '../types/theme';
+import { resolveSelectableTheme } from '../utils/themeEntitlement';
+
+const CLAIM_SOUNDS = {
+  classic: require('../../assets/sounds/claim.wav'),
+  halloween: require('../../assets/sounds/halloween/claim.wav'),
+  thanksgiving: require('../../assets/sounds/thanksgiving/claim.wav'),
+  christmas: require('../../assets/sounds/christmas/claim.wav'),
+} as const;
+
+const WIN_SOUNDS = {
+  classic: require('../../assets/sounds/win.wav'),
+  halloween: require('../../assets/sounds/halloween/win.wav'),
+  thanksgiving: require('../../assets/sounds/thanksgiving/win.wav'),
+  christmas: require('../../assets/sounds/christmas/win.wav'),
+} as const;
+
+const HORN_CAR_SOUNDS = {
+  classic: require('../../assets/sounds/horn-car.wav'),
+  halloween: require('../../assets/sounds/halloween/horn-car.wav'),
+  thanksgiving: require('../../assets/sounds/thanksgiving/horn-car.wav'),
+  christmas: require('../../assets/sounds/christmas/horn-car.wav'),
+} as const;
+
+const HORN_TRUCK_SOUNDS = {
+  classic: require('../../assets/sounds/horn-truck.wav'),
+  halloween: require('../../assets/sounds/halloween/horn-truck.wav'),
+  thanksgiving: require('../../assets/sounds/thanksgiving/horn-truck.wav'),
+  christmas: require('../../assets/sounds/christmas/horn-truck.wav'),
+} as const;
 
 let tapPlayer: AudioPlayer | null = null;
 let winPlayer: AudioPlayer | null = null;
 let hornCarPlayer: AudioPlayer | null = null;
 let hornTruckPlayer: AudioPlayer | null = null;
 let claimPlayer: AudioPlayer | null = null;
-let bingoPlayer: AudioPlayer | null = null;
 let invalidPlayer: AudioPlayer | null = null;
 let roundStartPlayer: AudioPlayer | null = null;
 let openJinglePlayer: AudioPlayer | null = null;
-let audioReady = false;
+let sharedReady = false;
+let loadedTheme: ThemeId | null = null;
 let openJinglePlayedThisSession = false;
 
+function resolvedThemeId(): ThemeId {
+  const sessionTheme = useSessionStore.getState().session?.themeId;
+  const selected = usePreferencesStore.getState().preferences.selectedThemeId;
+  const ownedThemeIds = usePurchaseStore.getState().ownedThemeIds;
+  if (isThemeId(sessionTheme)) {
+    return sessionTheme;
+  }
+  return resolveSelectableTheme(selected, ownedThemeIds);
+}
+
+function replacePlayer(current: AudioPlayer | null, source: number): AudioPlayer {
+  current?.remove();
+  return createAudioPlayer(source);
+}
+
 async function ensureAudio(): Promise<void> {
-  if (audioReady) {
+  await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: false });
+  if (!sharedReady) {
+    tapPlayer = createAudioPlayer(require('../../assets/sounds/tap.wav'));
+    invalidPlayer = createAudioPlayer(require('../../assets/sounds/invalid.wav'));
+    roundStartPlayer = createAudioPlayer(require('../../assets/sounds/round-start.wav'));
+    openJinglePlayer = createAudioPlayer(require('../../assets/sounds/open-jingle.wav'));
+    sharedReady = true;
+  }
+  const theme = resolvedThemeId();
+  if (loadedTheme === theme && claimPlayer && winPlayer && hornCarPlayer && hornTruckPlayer) {
     return;
   }
-  await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: false });
-  tapPlayer = createAudioPlayer(require('../../assets/sounds/tap.wav'));
-  winPlayer = createAudioPlayer(require('../../assets/sounds/win.wav'));
-  hornCarPlayer = createAudioPlayer(require('../../assets/sounds/horn-car.wav'));
-  hornTruckPlayer = createAudioPlayer(require('../../assets/sounds/horn-truck.wav'));
-  claimPlayer = createAudioPlayer(require('../../assets/sounds/claim.wav'));
-  bingoPlayer = createAudioPlayer(require('../../assets/sounds/bingo.wav'));
-  invalidPlayer = createAudioPlayer(require('../../assets/sounds/invalid.wav'));
-  roundStartPlayer = createAudioPlayer(require('../../assets/sounds/round-start.wav'));
-  openJinglePlayer = createAudioPlayer(require('../../assets/sounds/open-jingle.wav'));
-  audioReady = true;
+  claimPlayer = replacePlayer(claimPlayer, CLAIM_SOUNDS[theme]);
+  winPlayer = replacePlayer(winPlayer, WIN_SOUNDS[theme]);
+  hornCarPlayer = replacePlayer(hornCarPlayer, HORN_CAR_SOUNDS[theme]);
+  hornTruckPlayer = replacePlayer(hornTruckPlayer, HORN_TRUCK_SOUNDS[theme]);
+  loadedTheme = theme;
 }
 
 function prefs() {
@@ -67,22 +118,6 @@ export async function playClaimFeedback(): Promise<void> {
   try {
     await ensureAudio();
     await playPlayer(claimPlayer ?? tapPlayer);
-  } catch {
-    // Audio is optional polish.
-  }
-}
-
-export async function playBingoFeedback(): Promise<void> {
-  const { hapticsEnabled, soundEffectsEnabled } = prefs();
-  if (hapticsEnabled) {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-  }
-  if (!soundEffectsEnabled) {
-    return;
-  }
-  try {
-    await ensureAudio();
-    await playPlayer(bingoPlayer);
   } catch {
     // Audio is optional polish.
   }
