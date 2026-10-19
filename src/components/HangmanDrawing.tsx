@@ -207,7 +207,7 @@ function DoodleFigure({
         <View
           style={
             layout.head
-              ? partBox({ ...layout.head, zIndex: layout.head.zIndex ?? 5 })
+              ? [partBox({ ...layout.head, zIndex: layout.head.zIndex ?? 5 }), { overflow: 'hidden' }]
               : [styles.headLock, { width: HANGMAN_HEAD.width, height: HANGMAN_HEAD.height }]
           }
         >

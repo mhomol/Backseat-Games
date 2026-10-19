@@ -75,10 +75,10 @@ const LAYOUTS = {
   },
   snowman: {
     head: {
-      dx: -12.2,
-      dy: -8.2 + (25 * FRAME_W) / PREVIEW_W,
-      width: 68.4,
-      height: 68.4,
+      dx: 4,
+      dy: 4,
+      width: 36,
+      height: 36,
       zIndex: 5,
     },
     torso: { dx: -0.275, dy: 36.15, width: 44.55, height: 44.55, zIndex: 3 },

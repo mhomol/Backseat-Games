@@ -135,7 +135,8 @@ const pilgrimLayout: HangmanFigureLayout = {
 
 /** Locked to drafts/hangman-snowman-compose-preview.png. Legs are the two halves of the bottom ball. */
 const snowmanLayout: HangmanFigureLayout = {
-  head: { dx: -12.2, dy: -8.2 + previewPx(25), width: 68.4, height: 68.4, zIndex: 5 },
+  // v7 visual ~36px; same center X as the 68.4 slot, sat on the torso under the beam.
+  head: { dx: 4, dy: 4, width: 36, height: 36, zIndex: 5 },
   torso: { dx: -0.275, dy: 36.15, width: 44.55, height: 44.55, zIndex: 3 },
   armLeft: {
     dx: -19,
