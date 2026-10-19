@@ -204,15 +204,23 @@ function DoodleFigure({
         <View key={layer.key}>{layer.node}</View>
       ))}
       {stage >= 1 ? (
-        <Image
-          source={parts.head}
+        <View
           style={
             layout.head
               ? partBox({ ...layout.head, zIndex: layout.head.zIndex ?? 5 })
               : [styles.headLock, { width: HANGMAN_HEAD.width, height: HANGMAN_HEAD.height }]
           }
-          resizeMode="contain"
-        />
+        >
+          <Image
+            source={parts.head}
+            style={
+              layout.head
+                ? partImage(layout.head)
+                : { width: HANGMAN_HEAD.width, height: HANGMAN_HEAD.height }
+            }
+            resizeMode="contain"
+          />
+        </View>
       ) : null}
     </View>
   );

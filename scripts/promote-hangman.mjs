@@ -116,7 +116,7 @@ async function dropSmallOpaqueIslands(buf, minSize = 80) {
 }
 
 /** Keep the face (largest cream blob); drop cream halo around hair. */
-async function keepLargestCreamBlob(buf) {
+async function keepLargestCreamBlob(buf, pad = 0) {
   const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const w = info.width;
   const h = info.height;
@@ -149,9 +149,29 @@ async function keepLargestCreamBlob(buf) {
   }
   const keep = new Uint8Array(w * h);
   for (const i of best) keep[i] = 1;
-  for (let i = 0; i < w * h; i++) {
-    if (!creamAt(i) || keep[i]) continue;
-    data[i * 4 + 3] = 0;
+  if (pad > 0) {
+    // Keep the ink outline around the snowball; drop distant specks that inflate trim.
+    for (const i of best) {
+      const cx = i % w;
+      const cy = (i / w) | 0;
+      for (let dy = -pad; dy <= pad; dy++) {
+        for (let dx = -pad; dx <= pad; dx++) {
+          const x = cx + dx;
+          const y = cy + dy;
+          if (x < 0 || y < 0 || x >= w || y >= h) continue;
+          keep[y * w + x] = 1;
+        }
+      }
+    }
+    for (let i = 0; i < w * h; i++) {
+      if (keep[i] && data[i * 4 + 3] >= 16) continue;
+      data[i * 4 + 3] = 0;
+    }
+  } else {
+    for (let i = 0; i < w * h; i++) {
+      if (!creamAt(i) || keep[i]) continue;
+      data[i * 4 + 3] = 0;
+    }
   }
   return sharp(data, { raw: { width: w, height: h, channels: 4 } }).png({ compressionLevel: 9 }).toBuffer();
 }
@@ -363,6 +383,7 @@ const JOBS = [
     draft: 'hangman-snowman-head.jpg',
     mode: 'part',
     keepLargestCream: true,
+    clipToCreamPad: 18,
   },
   {
     src: '2026-10-19_0806_hangman-snowman-torso.jpg',
@@ -406,7 +427,7 @@ async function main() {
     } else {
       flooded = await despeckle(flooded);
       if (job.magentaSeal) flooded = await replaceMagentaWithSnow(flooded);
-      if (job.keepLargestCream) flooded = await keepLargestCreamBlob(flooded);
+      if (job.keepLargestCream) flooded = await keepLargestCreamBlob(flooded, job.clipToCreamPad ?? 0);
       if (job.magentaSeal) flooded = await replaceMagentaWithSnow(flooded);
       flooded = await dropSmallOpaqueIslands(flooded, job.islandMin ?? 80);
       let trimmed = await sharp(flooded).trim({ threshold: 10 }).png().toBuffer();
