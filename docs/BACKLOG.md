@@ -54,8 +54,8 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 ## App Store And Growth
 
 - **1.4:** shipped on App Store ~Oct 14–15, 2026 (Hangman + Color Catch)
-- **Marketing:** can run now in parallel with 1.5 (launch plan lives with the Homol Works bot)
-- **1.5 (in progress):** Holiday themes (Halloween + Thanksgiving + Christmas) — see Monetization below; version **1.5.0**, submit **Oct 19–20, 2026** (accelerated; ASC IAPs created; theme sounds finishing)
+- **1.5:** shipped — **live on the App Store Oct 20, 2026** (Holiday themes: Halloween + Thanksgiving + Christmas, $0.99 each) — see Monetization below
+- **Marketing (next):** Thanksgiving social blitz **Mon Nov 2, 2026**; swap App Store promo Thanksgiving -> Christmas around **Nov 30, 2026** (launch plan lives with the Homol Works bot)
 
 - Done: App Store 1.2.1 approved (delight + Solo offline + accessibility)
 - Done: Refresh screenshots after delight art + solo setup lands
@@ -64,27 +64,27 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 ## Monetization
 
 - Done in v1.1: Stronger one-time for-life copy on first-run + HostUnlockSheet
-- **1.5 track — Holiday themes:** purchasable game themes (look-and-feel, including themed bingo packs) for Halloween, Thanksgiving, and Christmas, plus Hangman costumes and extra motion — not a free host-setup filter
+- **Done in 1.5 (live Oct 20, 2026) — Holiday themes:** purchasable game themes (look-and-feel, including themed bingo packs) for Halloween, Thanksgiving, and Christmas, plus Hangman costumes and extra motion — not a free host-setup filter
   — Three SKUs ($0.99): `com.homolworks.backseatgames.theme_halloween`, `com.homolworks.backseatgames.theme_thanksgiving`, `com.homolworks.backseatgames.theme_christmas`
   — **Done (Oct 19):** all three IAPs created in App Store Connect
   — Store from home (corner control) + Settings apply picker
-  — All three themes ship in one release; **submit Oct 19–20, 2026** after finishing/testing extra theme sounds (accelerated from ~Nov 13)
-  — Halloween stays in this release even though it goes live after Oct 31 — evergreen / available for next season
-  — Soft-launch social posts drafted with Homol Works bot — publish when 1.5 goes live
-  — Swap promo text Thanksgiving -> Christmas around Nov 30 (no new build)
+  — All three themes shipped in one release (1.5.0, live Oct 20, 2026), with extra theme sounds
+  — Halloween shipped even though it went live close to Oct 31 — evergreen / available for next season
+  — Next: Thanksgiving social blitz Mon Nov 2, 2026 (Homol Works bot)
+  — Next: swap promo text Thanksgiving -> Christmas around Nov 30, 2026 (no new build)
   — No other builds Nov 16-25 or Dec 20-Jan 3 except hotfixes
   — Manual Flux Kontext Pro art first ([HOLIDAY_THEMES.md](./HOLIDAY_THEMES.md)); do not automate Replicate until vetted
   — Acceptance criteria:
     — [x] Theme IAP products created in App Store Connect (three $0.99 SKUs)
-    — [ ] Themes purchasable via IAP (sandbox / TestFlight verify)
-    — [ ] Restore Purchases restores owned themes (and host unlock)
-    — [ ] A selected theme applies across all games
-    — [ ] Theme previews available before buying (Store)
-    — [ ] Applying an owned theme is done in Settings
-    — [ ] Host theme syncs to joiners without them buying
-    — [ ] Extra theme sounds finished and tested
-    — [ ] Hangman: hitchhiker / skeleton / pilgrim / snowman; Wrong Way on loss unchanged
-    — [ ] Home Store entry is a corner control, not a fourth post sign
+    — [x] Themes purchasable via IAP (sandbox / TestFlight verify)
+    — [x] Restore Purchases restores owned themes (and host unlock)
+    — [x] A selected theme applies across all games
+    — [x] Theme previews available before buying (Store)
+    — [x] Applying an owned theme is done in Settings
+    — [x] Host theme syncs to joiners without them buying
+    — [x] Extra theme sounds finished and tested
+    — [x] Hangman: hitchhiker / skeleton / pilgrim / snowman; Wrong Way on loss unchanged
+    — [x] Home Store entry is a corner control, not a fourth post sign
 - P3: Promo-code friendly UI
 
 ## Technical Debt

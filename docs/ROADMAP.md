@@ -40,32 +40,30 @@ Shipped through App Store **1.3.0** (approved). Hangman + Color Catch shipped in
 - Done: Hangman aesthetic polish — wooden hitchhiker drawing, road-dash letter tiles, Wrong Way sign on a loss
 - Done: Hangman Solo uses a local Easy/Medium/Hard word list (no internet needed)
 
-## Next: Marketing push (parallel with 1.5)
+## Shipped: iOS 1.5 — Holiday themes
 
-1.4 is live. Marketing (listing, ratings, outreach) can run alongside 1.5 prep — do not wait for another feature ship. The launch plan lives with the Homol Works bot.
+**Live on the App Store October 20, 2026** (version **1.5.0**). All three themes shipped in **one** release.
 
-## Current build: iOS 1.5 — Holiday themes
-
-Quick follow-up after 1.4. All three themes ship in **one** release (one review pass, nothing changing mid-travel). 1.4 is live; **accelerated submit target Oct 19–20, 2026** (today/tomorrow) after finishing and testing extra theme sounds.
-
-- Version **1.5.0**
-- Three non-consumable IAPs ($0.99 each): Halloween, Thanksgiving, and Christmas — not a bundle
+- Done: Three non-consumable IAPs ($0.99 each): Halloween, Thanksgiving, and Christmas — not a bundle
   — Product IDs: `com.homolworks.backseatgames.theme_halloween`, `com.homolworks.backseatgames.theme_thanksgiving`, `com.homolworks.backseatgames.theme_christmas`
-  — **Done (Oct 19):** all three IAPs created in App Store Connect
-- Remaining before submit: finish + test extra theme sounds, then upload and submit
-- Home **Store** corner control (not a fourth post sign) → Store screen (browse / preview / buy / restore)
-- **Apply** owned themes in Settings (Classic is always free). Store "Use this theme" writes the same preference
-- Host's selected theme syncs on the session so the car matches; joiners do not need to buy
-- Themed home / host / waiting heroes and scenery (Flux Kontext, keep the car; manual Replicate until vetted — [HOLIDAY_THEMES.md](./HOLIDAY_THEMES.md))
-- Themed bingo packs mixed with classic sights; Hangman hitchhiker (Classic) / skeleton (Halloween) / pilgrim (Thanksgiving) / snowman (Christmas)
-- Falling leaves / snow + themed win overlay
-- Skip: 63 plate regenerations, App Store icon swap, Android
-- Halloween ships in this release even though it goes live after Oct 31 — treat as evergreen / available for next season
-- Target: **submit Oct 19–20, 2026** (accelerated; was ~Nov 13) so it is live well before Thanksgiving travel
-- Soft-launch social posts drafted with Homol Works bot — publish when 1.5 goes live
-- Around **Nov 30**: swap App Store promo text from Thanksgiving to Christmas (no new build)
+- Done: Home **Store** corner control (not a fourth post sign) → Store screen (browse / preview / buy / restore)
+- Done: **Apply** owned themes in Settings (Classic is always free). Store "Use this theme" writes the same preference
+- Done: Host's selected theme syncs on the session so the car matches; joiners do not need to buy
+- Done: Themed home / host / waiting heroes and scenery ([HOLIDAY_THEMES.md](./HOLIDAY_THEMES.md))
+- Done: Themed bingo packs mixed with classic sights; Hangman hitchhiker (Classic) / skeleton (Halloween) / pilgrim (Thanksgiving) / snowman (Christmas)
+- Done: Falling leaves / snow + themed win overlay + extra theme sounds
+- Skipped (as planned): 63 plate regenerations, App Store icon swap, Android
+- Halloween shipped even though it is late for Oct 31 — evergreen / available for next season
 - Freeze: no other builds during peak travel windows (**Nov 16-25**, **Dec 20-Jan 3**) except hotfixes
 - Detail and acceptance criteria in [BACKLOG.md](./BACKLOG.md)
+
+## Next: Marketing — holiday themes
+
+1.5 is live, so marketing is the active track (launch plan lives with the Homol Works bot).
+
+- **Mon Nov 2, 2026:** Thanksgiving social blitz (feed posts, Stories, Reel, pinned X post) across Homol Works accounts
+- Around **Nov 30, 2026**: swap App Store promo text / promo art from Thanksgiving to Christmas (no new build)
+- Ongoing: listing, ratings, outreach
 
 ## Shipped: P2 polish (existing games)
 
@@ -85,7 +83,7 @@ Goal: make the app more useful across repeat road trips.
 
 ## Longer-Term Options
 
-- Holiday themes shipped in **1.5** — see **Current build: iOS 1.5** above
+- Holiday themes shipped in **1.5** (live Oct 20, 2026) — see **Shipped: iOS 1.5** above
 - Host migration if the host phone dies (not in the current phase — host must reopen or start a new code)
 - Relay Sign Game audio snippets to other players, if privacy and review risk remain acceptable
 - Patch-based state sync if full snapshots ever become a performance issue
