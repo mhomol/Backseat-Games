@@ -1,0 +1,5 @@
+# Pinned to the versions that rendered the shipped assets/sounds bit-for-bit.
+numpy==2.5.4
+scipy==1.18.1
+soundfile==0.14.0
+pyloudnorm==0.2.0
