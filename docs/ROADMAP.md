@@ -57,6 +57,14 @@ Shipped through App Store **1.3.0** (approved). Hangman + Color Catch shipped in
 - Freeze: no other builds during peak travel windows (**Nov 16-25**, **Dec 20-Jan 3**) except hotfixes
 - Detail and acceptance criteria in [BACKLOG.md](./BACKLOG.md)
 
+## Shipped: iOS 1.5.1 - New sound set
+
+**Live on the App Store October 31, 2026** (build 64). What's New: "All-new sounds! Warmer chimes, livelier wins and a road-trip opening jingle."
+
+- Done: All 20 game sounds replaced with a warm mallet/bell set, plus a new road-trip opening jingle (music first, engine and road underneath)
+- Done: Old mjs sound generators replaced by a deterministic Python generator (`scripts/sounds/make_sounds.py`, `npm run generate:sounds`)
+- Open: sounds sometimes don't play (long-standing; see BACKLOG)
+
 ## Next: Marketing — holiday themes
 
 1.5 is live, so marketing is the active track (launch plan lives with the Homol Works bot).
