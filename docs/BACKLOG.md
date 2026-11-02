@@ -19,6 +19,8 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 - Done in v1.1: Opening jingle + separate Settings toggle
 - Done in v1.1: Claim / bingo / invalid / round-start palette
 - Done in v1.1: Truck horn for big moments; lighter claim sounds for routine marks
+- **P1 bug:** Game sounds sometimes don't play (long-standing; did not block 1.5.1). Needs a repro and debugging pass.
+- Done in 1.5.1 (live Oct 31, 2026): all-new 20-sound set + road-trip opening jingle; deterministic Python generator in `scripts/sounds/` replaces the old mjs scripts
 - P3: Kid-friendly voice or announcer stings
   - Optional "Bingo!", "Nice spot!", or "Road trip win!" callouts.
 
@@ -55,7 +57,8 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 
 - **1.4:** shipped on App Store ~Oct 14–15, 2026 (Hangman + Color Catch)
 - **1.5:** shipped — **live on the App Store Oct 20, 2026** (Holiday themes: Halloween + Thanksgiving + Christmas, $0.99 each) — see Monetization below
-- **Marketing (next):** Thanksgiving social blitz **Mon Nov 2, 2026**; swap App Store promo Thanksgiving -> Christmas around **Nov 30, 2026** (launch plan lives with the Homol Works bot)
+- **1.5.1:** shipped - **live on the App Store Oct 31, 2026** (new sound set)
+- **Marketing (now):** Thanksgiving social blitz **Mon Nov 2, 2026** (underway); swap App Store promo Thanksgiving -> Christmas around **Nov 30, 2026** (launch plan lives with the Homol Works bot)
 
 - Done: App Store 1.2.1 approved (delight + Solo offline + accessibility)
 - Done: Refresh screenshots after delight art + solo setup lands
@@ -90,6 +93,8 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 ## Technical Debt
 
 - P3: Checklist for plist-impacting plugins before every App Store submission
+- P3: `package-lock.json` root version still says 1.5.0 (app is 1.5.1)
+- P3: Christmas / Halloween / Thanksgiving IAP promo art and `scripts/compose-theme-iap-promo.mjs` are untracked - commit or ignore
 
 ## On hold: Android
 

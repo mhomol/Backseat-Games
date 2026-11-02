@@ -61,7 +61,7 @@ Shipped through App Store **1.3.0** (approved). Hangman + Color Catch shipped in
 
 1.5 is live, so marketing is the active track (launch plan lives with the Homol Works bot).
 
-- **Mon Nov 2, 2026:** Thanksgiving social blitz (feed posts, Stories, Reel, pinned X post) across Homol Works accounts
+- **Mon Nov 2, 2026:** Thanksgiving social blitz (feed posts, Stories, Reel, pinned X post) across Homol Works accounts - **underway** (Facebook Page anchor posted Nov 2)
 - Around **Nov 30, 2026**: swap App Store promo text / promo art from Thanksgiving to Christmas (no new build)
 - Ongoing: listing, ratings, outreach
 
