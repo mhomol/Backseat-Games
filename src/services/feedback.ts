@@ -1,11 +1,15 @@
+import { AppState } from 'react-native';
 import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { usePurchaseStore } from '../store/purchaseStore';
 import { useSessionStore } from '../store/sessionStore';
-import type { ThemeId } from '../types/theme';
+import { THEME_IDS, type ThemeId } from '../types/theme';
 import { isThemeId } from '../types/theme';
 import { resolveSelectableTheme } from '../utils/themeEntitlement';
+import { canAttemptOpenJingle, shouldRetrySilentPlayback } from './audioSessionPolicy';
+
+const PLAYER_OPTS = { keepAudioSessionActive: true } as const;
 
 const CLAIM_SOUNDS = {
   classic: require('../../assets/sounds/claim.wav'),
@@ -35,17 +39,20 @@ const HORN_TRUCK_SOUNDS = {
   christmas: require('../../assets/sounds/christmas/horn-truck.wav'),
 } as const;
 
-let tapPlayer: AudioPlayer | null = null;
-let winPlayer: AudioPlayer | null = null;
-let hornCarPlayer: AudioPlayer | null = null;
-let hornTruckPlayer: AudioPlayer | null = null;
-let claimPlayer: AudioPlayer | null = null;
-let invalidPlayer: AudioPlayer | null = null;
-let roundStartPlayer: AudioPlayer | null = null;
-let openJinglePlayer: AudioPlayer | null = null;
-let sharedReady = false;
-let loadedTheme: ThemeId | null = null;
+type SharedPlayerId = 'tap' | 'invalid' | 'round-start' | 'open-jingle';
+type ThemedKind = 'claim' | 'win' | 'horn-car' | 'horn-truck';
+
+const players: Partial<Record<string, AudioPlayer>> = {};
+const stallRetryByPlayer = new WeakMap<AudioPlayer, number>();
+let audioModeApplied = false;
+let playersReady = false;
 let openJinglePlayedThisSession = false;
+
+function warnSfx(message: string, error?: unknown): void {
+  if (__DEV__) {
+    console.warn(`[sfx] ${message}`, error ?? '');
+  }
+}
 
 function resolvedThemeId(): ThemeId {
   const sessionTheme = useSessionStore.getState().session?.themeId;
@@ -57,38 +64,100 @@ function resolvedThemeId(): ThemeId {
   return resolveSelectableTheme(selected, ownedThemeIds);
 }
 
-function replacePlayer(current: AudioPlayer | null, source: number): AudioPlayer {
-  current?.remove();
-  return createAudioPlayer(source);
-}
-
-async function ensureAudio(): Promise<void> {
-  await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: false });
-  if (!sharedReady) {
-    tapPlayer = createAudioPlayer(require('../../assets/sounds/tap.wav'));
-    invalidPlayer = createAudioPlayer(require('../../assets/sounds/invalid.wav'));
-    roundStartPlayer = createAudioPlayer(require('../../assets/sounds/round-start.wav'));
-    openJinglePlayer = createAudioPlayer(require('../../assets/sounds/open-jingle.wav'));
-    sharedReady = true;
-  }
-  const theme = resolvedThemeId();
-  if (loadedTheme === theme && claimPlayer && winPlayer && hornCarPlayer && hornTruckPlayer) {
-    return;
-  }
-  claimPlayer = replacePlayer(claimPlayer, CLAIM_SOUNDS[theme]);
-  winPlayer = replacePlayer(winPlayer, WIN_SOUNDS[theme]);
-  hornCarPlayer = replacePlayer(hornCarPlayer, HORN_CAR_SOUNDS[theme]);
-  hornTruckPlayer = replacePlayer(hornTruckPlayer, HORN_TRUCK_SOUNDS[theme]);
-  loadedTheme = theme;
+function themedPlayerId(kind: ThemedKind, theme: ThemeId): string {
+  return `${kind}:${theme}`;
 }
 
 function prefs() {
   return usePreferencesStore.getState().preferences;
 }
 
+export function invalidateAudioMode(): void {
+  audioModeApplied = false;
+}
+
+export async function applyAudioMode(force = false): Promise<void> {
+  if (audioModeApplied && !force) {
+    return;
+  }
+  await setAudioModeAsync({
+    playsInSilentMode: true,
+    allowsRecording: false,
+    interruptionMode: 'mixWithOthers',
+    shouldPlayInBackground: false,
+  });
+  audioModeApplied = true;
+}
+
+function createPlayer(source: number): AudioPlayer {
+  return createAudioPlayer(source, PLAYER_OPTS);
+}
+
+export async function preloadSounds(): Promise<void> {
+  await applyAudioMode();
+  if (playersReady) {
+    return;
+  }
+  players.tap = createPlayer(require('../../assets/sounds/tap.wav'));
+  players.invalid = createPlayer(require('../../assets/sounds/invalid.wav'));
+  players['round-start'] = createPlayer(require('../../assets/sounds/round-start.wav'));
+  players['open-jingle'] = createPlayer(require('../../assets/sounds/open-jingle.wav'));
+  for (const theme of THEME_IDS) {
+    players[themedPlayerId('claim', theme)] = createPlayer(CLAIM_SOUNDS[theme]);
+    players[themedPlayerId('win', theme)] = createPlayer(WIN_SOUNDS[theme]);
+    players[themedPlayerId('horn-car', theme)] = createPlayer(HORN_CAR_SOUNDS[theme]);
+    players[themedPlayerId('horn-truck', theme)] = createPlayer(HORN_TRUCK_SOUNDS[theme]);
+  }
+  playersReady = true;
+}
+
+function playerById(id: SharedPlayerId | string): AudioPlayer | undefined {
+  return players[id];
+}
+
+function themedPlayer(kind: ThemedKind): AudioPlayer | undefined {
+  return playerById(themedPlayerId(kind, resolvedThemeId()));
+}
+
 async function playPlayer(player: AudioPlayer | null | undefined): Promise<void> {
-  player?.seekTo(0);
-  player?.play();
+  if (!player) {
+    return;
+  }
+  try {
+    if (player.playing || player.currentTime > 0) {
+      await player.seekTo(0);
+    }
+  } catch (error) {
+    warnSfx('seekTo failed', error);
+  }
+  player.play();
+  const token = (stallRetryByPlayer.get(player) ?? 0) + 1;
+  stallRetryByPlayer.set(player, token);
+  setTimeout(() => {
+    if (stallRetryByPlayer.get(player) !== token) {
+      return;
+    }
+    if (
+      shouldRetrySilentPlayback({
+        playing: player.playing,
+        currentTime: player.currentTime,
+        duration: player.duration,
+      })
+    ) {
+      warnSfx(`stalled player ${player.id}; retrying play()`);
+      try {
+        player.play();
+      } catch (error) {
+        warnSfx('retry play failed', error);
+      }
+    }
+  }, 220);
+}
+
+async function withAudio(run: () => Promise<void>): Promise<void> {
+  await applyAudioMode();
+  await preloadSounds();
+  await run();
 }
 
 export async function playTapFeedback(): Promise<void> {
@@ -100,10 +169,11 @@ export async function playTapFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(tapPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(playerById('tap'));
+    });
+  } catch (error) {
+    warnSfx('tap failed', error);
   }
 }
 
@@ -116,10 +186,11 @@ export async function playClaimFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(claimPlayer ?? tapPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(themedPlayer('claim') ?? playerById('tap'));
+    });
+  } catch (error) {
+    warnSfx('claim failed', error);
   }
 }
 
@@ -132,10 +203,11 @@ export async function playInvalidFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(invalidPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(playerById('invalid'));
+    });
+  } catch (error) {
+    warnSfx('invalid failed', error);
   }
 }
 
@@ -145,10 +217,11 @@ export async function playRoundStartFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(roundStartPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(playerById('round-start'));
+    });
+  } catch (error) {
+    warnSfx('round-start failed', error);
   }
 }
 
@@ -158,14 +231,15 @@ export async function playWinFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(winPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(themedPlayer('win'));
+    });
+  } catch (error) {
+    warnSfx('win failed', error);
   }
 }
 
-/** Light car horn for routine plate/bingo marks. */
+/** Light car horn — used at round end with the win sting (not stacked on the truck). */
 export async function playHornFeedback(): Promise<void> {
   const { hapticsEnabled, soundEffectsEnabled } = prefs();
   if (hapticsEnabled) {
@@ -175,14 +249,15 @@ export async function playHornFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(hornCarPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(themedPlayer('horn-car'));
+    });
+  } catch (error) {
+    warnSfx('horn-car failed', error);
   }
 }
 
-/** Semi-truck horn for big moments (bingo, wins, first claim). */
+/** Semi-truck horn for in-round climaxes (bingo line, first plate, color-catch win cell). */
 export async function playTruckHornFeedback(): Promise<void> {
   const { hapticsEnabled, soundEffectsEnabled } = prefs();
   if (hapticsEnabled) {
@@ -192,31 +267,61 @@ export async function playTruckHornFeedback(): Promise<void> {
     return;
   }
   try {
-    await ensureAudio();
-    await playPlayer(hornTruckPlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(themedPlayer('horn-truck'));
+    });
+  } catch (error) {
+    warnSfx('horn-truck failed', error);
   }
 }
 
-/** Cold-start opening sting. Call once per app session from Home. */
-export async function playOpenJingle(): Promise<void> {
-  if (openJinglePlayedThisSession) {
-    return;
-  }
-  const { introJingleEnabled } = prefs();
-  if (!introJingleEnabled) {
-    return;
-  }
-  openJinglePlayedThisSession = true;
+/** Settings diagnostic: always plays, even if Sound effects is off. */
+export async function playSoundCheckFeedback(): Promise<void> {
   try {
-    await ensureAudio();
-    await playPlayer(openJinglePlayer);
-  } catch {
-    // Audio is optional polish.
+    await withAudio(async () => {
+      await playPlayer(themedPlayer('claim') ?? playerById('tap'));
+    });
+  } catch (error) {
+    warnSfx('sound check failed', error);
   }
+}
+
+/** Cold-start opening sting. Call from Home and again when returning to foreground until it succeeds. */
+export async function playOpenJingle(): Promise<void> {
+  if (
+    !canAttemptOpenJingle({
+      alreadyPlayed: openJinglePlayedThisSession,
+      introEnabled: prefs().introJingleEnabled,
+      appState: AppState.currentState,
+    })
+  ) {
+    return;
+  }
+  try {
+    await withAudio(async () => {
+      await playPlayer(playerById('open-jingle'));
+    });
+    openJinglePlayedThisSession = true;
+  } catch (error) {
+    warnSfx('open jingle failed', error);
+  }
+}
+
+export function onAppBecameActive(): void {
+  invalidateAudioMode();
+  void applyAudioMode(true).catch((error) => warnSfx('restore audio mode failed', error));
+  void playOpenJingle();
 }
 
 export function resetOpenJingleSessionFlagForTests(): void {
   openJinglePlayedThisSession = false;
+}
+
+export function resetAudioForTests(): void {
+  audioModeApplied = false;
+  playersReady = false;
+  openJinglePlayedThisSession = false;
+  for (const key of Object.keys(players)) {
+    delete players[key];
+  }
 }

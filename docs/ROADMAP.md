@@ -63,7 +63,16 @@ Shipped through App Store **1.3.0** (approved). Hangman + Color Catch shipped in
 
 - Done: All 20 game sounds replaced with a warm mallet/bell set, plus a new road-trip opening jingle (music first, engine and road underneath)
 - Done: Old mjs sound generators replaced by a deterministic Python generator (`scripts/sounds/make_sounds.py`, `npm run generate:sounds`)
-- Open: sounds sometimes don't play (long-standing; see BACKLOG)
+- Sound bug: moved to **fixed-pending-verification** in 1.6.0 (see below)
+
+## Shipped: iOS 1.6.0 — Sound reliability + unused SFX
+
+Prepare/submit before the **Nov 16–25** freeze. Marketing version **1.6.0**. Local iOS build number fallback **65** (1.5.1 was 64).
+
+- Fixed-pending-verification: iOS SFX silence from expo-audio session deactivation (~100ms after a clip ends; expo/expo#53110). Workaround: `keepAudioSessionActive`, preload all theme players, await `seekTo` before replay, restore playback mode after Sign Game voice / foreground.
+- Wired `round-start.wav` when a game or Hangman round starts; `horn-car.wav` on the win overlay (truck horn stays on in-round climaxes).
+- Settings **Sound check** row (media volume hint, no pricing).
+- Housekeeping: version 1.6.0 in app.config / package.json / package-lock; gitignore `build/`, `*.ipa`, `*.apk`.
 
 ## Next: Marketing — holiday themes
 

@@ -1,13 +1,14 @@
 /** @type {import('expo/config').ExpoConfig} */
 module.exports = () => {
-  const buildNumber = process.env.IOS_BUILD_NUMBER?.trim() || '1';
+  // 1.5.1 shipped as build 64. Local fallback must be higher; CI still overrides via IOS_BUILD_NUMBER.
+  const buildNumber = process.env.IOS_BUILD_NUMBER?.trim() || '65';
   const versionCode = Number.parseInt(process.env.ANDROID_VERSION_CODE?.trim() || '1', 10);
 
   return {
     expo: {
       name: 'Backseat Games',
       slug: 'backseat-games',
-      version: '1.5.1',
+      version: '1.6.0',
       orientation: 'portrait',
       icon: './assets/icon.png',
       userInterfaceStyle: 'light',

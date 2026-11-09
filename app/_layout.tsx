@@ -24,6 +24,7 @@ import { usePlateCollectionStore } from '@/store/plateCollectionStore';
 import { useStatsStore } from '@/store/statsStore';
 import { useThemePack } from '@/hooks/useResolvedTheme';
 import { stackScreenOptionsForPack } from '@/theme/navigation';
+import { onAppBecameActive, preloadSounds } from '@/services/feedback';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {
   // Splash may already be hidden in dev reloads.
@@ -72,9 +73,15 @@ export default function RootLayout() {
   }, [fontsReady, fontError]);
 
   useEffect(() => {
+    void preloadSounds().catch(() => {
+      // Audio is optional polish; first play() retries preload.
+    });
+  }, []);
+
+  useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextState) => {
-      if (nextState !== 'active') {
-        // Foreground-only multiplayer — documented in FEATURES.md
+      if (nextState === 'active') {
+        onAppBecameActive();
       }
     });
     return () => subscription.remove();
