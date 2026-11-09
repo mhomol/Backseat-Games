@@ -18,6 +18,7 @@ import { useSessionStore } from '@/store/sessionStore';
 import type { GameType } from '@/types/game';
 import { ALL_GAME_TYPES } from '@/types/game';
 import { colors, fonts, spacing } from '@/theme';
+import { playSoundCheckFeedback } from '@/services/feedback';
 import { isOnlineMultiplayerAvailable } from '@/utils/platformFeatures';
 
 const GAME_TYPES: GameType[] = ALL_GAME_TYPES;
@@ -25,6 +26,7 @@ const GAME_TYPES: GameType[] = ALL_GAME_TYPES;
 export default function SettingsScreen() {
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [teachingOpen, setTeachingOpen] = useState(false);
+  const [soundCheckHint, setSoundCheckHint] = useState<string | null>(null);
   const preferences = usePreferencesStore((state) => state.preferences);
   const updatePreferences = usePreferencesStore((state) => state.updatePreferences);
   const stats = useStatsStore((state) => state.stats);
@@ -128,6 +130,22 @@ export default function SettingsScreen() {
           description="Light vibration on button presses."
           value={preferences.hapticsEnabled}
           onValueChange={(hapticsEnabled) => updatePreferences({ hapticsEnabled })}
+        />
+        <SettingsLinkRow
+          label="Sound check"
+          description={
+            soundCheckHint ??
+            (preferences.soundEffectsEnabled
+              ? 'Plays a short test sound.'
+              : 'Sound effects are off above. This still plays a test.')
+          }
+          showChevron={false}
+          onPress={() => {
+            void playSoundCheckFeedback();
+            setSoundCheckHint(
+              "Turn up media volume if you can't hear it. That's the iPhone media slider, not the ringer switch.",
+            );
+          }}
         />
       </SettingsSection>
 

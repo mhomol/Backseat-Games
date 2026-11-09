@@ -3,6 +3,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { ConnectionBanner } from '@/components/ConnectionBanner';
 import { WinCelebration } from '@/components/WinCelebration';
 import type { useGameSessionGuard } from '@/hooks/useGameSessionGuard';
+import { useGameCueSounds } from '@/hooks/useGameCueSounds';
 import { useSessionStore } from '@/store/sessionStore';
 import type { WinnerOutcome } from '@/utils/winnerLabel';
 
@@ -20,6 +21,7 @@ export function GameSessionOverlays({
   outcome = 'win',
 }: GameSessionOverlaysProps) {
   const [celebrationDismissed, setCelebrationDismissed] = useState(false);
+  useGameCueSounds();
   const connectionStatus = useSessionStore((state) => state.connectionStatus);
   const hostPresent = useSessionStore((state) => state.hostPresent);
   const isHost = useSessionStore((state) => state.isHost);

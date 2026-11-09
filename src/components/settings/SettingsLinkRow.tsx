@@ -5,9 +5,15 @@ type SettingsLinkRowProps = {
   label: string;
   description?: string;
   onPress: () => void;
+  showChevron?: boolean;
 };
 
-export function SettingsLinkRow({ label, description, onPress }: SettingsLinkRowProps) {
+export function SettingsLinkRow({
+  label,
+  description,
+  onPress,
+  showChevron = true,
+}: SettingsLinkRowProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -18,7 +24,7 @@ export function SettingsLinkRow({ label, description, onPress }: SettingsLinkRow
         <Text style={styles.label}>{label}</Text>
         {description ? <Text style={styles.description}>{description}</Text> : null}
       </View>
-      <Text style={styles.chevron}>›</Text>
+      {showChevron ? <Text style={styles.chevron}>›</Text> : null}
     </Pressable>
   );
 }

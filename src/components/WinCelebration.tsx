@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Image, Modal, StyleSheet, Text, View } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { playInvalidFeedback, playTruckHornFeedback, playWinFeedback } from '../services/feedback';
+import { playHornFeedback, playInvalidFeedback, playWinFeedback } from '../services/feedback';
 import { HolidayWeatherEffects } from '@/components/brand/HolidayWeatherEffects';
 import { useThemePack } from '@/hooks/useResolvedTheme';
 import { borders, colors, fonts, radii, spacing } from '../theme';
@@ -43,7 +43,9 @@ export function WinCelebration({
     }
     animationRef.current?.play();
     void playWinFeedback();
-    void playTruckHornFeedback();
+    // Car horn (0.55s) sits under the win sting. The truck horn stays on in-round climaxes
+    // (first plate, bingo / color-catch line) so three horns don't stack here.
+    void playHornFeedback();
   }, [visible, isLoss]);
 
   const subtitle = isLoss
