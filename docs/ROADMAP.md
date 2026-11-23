@@ -67,16 +67,27 @@ Shipped through App Store **1.3.0** (approved). Hangman + Color Catch shipped in
 
 ## Shipped: iOS 1.6.0 — Sound reliability + unused SFX
 
-Prepare/submit before the **Nov 16–25** freeze. Marketing version **1.6.0**. Local iOS build number fallback **65** (1.5.1 was 64).
+**Live on the App Store November 10, 2026** (version **1.6.0**). Local iOS build number fallback **65** (1.5.1 was 64).
 
-- Fixed-pending-verification: iOS SFX silence from expo-audio session deactivation (~100ms after a clip ends; expo/expo#53110). Workaround: `keepAudioSessionActive`, preload all theme players, await `seekTo` before replay, restore playback mode after Sign Game voice / foreground.
+- Fixed (shipped in 1.6.0; keep an eye on real-device reports): iOS SFX silence from expo-audio session deactivation (~100ms after a clip ends; expo/expo#53110). Workaround: `keepAudioSessionActive`, preload all theme players, await `seekTo` before replay, restore playback mode after Sign Game voice / foreground.
 - Wired `round-start.wav` when a game or Hangman round starts; `horn-car.wav` on the win overlay (truck horn stays on in-round climaxes).
 - Settings **Sound check** row (media volume hint, no pricing).
 - Housekeeping: version 1.6.0 in app.config / package.json / package-lock; gitignore `build/`, `*.ipa`, `*.apk`.
 
-## Next: Marketing — holiday themes
+## Next: Barry theme for Backseat (planning)
 
-1.5 is live, so marketing is the active track (launch plan lives with the Homol Works bot).
+**In planning. No code yet** (code work starts in plan mode). A new purchasable theme (IAP) that is a crossover with Mike's Barry picture book, so Backseat gets a Barry look and feel. This is the plan placeholder; scope, SKU and timing are not decided.
+
+- Open question: which games does it theme (License Plates, Travel Bingo, Sign Game, Hangman, Color Catch), or all five like the holiday themes?
+- Open question: which Barry art from book 1 can be reused, and what new art is needed (home/host/waiting heroes, scenery, Hangman character)? Follow the Barry art rules; the Barry workspace stays the read-only art source.
+- Open question: target timing. Builds are frozen **Nov 16–25** and **Dec 20–Jan 3** except hotfixes, so aim after the Dec 20–Jan 3 freeze; no date is set.
+- Reuse the holiday-theme plumbing (Store, Settings apply, host theme sync, Restore Purchases) rather than new infrastructure, unless planning finds a reason not to.
+- Marketing notes must never mention prices.
+- Details in [BACKLOG.md](./BACKLOG.md) (Monetization).
+
+## Marketing — holiday themes (ongoing)
+
+1.5 is live, so marketing runs alongside planning (launch plan lives with the Homol Works bot).
 
 - **Mon Nov 2, 2026:** Thanksgiving social blitz (feed posts, Stories, Reel, pinned X post) across Homol Works accounts - **underway** (Facebook Page anchor posted Nov 2)
 - Around **Nov 30, 2026**: swap App Store promo text / promo art from Thanksgiving to Christmas (no new build)

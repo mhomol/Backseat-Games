@@ -60,7 +60,7 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
 - **1.4:** shipped on App Store ~Oct 14–15, 2026 (Hangman + Color Catch)
 - **1.5:** shipped — **live on the App Store Oct 20, 2026** (Holiday themes: Halloween + Thanksgiving + Christmas, $0.99 each) — see Monetization below
 - **1.5.1:** shipped - **live on the App Store Oct 31, 2026** (new sound set)
-- **1.6.0:** prepare before the Nov 16 iOS freeze — sound reliability, wire unused SFX, Sound check, version housekeeping. Mike builds/submits locally (no EAS submit from CI).
+- **1.6.0:** shipped — **live on the App Store Nov 10, 2026** (sound reliability, wired unused SFX, Sound check, version housekeeping)
 - **Marketing (now):** Thanksgiving social blitz **Mon Nov 2, 2026** (underway); swap App Store promo Thanksgiving -> Christmas around **Nov 30, 2026** (launch plan lives with the Homol Works bot)
 
 - Done: App Store 1.2.1 approved (delight + Solo offline + accessibility)
@@ -91,6 +91,11 @@ Backlog items are grouped by theme. Priority is directional, not a promise of de
     — [x] Extra theme sounds finished and tested
     — [x] Hangman: hitchhiker / skeleton / pilgrim / snowman; Wrong Way on loss unchanged
     — [x] Home Store entry is a corner control, not a fourth post sign
+- **Next (in planning, no code yet): Barry theme for Backseat.** A purchasable theme (IAP) that is a crossover with Mike's Barry picture book. Plan placeholder only; code starts in plan mode. No SKU, price or date decided; never mention prices in marketing notes.
+  — Open question: which games does it theme (all five, as with the holiday themes, or a subset)?
+  — Open question: which Barry art assets from book 1 are reusable, and what new art is needed (heroes, scenery, Hangman character)?
+  — Open question: target timing after the Dec 20-Jan 3 build freeze (no date set)
+  — Likely reuses the holiday-theme Store / Settings apply / host theme sync / Restore Purchases flow
 - P3: Promo-code friendly UI
 
 ## Technical Debt
